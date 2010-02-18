@@ -11,8 +11,8 @@ import java.util.ArrayList;
  * @author Christopher Rabotin
  */
 public class Stirling {
-	ArrayList<Player> players;
-	ArrayList<Room> rooms;
+	private ArrayList<Player> players;
+	private ArrayList<Room> rooms;
 
 	/**
 	 * In the main function, Stirling starts by calling the XML parser. If no
