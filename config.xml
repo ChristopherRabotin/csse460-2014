@@ -2,7 +2,7 @@
 <data>
 	<ServerConfig port="1024" maxPlayers="100"/>
 	<GameConfig>
-		<Rooms start="outside">
+		<Rooms default="outside">
 			<room name="outside" daemon="none">
 				<exit direction="north" room="entrance" />
 			</room>
@@ -16,4 +16,6 @@
 			<attack name="crush" damage="30" daemonOnly="true" />
 		</Attacks>
 	</GameConfig>
+	<CmdConfig>
+	</CmdConfig>
 </data>

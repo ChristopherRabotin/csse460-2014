@@ -17,6 +17,7 @@ public class XMLParser {
 	private static HashMap<String, Daemon> daemons;
 	private static HashMap<String, Room> rooms;
 	private static HashMap<String, Attack> attacks;
+	private static Room defaultRoom;
 	private static int serverPort, serverMaxConn;
 
 	public static boolean loadNParseXML(String xmlF) {
@@ -110,6 +111,7 @@ public class XMLParser {
 			}
 
 		}
+		defaultRoom = rooms.get(gameRoot.getChild("Rooms").getAttributeValue("default"));
 
 	}
 
@@ -131,6 +133,10 @@ public class XMLParser {
 
 	public static int getServerMaxConn() {
 		return serverMaxConn;
+	}
+	
+	public static Room getDefaultRoom(){
+		return defaultRoom;
 	}
 	
 }
