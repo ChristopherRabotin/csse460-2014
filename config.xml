@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data>
+	<ServerConfig>
+		<config name="port" value="1024" />
+		<config name="maxPlayers" value="100" />
+	</ServerConfig>
+	<GameConfig>
+		<Rooms start="outside">
+			<room name="outside" daemon="none">
+				<exits>
+					<exit direction="north" room="entrance" />
+				</exits>
+			</room>
+		</Rooms>
+		<Daemons>
+			<daemon name="Meanny" health="100" value="10" attacks="flames,crush" />
+		</Daemons>
+		<Attacks>
+			<attack name="sword" damage="10" daemonOnly="false" />
+			<attack name="flames" damage="20" daemonOnly="false" />
+			<attack name="crush" damage="30" daemonOnly="true" />
+		</Attacks>
+	</GameConfig>
+</data>
