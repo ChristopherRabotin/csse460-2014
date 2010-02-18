@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <data>
-	<ServerConfig>
-		<config name="port" value="1024" />
-		<config name="maxPlayers" value="100" />
-	</ServerConfig>
+	<ServerConfig port="1024" maxPlayers="100"/>
 	<GameConfig>
 		<Rooms start="outside">
 			<room name="outside" daemon="none">

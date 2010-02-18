@@ -32,6 +32,11 @@ public class MCServer {
  */
 class Client extends Thread{
 	private Socket socket = null;
+	private enum PlayerStates {idle, fighting, eog};
+	private PlayerStates state=PlayerStates.idle;
+	private PrintWriter out;
+	private BufferedReader in;
+	private String inputLn, outputLn;
 
 	public Client(Socket socket) {
 		super("StirlingZygote");
@@ -41,12 +46,15 @@ class Client extends Thread{
 	public void run() {
 
 		try {
-			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-			BufferedReader in = new BufferedReader(new InputStreamReader(socket
+			out = new PrintWriter(socket.getOutputStream(), true);
+			in = new BufferedReader(new InputStreamReader(socket
 					.getInputStream()));
 
-			Player p = new Player("test", 1000);
+			Stirling.addPlayer(new Player("test", 1000));
 			
+			while ((inputLn = in.readLine()) != null){
+				
+			}
 			out.close();
 			in.close();
 			socket.close();

@@ -33,4 +33,9 @@ public class Attack {
 	public int getDamage() {
 		return damage;
 	}
+	
+	public boolean isDaemonReserved() {
+		return daemonReserved;
+	}
+
 }
