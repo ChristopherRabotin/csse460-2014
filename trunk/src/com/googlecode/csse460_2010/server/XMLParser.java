@@ -13,12 +13,13 @@ import org.jdom.input.SAXBuilder;
 
 public class XMLParser {
 	private static Document xmlDoc;
-	private static Element root;
+	private static Element serverRoot, gameRoot;
 	private static HashMap<String, Daemon> daemons;
 	private static HashMap<String, Room> rooms;
 	private static HashMap<String, Attack> attacks;
+	private static int serverPort, serverMaxConn;
 
-	public static boolean loadXML(String xmlF) {
+	public static boolean loadNParseXML(String xmlF) {
 		boolean rtn = true;
 		try {
 			xmlDoc = (new SAXBuilder()).build(new File(xmlF));
@@ -29,28 +30,45 @@ public class XMLParser {
 			e.printStackTrace();
 			rtn = false;
 		}
+		serverRoot = xmlDoc.getRootElement().getChild("ServerConfig");
+		parseServerConf();
+		gameRoot = xmlDoc.getRootElement().getChild("GameConfig");
+		parseAttacks();
+		parseDaemons();
+		parseRooms();
 		return rtn;
 	}
 
-	public static void parseAttacks(){
-		List attacksList = root.getChild("Attacks").getChildren("attack");
+	private static void parseServerConf(){
+		serverPort = Integer.parseInt(serverRoot.getAttributeValue("port"));
+		serverMaxConn = Integer.parseInt(serverRoot.getAttributeValue("maxPlayers"));
+	}
+	
+	@SuppressWarnings("unchecked")
+	private static void parseAttacks() {
+		List attacksList = gameRoot.getChild("Attacks").getChildren("attack");
 		Iterator atkIt = attacksList.iterator();
-		String name; int damage; boolean daemonOnly;
-		while(atkIt.hasNext()){
+		String name;
+		int damage;
+		boolean daemonOnly;
+		while (atkIt.hasNext()) {
 			Element current = (Element) atkIt.next();
 			name = current.getAttributeValue("name");
 			damage = Integer.parseInt(current.getAttributeValue("damage"));
-			daemonOnly = Boolean.parseBoolean(current.getAttributeValue("daemonOnly"));
+			daemonOnly = Boolean.parseBoolean(current
+					.getAttributeValue("daemonOnly"));
 			attacks.put(name, new Attack(name, damage, daemonOnly));
 		}
 	}
-	
-	public static void parseDaemons(){
-		List daemonsList = root.getChild("Daemons").getChildren("daemon");
+
+	@SuppressWarnings("unchecked")
+	private static void parseDaemons() {
+		List daemonsList = gameRoot.getChild("Daemons").getChildren("daemon");
 		Iterator daemonIt = daemonsList.iterator();
-		String name, allAtks; int maxhealth, value;
+		String name, allAtks;
+		int maxhealth, value;
 		Daemon meanny;
-		while(daemonIt.hasNext()){
+		while (daemonIt.hasNext()) {
 			Element current = (Element) daemonIt.next();
 			name = current.getAttributeValue("name");
 			allAtks = current.getAttributeValue("attacks");
@@ -59,25 +77,60 @@ public class XMLParser {
 			meanny = new Daemon(name, maxhealth, value);
 			// now we split the attacks and add each attack to the daemon
 			String[] eachAtk = allAtks.split(",");
-			for(String atk:eachAtk)
+			for (String atk : eachAtk)
 				meanny.addAttack(attacks.get(atk));
 			daemons.put(name, meanny);
 		}
 	}
-	
-	public static void parseRooms() {
-		String name;
+
+	@SuppressWarnings("unchecked")
+	private static void parseRooms() {
+		String name, meannyName;
 		Room room;
 		Daemon meanny;
-		List roomsList = root.getChild("Rooms").getChildren("room"), exitsList;
+		Element currentRoom, currentExit;
+		List roomsList = gameRoot.getChild("Rooms").getChildren("room"), exitsList;
 		Iterator roomsIt = roomsList.iterator(), exitsIt;
 		while (roomsIt.hasNext()) {
-			Element current = (Element) roomsIt.next();
-			name = current.getAttributeValue("name");
-			
-			exitsList = current.getChildren("exits");
+			currentRoom = (Element) roomsIt.next();
+			name = currentRoom.getAttributeValue("name");
+			meannyName = currentRoom.getAttributeValue("daemon");
+			if (!meannyName.equals("none"))
+				meanny = daemons.get(meannyName);
+			else
+				meanny = null;
+			room = new Room(name, meanny);
+
+			exitsList = currentRoom.getChildren("exits");
+			exitsIt = exitsList.iterator();
+			while (exitsIt.hasNext()) {
+				currentExit = (Element) exitsIt.next();
+				room.addExit(rooms.get(currentExit.getAttributeValue("room")),
+						currentExit.getAttributeValue("direction"));
+			}
 
 		}
 
 	}
+
+	public static HashMap<String, Daemon> getDaemons() {
+		return daemons;
+	}
+
+	public static HashMap<String, Room> getRooms() {
+		return rooms;
+	}
+
+	public static HashMap<String, Attack> getAttacks() {
+		return attacks;
+	}
+
+	public static int getServerPort() {
+		return serverPort;
+	}
+
+	public static int getServerMaxConn() {
+		return serverMaxConn;
+	}
+	
 }

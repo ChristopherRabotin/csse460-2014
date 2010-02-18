@@ -102,4 +102,8 @@ public class Player {
 		return atks;
 	}
 
+	public int getFullHealth() {
+		return fullHealth;
+	}
+
 }

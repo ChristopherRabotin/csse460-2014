@@ -65,4 +65,24 @@ public class Daemon {
 		Random random = new Random();
 		return atks.get(random.nextInt(atks.size()));
 	}
+	
+	public int getFullHealth() {
+		return fullHealth;
+	}
+
+	public int getVictoryPoints() {
+		return victoryPoints;
+	}
+
+	public int getHealth() {
+		return health;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public boolean isAlive() {
+		return isAlive;
+	}
 }

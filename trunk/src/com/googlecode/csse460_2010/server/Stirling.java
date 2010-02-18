@@ -11,8 +11,7 @@ import java.util.ArrayList;
  * @author Christopher Rabotin
  */
 public class Stirling {
-	private ArrayList<Player> players;
-	private ArrayList<Room> rooms;
+	private static ArrayList<Player> players;
 
 	/**
 	 * In the main function, Stirling starts by calling the XML parser. If no
@@ -22,6 +21,15 @@ public class Stirling {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		if(args.length > 0){
+			XMLParser.loadNParseXML(args[0]);
+		}else{
+			XMLParser.loadNParseXML("config.xml");
+		}
 
+	}
+	
+	public static void addPlayer(Player p){
+		players.add(p);
 	}
 }

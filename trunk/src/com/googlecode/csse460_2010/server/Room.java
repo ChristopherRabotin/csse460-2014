@@ -1,6 +1,6 @@
 package com.googlecode.csse460_2010.server;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Room defines what a Room is and what it contains.
@@ -8,9 +8,14 @@ import java.util.ArrayList;
  * @author Christopher Rabotin
  */
 public class Room {
+	public static enum Directions {
+		up, down, left, right
+	};
+
 	private final String name;
 	private final Daemon meanny;
-	private final ArrayList<Room> exits = new ArrayList<Room>(4); 
+	private final HashMap<Directions, Room> exits = new HashMap<Directions, Room>(
+			4);
 
 	/**
 	 * Room constructor.
@@ -25,9 +30,32 @@ public class Room {
 		this.meanny = meanny;
 	}
 
-	public void addExit(Room e){
-		exits.add(e);
+	public void addExit(Room e, String direction) {
+		try {
+			exits.put(stringToDirection(direction), e);
+		} catch (Exception ex) {
+			System.err.println("Error in XML! The direction " + direction
+					+ " is invalid!");
+			ex.printStackTrace();
+		}
 	}
+
+	public Directions stringToDirection(String direction) throws Exception {
+		Directions rtn;
+		if (direction.equals("up")) {
+			rtn = Directions.up;
+		} else if (direction.equals("down")) {
+			rtn = Directions.down;
+		} else if (direction.equals("left")) {
+			rtn = Directions.left;
+		} else if (direction.equals("right")) {
+			rtn = Directions.right;
+		} else {
+			throw new Exception();
+		}
+		return rtn;
+	}
+
 	public String getName() {
 		return name;
 	}
