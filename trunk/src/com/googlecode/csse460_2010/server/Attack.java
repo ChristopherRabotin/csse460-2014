@@ -7,9 +7,9 @@ package com.googlecode.csse460_2010.server;
  * @author Christopher Rabotin
  */
 public class Attack {
-	final String name;
-	final int damage;
-	final boolean daemonReserved;
+	private final String name;
+	private final int damage;
+	private final boolean daemonReserved;
 
 	/**
 	 * Attack constructor.

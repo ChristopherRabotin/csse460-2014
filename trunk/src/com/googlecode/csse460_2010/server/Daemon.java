@@ -9,11 +9,11 @@ import java.util.Random;
  * @author Christopher Rabotin
  */
 public class Daemon {
-	final int fullHealth, victoryPoints;
-	int health;
-	ArrayList<Attack> atks;
-	final String name;
-	boolean isAlive = true;
+	private final int fullHealth, victoryPoints;
+	private int health;
+	private ArrayList<Attack> atks;
+	private final String name;
+	private boolean isAlive = true;
 
 	/**
 	 * Daemon constructor.

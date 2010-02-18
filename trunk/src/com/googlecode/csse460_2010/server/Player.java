@@ -8,12 +8,12 @@ import java.util.ArrayList;
  * @author Christopher Rabotin
  */
 public class Player {
-	Room room;
-	int points, health;
-	final int fullHealth;
-	final long connectionDate;
-	final String name;
-	ArrayList<Attack> atks;
+	private Room room;
+	private int points, health;
+	private final int fullHealth;
+	private final long connectionDate;
+	private final String name;
+	private ArrayList<Attack> atks;
 
 	/**
 	 * Player constructor.

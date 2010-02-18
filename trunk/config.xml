@@ -7,9 +7,7 @@
 	<GameConfig>
 		<Rooms start="outside">
 			<room name="outside" daemon="none">
-				<exits>
-					<exit direction="north" room="entrance" />
-				</exits>
+				<exit direction="north" room="entrance" />
 			</room>
 		</Rooms>
 		<Daemons>
