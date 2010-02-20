@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <data>
-	<ServerConfig port="1024" maxPlayers="100"/>
+	<ServerConfig port="1024" maxPlayers="100" name="Game Server" />
+	<Protocol>
+		<!--
+			The words preceded by a @ will be replaced by values from the player
+			and the messages preceded by $ will be replaced by values from the
+			server. Warning: the variables described previously MUST have the
+			same name in Java as we are using reflecting functions to get their
+			respective value.
+		-->
+		<WelcomeMsg>
+			Hello @player, welcome to $serverName! You are player #@id
+			of $serverMaxConn.
+		</WelcomeMsg>
+	</Protocol>
 	<GameConfig>
 		<Rooms default="outside">
 			<room name="outside" daemon="none">

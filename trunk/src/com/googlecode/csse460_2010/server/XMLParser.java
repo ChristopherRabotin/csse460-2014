@@ -13,12 +13,13 @@ import org.jdom.input.SAXBuilder;
 
 public class XMLParser {
 	private static Document xmlDoc;
-	private static Element serverRoot, gameRoot;
+	private static Element serverRoot, gameRoot, protocolRoot;
 	private static HashMap<String, Daemon> daemons;
 	private static HashMap<String, Room> rooms;
 	private static HashMap<String, Attack> attacks;
 	private static Room defaultRoom;
 	private static int serverPort, serverMaxConn;
+	private static String serverName, serverWelcomeMsg;
 
 	public static boolean loadNParseXML(String xmlF) {
 		boolean rtn = true;
@@ -32,6 +33,7 @@ public class XMLParser {
 			rtn = false;
 		}
 		serverRoot = xmlDoc.getRootElement().getChild("ServerConfig");
+		protocolRoot = xmlDoc.getRootElement().getChild("Protocol");
 		parseServerConf();
 		gameRoot = xmlDoc.getRootElement().getChild("GameConfig");
 		parseAttacks();
@@ -40,11 +42,17 @@ public class XMLParser {
 		return rtn;
 	}
 
-	private static void parseServerConf(){
+	private static void parseServerConf() {
 		serverPort = Integer.parseInt(serverRoot.getAttributeValue("port"));
-		serverMaxConn = Integer.parseInt(serverRoot.getAttributeValue("maxPlayers"));
+		serverMaxConn = Integer.parseInt(serverRoot
+				.getAttributeValue("maxPlayers"));
+		serverName = serverRoot.getAttributeValue("name");
+		serverWelcomeMsg = protocolRoot.getChildText("WelcomeMsg");
+		// now let's convert all the server properties of the welcome message to
+		// their respective values
+		serverWelcomeMsg = getWelcomeMsg("$", XMLParser.class);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private static void parseAttacks() {
 		List attacksList = gameRoot.getChild("Attacks").getChildren("attack");
@@ -111,7 +119,8 @@ public class XMLParser {
 			}
 
 		}
-		defaultRoom = rooms.get(gameRoot.getChild("Rooms").getAttributeValue("default"));
+		defaultRoom = rooms.get(gameRoot.getChild("Rooms").getAttributeValue(
+				"default"));
 
 	}
 
@@ -134,9 +143,44 @@ public class XMLParser {
 	public static int getServerMaxConn() {
 		return serverMaxConn;
 	}
-	
-	public static Room getDefaultRoom(){
+
+	public static String getServerName() {
+		return serverName;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static String getWelcomeMsg(String var, Object assosVar) {
+		String[] splt, splt1;
+		Class c = assosVar.getClass();
+		while (serverWelcomeMsg.contains(var)) {
+			splt = serverWelcomeMsg.split(var); // we start by splitting the
+			// string by the token (var)
+			for (int i = 1; i < splt.length; i += 2) {
+				// then for every even value (the one where the first word
+				// corresponds to the field), we extract the first word
+				splt1 = splt[i].split(" ");
+				try {
+					// finally we get the field in the given class, convert that
+					// to string and replace the original string.
+					serverWelcomeMsg.replace(var + splt1[0], String.valueOf((c
+							.getField(splt1[0])).get(assosVar)));
+				} catch (IllegalArgumentException e) {
+					e.printStackTrace();
+				} catch (SecurityException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				} catch (NoSuchFieldException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return serverWelcomeMsg;
+
+	}
+
+	public static Room getDefaultRoom() {
 		return defaultRoom;
 	}
-	
+
 }

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class Player {
 	private Room room;
 	private int points, health;
-	private final int fullHealth;
+	private final int id, fullHealth;
 	private final long connectionDate;
 	private final String name;
 	private ArrayList<Attack> atks;
@@ -23,8 +23,9 @@ public class Player {
 	 * @param fullHealth
 	 *            Health the player starts with
 	 */
-	public Player(String name, int fullHealth) {
+	public Player(String name, int id, int fullHealth) {
 		this.name = name;
+		this.id = id;
 		this.fullHealth = fullHealth;
 		room = null;
 		points = 0;
