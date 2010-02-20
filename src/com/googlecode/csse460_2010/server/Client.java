@@ -34,8 +34,11 @@ public class Client extends Thread {
 			in = new BufferedReader(new InputStreamReader(socket
 					.getInputStream()));
 
-			me = new Player("test", 1000);
+			me = new Player("test", 1000,Stirling.getNoPlayers()+1);
 			Stirling.addPlayer(this); // we "register" our selves to the game engine
+			
+			// say hello to the new player
+			out.println(XMLParser.getWelcomeMsg("@", me));
 
 			while ((inputLn = in.readLine()) != null) {
 				// if there are messages pending to be sent (e.g. Multicast
@@ -43,6 +46,7 @@ public class Client extends Thread {
 				while (msgQ.size() > 0) {
 					out.println(msgQ.pop());
 				}
+				
 
 			}
 			killClient();

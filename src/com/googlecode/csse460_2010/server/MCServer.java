@@ -10,13 +10,13 @@ import java.util.Stack;
 
 public class MCServer {
 	private static boolean listening = true;
-	public static void startServer(int port) throws IOException {
+	public static void startServer() throws IOException {
 		ServerSocket serverSocket = null;
 
 		try {
-			serverSocket = new ServerSocket(port);
+			serverSocket = new ServerSocket(XMLParser.getServerPort());
 		} catch (IOException e) {
-			System.err.println("Could not listen on port: 4444.");
+			System.err.println("Could not listen on port: "+XMLParser.getServerPort()+".");
 			System.exit(-1);
 		}
 

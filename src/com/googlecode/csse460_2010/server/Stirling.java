@@ -1,5 +1,6 @@
 package com.googlecode.csse460_2010.server;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -27,6 +28,11 @@ public class Stirling {
 			XMLParser.loadNParseXML("config.xml");
 		}
 
+		try {
+			MCServer.startServer();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static void addPlayer(Client p){
@@ -35,5 +41,9 @@ public class Stirling {
 	
 	public static void rmPlayer(Client p){
 		players.remove(p);
+	}
+	
+	public static int getNoPlayers(){
+		return players.size();
 	}
 }
