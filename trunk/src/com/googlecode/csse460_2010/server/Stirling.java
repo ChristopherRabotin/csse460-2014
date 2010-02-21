@@ -27,7 +27,6 @@ public class Stirling {
 		if (args.length > 0) {
 			xmlFile = args[0];
 		}
-		System.out.println("here");
 		if (!XMLParser.loadNParseXML(xmlFile)) {
 			System.out.println("Error while loading XML!");
 		} else {
@@ -42,14 +41,30 @@ public class Stirling {
 	}
 
 	public static void addPlayer(Client p) {
+		for(Client c : players)
+			c.queueMsg("join "+p.getPlayer().getName());
 		players.add(p);
 	}
 
 	public static void rmPlayer(Client p) {
 		players.remove(p);
+		for(Client c : players)
+			c.queueMsg("quit "+p.getPlayer().getName());
 	}
 
 	public static int getNoPlayers() {
 		return players.size();
+	}
+
+	public static String getPlayersFormatted() {
+		String rtn = "Name\t\tHealth\t\tPoints\t\tRoom\n\n";
+		for (Client c : players) {
+			rtn += c.getPlayer().getName() + "\t\t" + c.getPlayer().getHealth()
+					+ "/" + c.getPlayer().getFullHealth();
+			rtn += "\t\t" + c.getPlayer().getPoints() + "\t\t"
+					+ c.getPlayer().getRoom();
+			rtn += "\n";
+		}
+		return rtn;
 	}
 }

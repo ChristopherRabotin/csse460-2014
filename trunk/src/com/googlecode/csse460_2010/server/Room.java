@@ -40,8 +40,18 @@ public class Room {
 		}
 	}
 
-	public Directions stringToDirection(String direction) throws Exception {
-		Directions rtn;
+	public Room getExit(Directions where){
+		return exits.get(where);
+	}
+	
+	public String getExitsFormatted(){
+		String rtn = "";
+		
+		return rtn;
+	}
+	
+	public static Directions stringToDirection(String direction){
+		Directions rtn=null;
 		if (direction.equals("up")) {
 			rtn = Directions.up;
 		} else if (direction.equals("down")) {
@@ -50,8 +60,6 @@ public class Room {
 			rtn = Directions.left;
 		} else if (direction.equals("right")) {
 			rtn = Directions.right;
-		} else {
-			throw new Exception();
 		}
 		return rtn;
 	}

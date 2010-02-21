@@ -44,6 +44,9 @@ public class Daemon {
 		atks.add(e);
 	}
 
+	public ArrayList<Attack> getAttacks(){
+		return atks;
+	}
 	/**
 	 * This function lowers the health of the daemon. It is synchronized in case
 	 * multiple players hit at the same time a same daemon.
