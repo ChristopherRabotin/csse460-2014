@@ -18,7 +18,9 @@
 	<GameConfig>
 		<Rooms default="outside">
 			<room name="outside" daemon="none">
-				<exit direction="north" room="entrance" />
+				<exit direction="up" room="entrance" />
+			</room>
+			<room name="entrance" daemon="Meanny">
 			</room>
 		</Rooms>
 		<Daemons>

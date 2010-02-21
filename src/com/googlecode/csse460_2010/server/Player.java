@@ -8,8 +8,11 @@ import java.util.ArrayList;
  * @author Christopher Rabotin
  */
 public class Player {
-	public static enum States {IDLE, COMBAT, GAMEOVER};
-	private States state; 
+	public static enum States {
+		IDLE, COMBAT, GAMEOVER
+	};
+
+	private States state;
 	private Room room;
 	private int points, health;
 	private final int fullHealth;
@@ -30,7 +33,7 @@ public class Player {
 		this.name = name;
 		this.id = id;
 		this.fullHealth = fullHealth;
-		room = null;
+		room = XMLParser.getDefaultRoom();
 		points = 0;
 		connectionDate = System.currentTimeMillis();
 		setState(States.IDLE);

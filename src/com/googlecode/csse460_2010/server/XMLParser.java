@@ -62,19 +62,6 @@ public class XMLParser {
 		// now let's convert all the server properties of the welcome message to
 		// their respective values
 		serverWelcomeMsg = getWelcomeMsg("$", XMLParser.class);
-		/*
-		 * try { Class cls = XMLParser.class;
-		 * 
-		 * Field fieldlist[] = cls.getDeclaredFields(); for (int i = 0; i <
-		 * fieldlist.length; i++) { Field fld = fieldlist[i];
-		 * System.out.println("name = " + fld.getName());
-		 * System.out.println("value = "+fld.get(cls));
-		 * System.out.println("decl class = " + fld.getDeclaringClass());
-		 * System.out.println("type = " + fld.getType()); int mod =
-		 * fld.getModifiers(); System.out.println("modifiers = " +
-		 * Modifier.toString(mod)); System.out.println("-----"); } } catch
-		 * (Throwable e) { System.err.println(e); }
-		 */
 	}
 
 	@SuppressWarnings("unchecked")
@@ -141,10 +128,13 @@ public class XMLParser {
 				room.addExit(rooms.get(currentExit.getAttributeValue("room")),
 						currentExit.getAttributeValue("direction"));
 			}
+			rooms.put(room.getName(), room);
 
 		}
 		defaultRoom = rooms.get(gameRoot.getChild("Rooms").getAttributeValue(
 				"default"));
+		System.out.println("Default room:"+gameRoot.getChild("Rooms").getAttributeValue(
+		"default"));
 
 	}
 
@@ -185,7 +175,34 @@ public class XMLParser {
 	@SuppressWarnings("unchecked")
 	public static String getWelcomeMsg(String var, Object obj) {
 		Class cls = obj.getClass();
-		return getWelcomeMsg(var, cls);
+		String rtn = serverWelcomeMsg;
+		String[] splt, splt1;
+		Field fd;
+		while (rtn.contains(var)) {
+			splt = rtn.split("\\" + var); // we start by splitting
+			// the string by the token (var)
+			for (int i = 1; i < splt.length; i += 2) {
+				// then for every even value (the one where the first word
+				// corresponds to the field), we extract the first word
+				splt1 = splt[i].split("\\W"); // we split by non-white character
+				// to make sure we don't include
+				// ! or .
+				try {
+					// finally we get the field in the given class, convert that
+					// to string and replace the original string.
+					fd = cls.getDeclaredField(splt1[0]);
+					fd.setAccessible(true);
+
+					rtn = rtn.replace(var + splt1[0], String.valueOf(fd
+							.get(obj)));
+				} catch (Throwable e) {
+					System.out.println("[" + splt1[0] + "]");
+					e.printStackTrace();
+					System.exit(0);
+				}
+			}
+		}
+		return rtn;
 	}
 
 	/**
@@ -219,8 +236,6 @@ public class XMLParser {
 					// to string and replace the original string.
 					fd = cls.getDeclaredField(splt1[0]);
 					fd.setAccessible(true);
-					System.out.println("type = " + fd.getType().toString());
-
 					rtn = rtn.replace(var + splt1[0], String.valueOf(fd
 							.get(null)));
 				} catch (Throwable e) {
