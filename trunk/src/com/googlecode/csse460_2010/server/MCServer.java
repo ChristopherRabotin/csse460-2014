@@ -1,27 +1,30 @@
 package com.googlecode.csse460_2010.server;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.Stack;
 
 public class MCServer {
-	private static boolean listening = true;
+	private static boolean listening = true; 
+	
 	public static void startServer() throws IOException {
 		ServerSocket serverSocket = null;
 
 		try {
 			serverSocket = new ServerSocket(XMLParser.getServerPort());
+			System.out.println("Starting server");
 		} catch (IOException e) {
 			System.err.println("Could not listen on port: "+XMLParser.getServerPort()+".");
 			System.exit(-1);
 		}
 
-		while (listening)
+		while (listening){
 			new Client(serverSocket.accept()).start();
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 
 		serverSocket.close();
 	}
