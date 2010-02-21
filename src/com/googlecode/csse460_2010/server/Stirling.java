@@ -12,7 +12,8 @@ import java.util.ArrayList;
  * @author Christopher Rabotin
  */
 public class Stirling {
-	private static ArrayList<Client> players;
+	private static ArrayList<Client> players = new ArrayList<Client>();
+	private static String xmlFile = "config.xml";
 
 	/**
 	 * In the main function, Stirling starts by calling the XML parser. If no
@@ -22,28 +23,33 @@ public class Stirling {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		if(args.length > 0){
-			XMLParser.loadNParseXML(args[0]);
-		}else{
-			XMLParser.loadNParseXML("config.xml");
+		System.out.println("Starting game...");
+		if (args.length > 0) {
+			xmlFile = args[0];
 		}
-
+		System.out.println("here");
+		if (!XMLParser.loadNParseXML(xmlFile)) {
+			System.out.println("Error while loading XML!");
+		} else {
+			System.out.println("Loaded XML.");
+		}
 		try {
 			MCServer.startServer();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		System.out.println("Server returned.");
 	}
-	
-	public static void addPlayer(Client p){
+
+	public static void addPlayer(Client p) {
 		players.add(p);
 	}
-	
-	public static void rmPlayer(Client p){
+
+	public static void rmPlayer(Client p) {
 		players.remove(p);
 	}
-	
-	public static int getNoPlayers(){
+
+	public static int getNoPlayers() {
 		return players.size();
 	}
 }

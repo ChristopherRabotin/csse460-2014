@@ -8,12 +8,15 @@ import java.util.ArrayList;
  * @author Christopher Rabotin
  */
 public class Player {
+	public static enum States {IDLE, COMBAT, GAMEOVER};
+	private States state; 
 	private Room room;
 	private int points, health;
-	private final int id, fullHealth;
+	private final int fullHealth;
 	private final long connectionDate;
-	private final String name;
 	private ArrayList<Attack> atks;
+	private final String name;
+	private final int id;
 
 	/**
 	 * Player constructor.
@@ -30,6 +33,7 @@ public class Player {
 		room = null;
 		points = 0;
 		connectionDate = System.currentTimeMillis();
+		setState(States.IDLE);
 	}
 
 	/**
@@ -91,10 +95,6 @@ public class Player {
 		return connectionDate;
 	}
 
-	public String getName() {
-		return name;
-	}
-
 	public int getHealth() {
 		return health;
 	}
@@ -105,6 +105,22 @@ public class Player {
 
 	public int getFullHealth() {
 		return fullHealth;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setState(States state) {
+		this.state = state;
+	}
+
+	public States getState() {
+		return state;
 	}
 
 }

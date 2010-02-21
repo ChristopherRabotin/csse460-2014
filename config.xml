@@ -8,9 +8,10 @@
 			server. Warning: the variables described previously MUST have the
 			same name in Java as we are using reflecting functions to get their
 			respective value.
+			For the reflection to work, the fields MUST be public.
 		-->
 		<WelcomeMsg>
-			Hello @player, welcome to $serverName! You are player #@id
+			Hello @name, welcome to $serverName! You are player #@id
 			of $serverMaxConn.
 		</WelcomeMsg>
 	</Protocol>
