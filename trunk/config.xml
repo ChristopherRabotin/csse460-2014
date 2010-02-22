@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <data>
-	<ServerConfig port="1024" maxPlayers="100" name="Game Server" />
+	<!--
+		ServerConfig documentation: port is port number; maxPlayers is maximum
+		number of players; name is name of the server and restartTime is time
+		(in seconds) to wait before reviving all the daemons and resetting all
+		the players to the default room.
+	-->
+	<ServerConfig port="1024" maxPlayers="20" name="Game Server"
+		restartTime="10" />
 	<Protocol>
 		<!--
 			The words preceded by a @ will be replaced by values from the player
 			and the messages preceded by $ will be replaced by values from the
 			server. Warning: the variables described previously MUST have the
 			same name in Java as we are using reflecting functions to get their
-			respective value.
-			For the reflection to work, the fields MUST be public.
+			respective value. For the reflection to work, the fields MUST be
+			public.
 		-->
 		<WelcomeMsg>
 			Hello @name, welcome to $serverName! You are player #@id
@@ -17,19 +24,34 @@
 	</Protocol>
 	<GameConfig>
 		<Rooms default="outside">
-			<room name="outside" daemon="none">
-				<exit direction="up" room="entrance" />
+			<!--
+				Make sure to put the rooms with no exits first and have all the room
+				in hierarchical order. A room CANNOT reference another room as an
+				exit if it has not been PREVIOUSLY defined! That will lead to a NPE.
+				In other words, the final room cannot not have ANY exits and all
+				rooms are a point of no return.
+			-->
+			<room name="finalroom" daemon="BigBoss">
+			</room>
+			<room name="ontheleft" daemon="Meanny">
+				<exit direction="left" room="finalroom" />
 			</room>
 			<room name="entrance" daemon="Meanny">
+				<exit direction="left" room="ontheleft" />
+			</room>
+			<room name="outside" daemon="none">
+				<exit direction="up" room="entrance" />
 			</room>
 		</Rooms>
 		<Daemons>
 			<daemon name="Meanny" health="100" value="10" attacks="flames,crush" />
+			<daemon name="BigBoss" health="500" value="1000" attacks="crush,BFG" />
 		</Daemons>
-		<Attacks>
+		<Attacks playersDefaultAttack="sword">
 			<attack name="sword" damage="10" daemonOnly="false" />
 			<attack name="flames" damage="20" daemonOnly="false" />
 			<attack name="crush" damage="30" daemonOnly="true" />
+			<attack name="BFG" damage="50" daemonOnly="true" />
 		</Attacks>
 	</GameConfig>
 	<CmdConfig>

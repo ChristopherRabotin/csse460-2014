@@ -69,6 +69,11 @@ public class Daemon {
 		return atks.get(random.nextInt(atks.size()));
 	}
 	
+	public void reset(){
+		health = fullHealth;
+		isAlive = true;
+	}
+	
 	public int getFullHealth() {
 		return fullHealth;
 	}

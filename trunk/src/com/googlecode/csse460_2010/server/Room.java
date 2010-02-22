@@ -31,6 +31,7 @@ public class Room {
 	}
 
 	public void addExit(Room e, String direction) {
+		System.out.println("added room "+e.getName());
 		try {
 			exits.put(stringToDirection(direction), e);
 		} catch (Exception ex) {
@@ -40,18 +41,22 @@ public class Room {
 		}
 	}
 
-	public Room getExit(Directions where){
+	public Room getExit(Directions where) {
 		return exits.get(where);
 	}
-	
-	public String getExitsFormatted(){
+
+	public String getExitsFormatted() {
 		String rtn = "";
-		
+		for (Directions d : exits.keySet()) {
+			Room r = exits.get(d);
+			rtn += directionToString(d) + ":" + r.name + ":"
+					+ r.meanny.getName() + "\n";
+		}
 		return rtn;
 	}
-	
-	public static Directions stringToDirection(String direction){
-		Directions rtn=null;
+
+	public static Directions stringToDirection(String direction) {
+		Directions rtn = null;
 		if (direction.equals("up")) {
 			rtn = Directions.up;
 		} else if (direction.equals("down")) {
@@ -62,6 +67,21 @@ public class Room {
 			rtn = Directions.right;
 		}
 		return rtn;
+	}
+
+	public static String directionToString(Directions d) {
+		switch (d) {
+		case up:
+			return "up";
+		case down:
+			return "down";
+		case left:
+			return "left";
+		case right:
+			return "right";
+		default:
+			return "null";
+		}
 	}
 
 	public String getName() {

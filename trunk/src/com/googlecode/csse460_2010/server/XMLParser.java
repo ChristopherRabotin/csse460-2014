@@ -26,8 +26,9 @@ public class XMLParser {
 	private static HashMap<String, Room> rooms = new HashMap<String, Room>();
 	private static HashMap<String, Attack> attacks = new HashMap<String, Attack>();
 	private static Room defaultRoom;
+	private static Attack playersDefaultAttack;
 	// these two fields are related to the server
-	private static int serverPort, serverMaxConn;
+	private static int serverPort, serverMaxConn, serverRestartTime;
 	private static String serverName, serverWelcomeMsg;
 
 	public static boolean loadNParseXML(String xmlF) {
@@ -58,6 +59,8 @@ public class XMLParser {
 		serverMaxConn = Integer.parseInt(serverRoot
 				.getAttributeValue("maxPlayers"));
 		serverName = serverRoot.getAttributeValue("name");
+		serverRestartTime= Integer.parseInt(serverRoot.getAttributeValue("restartTime"));
+		serverRestartTime *= 1000; // it is defined in seconds but TimerTask works in milliseconds
 		serverWelcomeMsg = protocolRoot.getChildTextNormalize("WelcomeMsg");
 		// now let's convert all the server properties of the welcome message to
 		// their respective values
@@ -79,6 +82,8 @@ public class XMLParser {
 					.getAttributeValue("daemonOnly"));
 			attacks.put(name, new Attack(name, damage, daemonOnly));
 		}
+		playersDefaultAttack = attacks.get(gameRoot.getChild("Attacks")
+				.getAttributeValue("playersDefaultAttack"));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -120,21 +125,24 @@ public class XMLParser {
 			else
 				meanny = null;
 			room = new Room(name, meanny);
+			rooms.put(room.getName(), room); // we add the room to be able to
+			// add the exits
 
-			exitsList = currentRoom.getChildren("exits");
+			exitsList = currentRoom.getChildren("exit");
 			exitsIt = exitsList.iterator();
 			while (exitsIt.hasNext()) {
 				currentExit = (Element) exitsIt.next();
 				room.addExit(rooms.get(currentExit.getAttributeValue("room")),
 						currentExit.getAttributeValue("direction"));
 			}
-			rooms.put(room.getName(), room);
+			rooms.remove(room.getName()); // now we delete the room to update it
+			rooms.put(room.getName(), room); // and update
 
 		}
 		defaultRoom = rooms.get(gameRoot.getChild("Rooms").getAttributeValue(
 				"default"));
-		System.out.println("Default room:"+gameRoot.getChild("Rooms").getAttributeValue(
-		"default"));
+		System.out.println("Default room:"
+				+ gameRoot.getChild("Rooms").getAttributeValue("default"));
 
 	}
 
@@ -251,6 +259,13 @@ public class XMLParser {
 
 	public static Room getDefaultRoom() {
 		return defaultRoom;
+	}
+
+	public static Attack getPlayersDefaultAttack() {
+		return playersDefaultAttack;
+	}
+	public static int getServerRestartTime(){
+		return serverRestartTime;
 	}
 
 }
