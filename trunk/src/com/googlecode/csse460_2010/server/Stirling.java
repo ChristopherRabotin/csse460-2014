@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Stirling is the main game engine. After starting the server, Stirling will
@@ -18,6 +20,7 @@ import java.util.TimerTask;
 public class Stirling {
 	private static ArrayList<Client> players = new ArrayList<Client>();
 	private static String xmlFile = "config.xml";
+	public final static Logger log = Logger.getLogger(Stirling.class.getName());
 
 	/**
 	 * In the main function, Stirling starts by calling the XML parser. If no
@@ -27,40 +30,42 @@ public class Stirling {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		System.out.println("Starting game...");
+		LogHandler lh = new LogHandler(null);
+		log.addHandler(lh);
+		log.setLevel(Level.ALL);
+		log.info("Starting game...");
 		if (args.length > 0) {
 			xmlFile = args[0];
 		}
+		log.fine("Using configuration file " + xmlFile);
 		if (!XMLParser.loadNParseXML(xmlFile)) {
-			System.out.println("Error while loading XML!");
+			log.severe("Error while loading XML!");
 		} else {
-			System.out.println("Loaded XML.");
+			log.info("Loaded XML.");
 		}
 		try {
 			MCServer.startServer();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println("Server returned.");
+		log.info("Server stopped.");
 	}
 
 	@SuppressWarnings("unchecked")
 	synchronized public static void endGame(Client whoasked) {
+		log.info("Player " + whoasked.getPlayer().getName() + " (PlayerId="
+				+ whoasked.getPlayer().getId() + ", ThreadId="
+				+ whoasked.getId() + ") asked to kill the server.");
 		ArrayList<Client> copyOfPlayer = (ArrayList<Client>) players.clone();
 		for (Client c : copyOfPlayer) {
-			try { // we wait for a couple seconds in order for all the multicast
-				// messages to be received
-				if (whoasked.getId() == c.getId()) { // NOTE: we use the
-														// thread's ID
-					// instead of the player's.
-					continue; // we don't kill the person who asked yet
-				}
-				c.queueMsg("MC:Server shutting down. Good bye.");
-				Thread.sleep(10000);
-				c.killClient();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+			// messages to be received
+			if (whoasked.getId() == c.getId()) { // NOTE: we use the
+				// thread's ID
+				// instead of the player's.
+				continue; // we don't kill the person who asked yet
 			}
+			c.queueMsg("MC:Server shutting down. Good bye.");
+			c.killClient();
 		}
 		whoasked.killClient();
 		MCServer.stopServer();
@@ -75,11 +80,15 @@ public class Stirling {
 	synchronized public static void addPlayer(Client p) {
 		multicast("join " + p.getPlayer().getName());
 		players.add(p);
+		log.finest("Added player " + p.getPlayer().getName() + " (PlayerId="
+				+ p.getPlayer().getId() + "; ThreadId=" + p.getId() + ")");
 	}
 
 	synchronized public static void rmPlayer(Client p) {
 		players.remove(p);
 		multicast("quit " + p.getPlayer().getName());
+		log.finest("Removed player " + p.getPlayer().getName() + " (PlayerId="
+				+ p.getPlayer().getId() + "; ThreadId=" + p.getId() + ")");
 	}
 
 	public static int getNoPlayers() {
@@ -101,6 +110,8 @@ public class Stirling {
 	}
 
 	public static String attackDaemon(Player p, Attack a) {
+		log.finest("Player " + p.getName() + " (PlayerId=" + p.getId()
+				+ ") using attack " + a.getName());
 		String rtn = "";
 		Daemon d = p.getRoom().getMeanny();
 		if (!d.isAlive()) {
@@ -112,6 +123,9 @@ public class Stirling {
 			if (p.isBlessed())
 				ouch *= 100;
 			rtn = "hurtd:" + ouch; // hurt daemon
+			log.finest("Player " + p.getName() + " (PlayerId=" + p.getId()
+					+ ") hurt daemon " + d.getName() + " by " + ouch
+					+ " health points.");
 			d.lowerHealth(ouch);
 			p.addPoints(ouch);
 			// after being hit, the daemon responds (if still alive)
@@ -122,10 +136,14 @@ public class Stirling {
 						* d.getAttacks().get(whichOne).getDamage());
 				p.lowerHealth(ouch);
 				rtn += " hurty:" + ouch; // hurt you
+				log.finest("Daemon " + d.getName() + " hurt player "
+						+ p.getName() + " (PlayerId=" + p.getId() + " by "
+						+ ouch + ") health points.");
 				if (!p.isAlive()) {
 					rtn += " deady";
 				}
 			} else {
+				log.finest("... and killed it!");
 				p.addPoints(d.getVictoryPoints());
 				p.setState(Player.States.IDLE);
 			}
@@ -135,19 +153,23 @@ public class Stirling {
 	}
 
 	public static void checkAllDaemonsDead() {
-		boolean allDead;
+		boolean allDead = true;
 		for (String ds : XMLParser.getDaemons().keySet()) {
-			if (XMLParser.getDaemons().get(ds).isAlive())
+			if (XMLParser.getDaemons().get(ds).isAlive()){
 				allDead = false;
+				break; // no need to continue searching, at least one is alive.
+			}
 		}
-		allDead = true;
 		if (allDead) {
+			log.info("All daemons are dead. The server will restart in "
+					+ XMLParser.getServerRestartTime()/1000 + " seconds.");
 			multicast("victory. Reset in " + XMLParser.getServerRestartTime()
 					+ " seconds.");
 			// now we restart the server after X seconds
 			TimerTask resetTask = new TimerTask() {
 				@Override
 				public void run() {
+					log.info("Restarting server now.");
 					// start be setting all the players back to the original
 					// room
 					for (Client c : players) {
@@ -163,6 +185,8 @@ public class Stirling {
 	}
 
 	public static String processClientInput(Player player, String inputLn) {
+		log.finest("Player " + player.getName() + "(id=" + player.getId()
+				+ ") sent {" + inputLn + "}");
 		String[] cmdargs = inputLn.split(" ");
 		String outputLn = "", tmparg = cmdargs[1]; // that's the subcommand
 		if (inputLn.startsWith("go")) { /* GO */

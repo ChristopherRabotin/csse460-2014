@@ -133,7 +133,8 @@ public class Player {
 	public States getState() {
 		// this condition means that another player killed this daemon when both
 		// were in the room
-		if (!room.getMeanny().isAlive()) {
+		Daemon meanny = room.getMeanny();
+		if (meanny != null && !meanny.isAlive()) {
 			state = States.IDLE;
 		}
 		return state;
