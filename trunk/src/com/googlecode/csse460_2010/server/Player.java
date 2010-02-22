@@ -61,6 +61,10 @@ public class Player {
 	public void addPoints(int tba) {
 		points += tba;
 	}
+	
+	public void lowerPoints(int tbl){
+		points -= tbl;
+	}
 
 	/**
 	 * Subtracts health points to the player. If the player has no more points,

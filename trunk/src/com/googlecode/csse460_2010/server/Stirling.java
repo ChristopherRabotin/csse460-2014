@@ -49,6 +49,7 @@ public class Stirling {
 			e.printStackTrace();
 		}
 		log.info("Server stopped.");
+		System.exit(0);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -121,7 +122,7 @@ public class Stirling {
 			float prob = r.nextFloat();// *(1+p.getPoints());
 			int ouch = Math.round(prob * a.getDamage());
 			if (p.isBlessed())
-				ouch *= 100;
+				ouch *= 10;
 			rtn = "hurtd:" + ouch; // hurt daemon
 			log.finest("Player " + p.getName() + " (PlayerId=" + p.getId()
 					+ ") hurt daemon " + d.getName() + " by " + ouch
@@ -162,7 +163,7 @@ public class Stirling {
 		}
 		if (allDead) {
 			log.info("All daemons are dead. The server will restart in "
-					+ XMLParser.getServerRestartTime()/1000 + " seconds.");
+					+ (XMLParser.getServerRestartTime())/1000 + " seconds.");
 			multicast("victory. Reset in " + XMLParser.getServerRestartTime()
 					+ " seconds.");
 			// now we restart the server after X seconds
@@ -178,6 +179,7 @@ public class Stirling {
 					for (String ds : XMLParser.getDaemons().keySet()) {
 						XMLParser.getDaemons().get(ds).reset();
 					}
+					multicast("A new game has started.");
 				}
 			};
 			(new Timer()).schedule(resetTask, XMLParser.getServerRestartTime());
@@ -188,14 +190,14 @@ public class Stirling {
 		log.finest("Player " + player.getName() + "(id=" + player.getId()
 				+ ") sent {" + inputLn + "}");
 		String[] cmdargs = inputLn.split(" ");
-		String outputLn = "", tmparg = cmdargs[1]; // that's the subcommand
+		String outputLn = "", cmdarg = cmdargs[1]; // that's the subcommand
 		if (inputLn.startsWith("go")) { /* GO */
 			if (player.getState() != Player.States.IDLE) {
 				outputLn = "nomove";
 			} else {
 				try {
 					Room newRoom = player.getRoom().getExit(
-							Room.stringToDirection(tmparg));
+							Room.stringToDirection(cmdarg));
 					player.setRoom(newRoom);
 					outputLn = "room:" + newRoom.getName();
 					if (newRoom.getMeanny().isAlive()) {
@@ -203,14 +205,14 @@ public class Stirling {
 								+ newRoom.getMeanny().getName();
 					}
 				} catch (NullPointerException e) {
-					outputLn = "noexit:" + tmparg;
+					outputLn = "noexit:" + cmdarg;
 				}
 			}
 		} else if (inputLn.startsWith("show")) { /* SHOW */
-			if (tmparg.equals("players")) { /* SHOW PLAYERS */
+			if (cmdarg.equals("players")) { /* SHOW PLAYERS */
 				outputLn = "raw\n";
 				outputLn += Stirling.getPlayersFormatted();
-			} else if (tmparg.equals("attacks")) { /* SHOW ATTACKS */
+			} else if (cmdarg.equals("attacks")) { /* SHOW ATTACKS */
 				outputLn = "raw\n";
 				outputLn += "Name\t\tDamage\t\tDaemon reserved\n\n";
 				HashMap<String, Attack> atks = XMLParser.getAttacks();
@@ -221,11 +223,11 @@ public class Stirling {
 							+ "\t\t" + atk.isDaemonReserved() + "\n";
 				}
 
-			} else if (tmparg.equals("points")) { /* SHOW POINTS */
+			} else if (cmdarg.equals("points")) { /* SHOW POINTS */
 				outputLn = "health:" + player.getHealth() + "/"
 						+ player.getFullHealth() + " points:"
 						+ player.getPoints();
-			} else if (tmparg.equals("daemons")) { /* SHOW DAEMONS */
+			} else if (cmdarg.equals("daemons")) { /* SHOW DAEMONS */
 				outputLn = "raw\n";
 				outputLn += "Name\t\tValue\t\tHealth\t\tAttacks\n";
 				HashMap<String, Daemon> dae = XMLParser.getDaemons();
@@ -240,7 +242,7 @@ public class Stirling {
 					}
 					outputLn += "\n";
 				}
-			} else if (tmparg.equals("exits")) { /* SHOW EXITS */
+			} else if (cmdarg.equals("exits")) { /* SHOW EXITS */
 				outputLn = "raw\n";
 				outputLn += player.getRoom().getExitsFormatted();
 			}
@@ -252,7 +254,7 @@ public class Stirling {
 			} else {
 				boolean attacked = false;
 				for (Attack e : player.getAtks()) {
-					if (e.getName().equals(tmparg)) {
+					if (e.getName().equals(cmdarg)) {
 						outputLn = attackDaemon(player, e);
 						attacked = true;
 					}
@@ -260,6 +262,21 @@ public class Stirling {
 				if (!attacked) {
 					outputLn = "nocombat:unkown_attack";
 				}
+			}
+		} else if (inputLn.startsWith("learn")) { /* LEARN */
+			try{
+				Attack tbl = XMLParser.getAttacks().get(cmdarg);
+				if(tbl.isDaemonReserved()){
+					outputLn = "atk:daemononly";
+				}else if(player.getPoints() >= tbl.getDamage()){
+					player.addAttack(tbl);
+					player.lowerPoints(tbl.getDamage());
+					outputLn = "atk:"+cmdarg;
+				}else{
+					outputLn = "atk:nte_points";
+				}
+			}catch (NullPointerException e){
+				outputLn = "atk:unknown_attack";
 			}
 		}
 		return outputLn;
