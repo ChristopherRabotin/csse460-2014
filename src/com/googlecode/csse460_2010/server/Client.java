@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.HashMap;
 import java.util.Stack;
 
 /**
@@ -19,13 +18,18 @@ public class Client extends Thread {
 	private Socket socket = null;
 	private PrintWriter out;
 	private BufferedReader in;
-	private String inputLn, outputLn, tmparg;
-	private String[] cmdargs;
+	private String inputLn, outputLn;
 	private Player me;
 	private Stack<String> msgQ;
 
 	public Client(Socket socket) {
-		super("StirlingZygote#"+Stirling.getNoPlayers());
+		super("StirlingZygote#" + Stirling.getNoPlayers());
+		if(!MCServer.getListening())
+			try {
+				this.finalize();
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
 		this.socket = socket;
 		msgQ = new Stack<String>();
 	}
@@ -38,86 +42,50 @@ public class Client extends Thread {
 
 			me = new Player(in.readLine().trim(), Stirling.getNoPlayers() + 1,
 					1000);
+			me.addAttack(XMLParser.getPlayersDefaultAttack());
 			Stirling.addPlayer(this); // we "register" our selves to the game
 			// engine
 
 			// say hello to the new player
 			out.println(XMLParser.getWelcomeMsg("@", me));
 
-			while ((inputLn = in.readLine().trim()) != null) {
-				// if there are messages pending to be sent (e.g. Multicast
-				// msg), we send them now!
-				while (msgQ.size() > 0) {
-					out.println(msgQ.peek());
-				}
-				// now we read an understand the information sent from the
-				// client
-				if (inputLn.startsWith("bye")) {
-					killClient();
-				} else if(inputLn.startsWith("ping")){
-					// enables to see multicast messages quickly
-					out.println("pong");
-				}else {
-					cmdargs = inputLn.split(" ");
-					tmparg = cmdargs[1]; // that's the subcommand
-					if (inputLn.startsWith("go")) {
-						if (me.getState() != Player.States.IDLE) {
-							outputLn = "nomove";
-						} else {
-							try {
-								Room newRoom = me.getRoom().getExit(
-										Room.stringToDirection(tmparg));
-								me.setRoom(newRoom);
-							} catch (NullPointerException e) {
-								outputLn = "noexit " + tmparg;
-							}
-						}
-					} else if (inputLn.startsWith("show")) {
-						if (tmparg.equals("players")) {
-							outputLn = "raw\n";
-							outputLn += Stirling.getPlayersFormatted();
-						} else if (tmparg.equals("attacks")) {
-							outputLn = "raw\n";
-							outputLn += "Name\t\tDamage\t\tDaemon reserved\n\n";
-							HashMap<String, Attack> atks = XMLParser
-									.getAttacks();
-							Attack atk;
-							for (String a : atks.keySet()) {
-								atk = atks.get(a);
-								outputLn += atk.getName() + "\t\t"
-										+ atk.getDamage() + "\t\t"
-										+ atk.isDaemonReserved()+"\n";
-							}
-
-						} else if (tmparg.equals("points")) {
-							outputLn = "points " + me.getPoints();
-						} else if (tmparg.equals("daemons")) {
-							outputLn = "raw\n";
-							outputLn += "Name\t\tValue\t\tHealth\t\tAttacks\n";
-							HashMap<String, Daemon> dae = XMLParser
-									.getDaemons();
-							Daemon tmp;
-							for (String dn : dae.keySet()) {
-								tmp = dae.get(dn);
-								outputLn += tmp.getName() + "\t\t"
-										+ tmp.getVictoryPoints() + "\t\t"
-										+ tmp.getHealth() + "/"
-										+ tmp.getFullHealth() + "\t\t";
-								for (Attack atk : tmp.getAttacks()) {
-									outputLn += atk.getName() + " ";
-								}
-								outputLn +="\n";
-							}
-						} else if (tmparg.equals("exits")) {
-							outputLn = "raw\n";
-							outputLn += me.getRoom().getExitsFormatted();
-						}
+			try {
+				while ((inputLn = in.readLine().trim()) != null) {
+					// if there are messages pending to be sent (e.g. Multicast
+					// msg), we send them now!
+					while (msgQ.size() > 0) {
+						out.println(msgQ.peek());
+						msgQ.remove(0); // it's a sloppy implementation of a
+						// FIFO but it works.
 					}
+					// now we read an understand the information sent from the
+					// client
+					if (inputLn.startsWith("bye")) {
+						killClient();
+					} else if (inputLn.startsWith("ping")) {
+						// enables to see multicast messages quickly
+						out.println("pong");
+					} else if (inputLn.startsWith("godmode")) {
+						me.beatify();
+						out.println("Roger.");
+					} else if (inputLn.startsWith("killserver")) {
+						if (me.isBlessed()) {
+							out.println("granted"); // we send out the message
+													// directly because the
+													// server WILL shut down
+							Stirling.endGame(this);
+						} else {
+							outputLn = "denied";
+						}
+					} else {
+						outputLn = Stirling.processClientInput(me, inputLn);
+					}
+					if(outputLn != null) out.println(outputLn);
+					outputLn = ""; // reset the value
 				}
-				out.println(outputLn);
-				outputLn = ""; // reset the value
+			} catch (IOException e) {
+				killClient();
 			}
-			killClient();
 
 		} catch (IOException e) {
 			e.printStackTrace();

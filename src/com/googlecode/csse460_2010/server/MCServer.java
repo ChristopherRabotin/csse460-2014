@@ -17,18 +17,16 @@ public class MCServer {
 			System.exit(-1);
 		}
 
-		while (listening){
+		while (listening && Stirling.getNoPlayers() < XMLParser.getServerMaxConn()-1){
 			new Client(serverSocket.accept()).start();
-			try {
-				Thread.sleep(1);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
 		}
 
 		serverSocket.close();
 	}
 	public static void stopServer(){
 		listening = false;
+	}
+	public static boolean getListening(){
+		return listening;
 	}
 }

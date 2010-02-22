@@ -17,9 +17,10 @@ public class Player {
 	private int points, health;
 	private final int fullHealth;
 	private final long connectionDate;
-	private ArrayList<Attack> atks;
+	private ArrayList<Attack> atks = new ArrayList<Attack>();
 	private final String name;
 	private final int id;
+	private boolean isAlive, isBlessed = false;
 
 	/**
 	 * Player constructor.
@@ -33,10 +34,12 @@ public class Player {
 		this.name = name;
 		this.id = id;
 		this.fullHealth = fullHealth;
+		health = fullHealth;
 		room = XMLParser.getDefaultRoom();
 		points = 0;
 		connectionDate = System.currentTimeMillis();
-		setState(States.IDLE);
+		state = States.IDLE;
+		isAlive = true;
 	}
 
 	/**
@@ -68,22 +71,27 @@ public class Player {
 	 *            points
 	 */
 	public void lowerHealth(int ouch) {
-		health -= ouch;
-		if (health <= 0)
-			died();
+		if (!isBlessed) {
+			health -= ouch;
+			if (health <= 0)
+				isAlive = false;
+		} else {
+			health -= ouch / 10;
+		}
 	}
 
-	/**
-	 * Determines what happens when a player dies.
-	 */
-	private void died() {
-		// TODO What happens when the player dies?
-
+	public void reset() {
+		health = fullHealth;
+		room = XMLParser.getDefaultRoom();
+		isAlive = true;
+		state = States.IDLE;
 	}
 
 	// Generated getters and setters
 	public void setRoom(Room r) {
 		room = r;
+		if (r.getMeanny().isAlive())
+			state = States.COMBAT;
 	}
 
 	public Room getRoom() {
@@ -123,7 +131,23 @@ public class Player {
 	}
 
 	public States getState() {
+		// this condition means that another player killed this daemon when both
+		// were in the room
+		if (!room.getMeanny().isAlive()) {
+			state = States.IDLE;
+		}
 		return state;
 	}
 
+	public boolean isAlive() {
+		return isAlive;
+	}
+
+	public void beatify() {
+		isBlessed = true;
+	}
+
+	public boolean isBlessed() {
+		return isBlessed;
+	}
 }
