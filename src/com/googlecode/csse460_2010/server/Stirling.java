@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  */
 public class Stirling {
 	private static ArrayList<Client> players = new ArrayList<Client>();
-	private static String xmlFile = "config.xml";
+	private static String xmlFile = "serverConf.xml";
 	public final static Logger log = Logger.getLogger(Stirling.class.getName());
 
 	/**
@@ -38,17 +38,23 @@ public class Stirling {
 			xmlFile = args[0];
 		}
 		log.fine("Using configuration file " + xmlFile);
-		if (!XMLParser.loadNParseXML(xmlFile)) {
-			log.severe("Error while loading XML!");
-		} else {
+		try {
+			XMLParser.loadNParseXML(xmlFile);
 			log.info("Loaded XML.");
+		} catch (Throwable e) {
+			log.severe("Error while loading XML:\n" + e);
 		}
 		try {
 			MCServer.startServer();
+			/*
+			 * startServer is blocking function. It will NOT return until an
+			 * order has been given.
+			 */
+			log.info("Server stopped.");
 		} catch (IOException e) {
+			log.severe("Error while starting server:\n" + e);
 			e.printStackTrace();
 		}
-		log.info("Server stopped.");
 		System.exit(0);
 	}
 
@@ -60,10 +66,12 @@ public class Stirling {
 		ArrayList<Client> copyOfPlayer = (ArrayList<Client>) players.clone();
 		for (Client c : copyOfPlayer) {
 			// messages to be received
-			if (whoasked.getId() == c.getId()) { // NOTE: we use the
-				// thread's ID
-				// instead of the player's.
-				continue; // we don't kill the person who asked yet
+			if (whoasked.getId() == c.getId()) {
+				/*
+				 * NOTE: we use the thread's ID instead of the player's.
+				 * We also do not yet kill the player who asked to kill the server.
+				 */
+				continue;
 			}
 			c.queueMsg("MC:Server shutting down. Good bye.");
 			c.killClient();
@@ -156,14 +164,14 @@ public class Stirling {
 	public static void checkAllDaemonsDead() {
 		boolean allDead = true;
 		for (String ds : XMLParser.getDaemons().keySet()) {
-			if (XMLParser.getDaemons().get(ds).isAlive()){
+			if (XMLParser.getDaemons().get(ds).isAlive()) {
 				allDead = false;
 				break; // no need to continue searching, at least one is alive.
 			}
 		}
 		if (allDead) {
 			log.info("All daemons are dead. The server will restart in "
-					+ (XMLParser.getServerRestartTime())/1000 + " seconds.");
+					+ (XMLParser.getServerRestartTime()) / 1000 + " seconds.");
 			multicast("victory. Reset in " + XMLParser.getServerRestartTime()
 					+ " seconds.");
 			// now we restart the server after X seconds
@@ -201,7 +209,7 @@ public class Stirling {
 					player.setRoom(newRoom);
 					outputLn = "room:" + newRoom.getName();
 					if (newRoom.getMeanny().isAlive()) {
-						outputLn += " state:fighting_"
+						outputLn += " fighting:"
 								+ newRoom.getMeanny().getName();
 					}
 				} catch (NullPointerException e) {
@@ -222,6 +230,7 @@ public class Stirling {
 					outputLn += atk.getName() + "\t\t" + atk.getDamage()
 							+ "\t\t" + atk.isDaemonReserved() + "\n";
 				}
+				outputLn += "\nendraw";
 
 			} else if (cmdarg.equals("points")) { /* SHOW POINTS */
 				outputLn = "health:" + player.getHealth() + "/"
@@ -240,17 +249,18 @@ public class Stirling {
 					for (Attack atk : tmp.getAttacks()) {
 						outputLn += atk.getName() + " ";
 					}
-					outputLn += "\n";
+					outputLn += "\nendraw";
 				}
 			} else if (cmdarg.equals("exits")) { /* SHOW EXITS */
 				outputLn = "raw\n";
 				outputLn += player.getRoom().getExitsFormatted();
+				outputLn += "\nendraw";
 			}
 		} else if (inputLn.startsWith("attack")) { /* ATTACK */
 			if (player.getState() != Player.States.COMBAT) {
-				outputLn = "nocombat:nobody";
+				outputLn = "nocombatBnobody";
 			} else if (!player.isAlive()) {
-				outputLn = "nocombat:deady";
+				outputLn = "nocombatBdeady";
 			} else {
 				boolean attacked = false;
 				for (Attack e : player.getAtks()) {
@@ -260,23 +270,23 @@ public class Stirling {
 					}
 				}
 				if (!attacked) {
-					outputLn = "nocombat:unkown_attack";
+					outputLn = "nocombatBunkown";
 				}
 			}
 		} else if (inputLn.startsWith("learn")) { /* LEARN */
-			try{
+			try {
 				Attack tbl = XMLParser.getAttacks().get(cmdarg);
-				if(tbl.isDaemonReserved()){
-					outputLn = "atk:daemononly";
-				}else if(player.getPoints() >= tbl.getDamage()){
+				if (tbl.isDaemonReserved()) {
+					outputLn = "atkBdaemononly:" + cmdarg;
+				} else if (player.getPoints() >= tbl.getDamage()) {
 					player.addAttack(tbl);
 					player.lowerPoints(tbl.getDamage());
-					outputLn = "atk:"+cmdarg;
-				}else{
-					outputLn = "atk:nte_points";
+					outputLn = "atk:" + cmdarg;
+				} else {
+					outputLn = "atkBnte_points:" + cmdarg;
 				}
-			}catch (NullPointerException e){
-				outputLn = "atk:unknown_attack";
+			} catch (NullPointerException e) {
+				outputLn = "atkBunknown:" + cmdarg;
 			}
 		}
 		return outputLn;
