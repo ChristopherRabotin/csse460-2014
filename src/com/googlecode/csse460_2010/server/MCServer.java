@@ -11,9 +11,9 @@ public class MCServer {
 
 		try {
 			serverSocket = new ServerSocket(XMLParser.getServerPort());
-			System.out.println("Starting server");
+			Stirling.log.info("Starting server");
 		} catch (IOException e) {
-			System.err.println("Could not listen on port: "+XMLParser.getServerPort()+".");
+			Stirling.log.severe("Could not listen on port: "+XMLParser.getServerPort()+".");
 			System.exit(-1);
 		}
 

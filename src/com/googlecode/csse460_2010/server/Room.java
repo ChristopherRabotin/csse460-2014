@@ -31,11 +31,11 @@ public class Room {
 	}
 
 	public void addExit(Room e, String direction) {
-		System.out.println("added room "+e.getName());
 		try {
 			exits.put(stringToDirection(direction), e);
+			Stirling.log.config("Added exit "+e.getName() + " "+ direction + " from "+this.name);
 		} catch (Exception ex) {
-			System.err.println("Error in XML! The direction " + direction
+			Stirling.log.severe("Error in XML! The direction " + direction
 					+ " is invalid!");
 			ex.printStackTrace();
 		}
@@ -65,6 +65,8 @@ public class Room {
 			rtn = Directions.left;
 		} else if (direction.equals("right")) {
 			rtn = Directions.right;
+		} else{
+			Stirling.log.severe("Asked for direction "+direction+" which doesn't exist!");
 		}
 		return rtn;
 	}
@@ -80,6 +82,7 @@ public class Room {
 		case right:
 			return "right";
 		default:
+			Stirling.log.severe("Asked for direction "+d+" which doesn't exist!");
 			return "null";
 		}
 	}

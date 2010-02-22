@@ -24,14 +24,16 @@ public class Client extends Thread {
 
 	public Client(Socket socket) {
 		super("StirlingZygote#" + Stirling.getNoPlayers());
-		if(!MCServer.getListening())
+		if (!MCServer.getListening())
 			try {
+				Stirling.log.info("Server should be dead but isn't!");
 				this.finalize();
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
 		this.socket = socket;
 		msgQ = new Stack<String>();
+		Stirling.log.finest("New client");
 	}
 
 	public void run() {
@@ -71,8 +73,8 @@ public class Client extends Thread {
 					} else if (inputLn.startsWith("killserver")) {
 						if (me.isBlessed()) {
 							out.println("granted"); // we send out the message
-													// directly because the
-													// server WILL shut down
+							// directly because the
+							// server WILL shut down
 							Stirling.endGame(this);
 						} else {
 							outputLn = "denied";
@@ -80,7 +82,8 @@ public class Client extends Thread {
 					} else {
 						outputLn = Stirling.processClientInput(me, inputLn);
 					}
-					if(outputLn != null) out.println(outputLn);
+					if (outputLn != null)
+						out.println(outputLn);
 					outputLn = ""; // reset the value
 				}
 			} catch (IOException e) {

@@ -59,12 +59,17 @@ public class XMLParser {
 		serverMaxConn = Integer.parseInt(serverRoot
 				.getAttributeValue("maxPlayers"));
 		serverName = serverRoot.getAttributeValue("name");
-		serverRestartTime= Integer.parseInt(serverRoot.getAttributeValue("restartTime"));
-		serverRestartTime *= 1000; // it is defined in seconds but TimerTask works in milliseconds
+		serverRestartTime = Integer.parseInt(serverRoot
+				.getAttributeValue("restartTime"));
+		serverRestartTime *= 1000; // it is defined in seconds but TimerTask
+		// works in milliseconds
 		serverWelcomeMsg = protocolRoot.getChildTextNormalize("WelcomeMsg");
 		// now let's convert all the server properties of the welcome message to
 		// their respective values
 		serverWelcomeMsg = getWelcomeMsg("$", XMLParser.class);
+		Stirling.log.config("Server has the following configuration:\nport = "
+				+ serverPort + "\nname = " + serverName + "\nmaxConn = "
+				+ serverMaxConn + "\nRestart time = " + serverRestartTime);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -141,7 +146,7 @@ public class XMLParser {
 		}
 		defaultRoom = rooms.get(gameRoot.getChild("Rooms").getAttributeValue(
 				"default"));
-		System.out.println("Default room:"
+		Stirling.log.config("Default room:"
 				+ gameRoot.getChild("Rooms").getAttributeValue("default"));
 
 	}
@@ -264,7 +269,8 @@ public class XMLParser {
 	public static Attack getPlayersDefaultAttack() {
 		return playersDefaultAttack;
 	}
-	public static int getServerRestartTime(){
+
+	public static int getServerRestartTime() {
 		return serverRestartTime;
 	}
 
