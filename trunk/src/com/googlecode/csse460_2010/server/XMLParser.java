@@ -31,19 +31,8 @@ public class XMLParser {
 	private static int serverPort, serverMaxConn, serverRestartTime;
 	private static String serverName, serverWelcomeMsg;
 
-	public static boolean loadNParseXML(String xmlF) {
-		boolean error = false;
-		try {
-			xmlDoc = (new SAXBuilder()).build(new File(xmlF));
-		} catch (JDOMException e) {
-			e.printStackTrace();
-			error = true;
-		} catch (IOException e) {
-			e.printStackTrace();
-			error = true;
-		}
-		if (error)
-			return false;
+	public static void loadNParseXML(String xmlF) throws JDOMException, IOException{
+		xmlDoc = (new SAXBuilder()).build(new File(xmlF));
 		serverRoot = xmlDoc.getRootElement().getChild("ServerConfig");
 		protocolRoot = xmlDoc.getRootElement().getChild("Protocol");
 		parseServerConf();
@@ -51,7 +40,6 @@ public class XMLParser {
 		parseAttacks();
 		parseDaemons();
 		parseRooms();
-		return true;
 	}
 
 	private static void parseServerConf() {

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data>
+	<Cnx host="localhost" port="1024" timeout="2000" />
+	<Cmds>
+		<!--
+			The client attribute is what should be typed by the user. The server
+			attribute is what will be sent to the server. The content is the help
+			section. The clientValid attribute of the args element should be
+			typed by the user. The serverValid is what will be sent to the
+			server. A star (*) corresponds to any value.
+		-->
+		<cmd client="move" server="go">
+			<args clientValid="north,south,east,west" serverValid="up,down,left,right" />
+			Followed by the direction up/down/left/right enable you to move from
+			one room to another.
+		</cmd>
+		<cmd client="show" server="show">
+			<args serverValid="attacks,daemons,players,points" clientValid="attacks,daemons,players,points" />
+			Followed by either 'attacks', 'daemons', 'players' or 'points'.
+		</cmd>
+		<cmd client="learn" server="learn">
+			<args serverValid="*" clientValid="*" />
+			Followed by the attack you wish to learn.
+		</cmd>
+	</Cmds>
+	<GameMsgs>
+		<!--
+			The content of the messages is what will be printed out to the user.
+			Words preceded by a $ correspond to fields in the corresponding
+			class. @ correspond to the string following the message sent by the
+			server.
+		-->
+		<ClientMsg name="welcome">
+			Welcome to the game! Please enter your name:
+		</ClientMsg>
+		<ClientMsg name="nameThx">
+			Thank you! We are now establishing a connection with $cnxHost
+			on port $cnxPort. The timeout is set to $cnxTimeout.
+		</ClientMsg>
+		<ServerMsg for="nomove">
+			You may not flee from your current combat. Be victorious and you will be able to move. 
+		</ServerMsg>
+		<ServerMsg for="noexit">
+			No such exit: $latestDirection from $room.
+		</ServerMsg>
+		<ServerMsg for="fighting">
+			You are now fighting daemon @!
+		</ServerMsg>
+		<ServerMsg for="room">
+			Welcome to room @.
+		</ServerMsg>
+		<ServerMsg for="health">
+			You have @ health points.
+		</ServerMsg>
+		<ServerMsg for="points">
+			You have @ points. These can be used to learn new attacks.
+		</ServerMsg>
+		<ServerMsg for="nocombatBnobody">
+			There is no one to fight with.
+		</ServerMsg>
+		<ServerMsg for="nocombatBdeady">
+			You may not combat if you are dead.
+		</ServerMsg>
+		<ServerMsg for="nocombatBunkown">
+			The attack $latestAttack is unknown or you haven't learned it yet.
+		</ServerMsg>
+		<ServerMsg for="atk">
+			You have just learned how to use attack @!
+		</ServerMsg>
+		<ServerMsg for="atkBnte_points">
+			You do not have enough points to learn @.
+		</ServerMsg>
+		<ServerMsg for="atkBdaemononly">
+			The attack @ can only be used by daemons.
+		</ServerMsg>
+		<ServerMsg for="atkBunknown">
+			The attack @ does not exists.
+		</ServerMsg>
+	</GameMsgs>
+</data>
