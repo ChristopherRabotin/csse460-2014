@@ -18,8 +18,7 @@
 			public.
 		-->
 		<WelcomeMsg>
-			Hello @name, welcome to $serverName! You are player #@id
-			of $serverMaxConn.
+			welcome:$serverName
 		</WelcomeMsg>
 	</Protocol>
 	<GameConfig>

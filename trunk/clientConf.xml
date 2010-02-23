@@ -8,8 +8,12 @@
 			section. The clientValid attribute of the args element should be
 			typed by the user. The serverValid is what will be sent to the
 			server. A star (*) corresponds to any value.
+			If there is a special attribute, it corresponds to the variable in which
+			the client input will be stored (in Client.java). Make sure that variable
+			is defined as a String in Client.java or the reflection will lead to an
+			error.
 		-->
-		<cmd client="move" server="go">
+		<cmd client="move" server="go" special="latestDirection">
 			<args clientValid="north,south,east,west" serverValid="up,down,left,right" />
 			Followed by the direction up/down/left/right enable you to move from
 			one room to another.
@@ -17,6 +21,10 @@
 		<cmd client="show" server="show">
 			<args serverValid="attacks,daemons,players,points" clientValid="attacks,daemons,players,points" />
 			Followed by either 'attacks', 'daemons', 'players' or 'points'.
+		</cmd>
+		<cmd client="fight" server="attack" special="latestAttack">
+			<args serverValid="*" clientValid="*" />
+			Followed by the attack you wish to use on the daemon in the room.
 		</cmd>
 		<cmd client="learn" server="learn">
 			<args serverValid="*" clientValid="*" />
@@ -37,6 +45,15 @@
 			Thank you! We are now establishing a connection with $cnxHost
 			on port $cnxPort. The timeout is set to $cnxTimeout.
 		</ClientMsg>
+		<ClientMsg name="input">
+			Please enter your next move:
+		</ClientMsg>
+		<ClientMsg name="invalid">
+			Invalid command. Type help for more information.
+		</ClientMsg>
+		<ServerMsg for="welcome">
+			Welcome to @. 
+		</ServerMsg>
 		<ServerMsg for="nomove">
 			You may not flee from your current combat. Be victorious and you will be able to move. 
 		</ServerMsg>

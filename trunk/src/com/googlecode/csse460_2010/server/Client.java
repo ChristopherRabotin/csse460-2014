@@ -50,7 +50,8 @@ public class Client extends Thread {
 
 			// say hello to the new player
 			out.println(XMLParser.getWelcomeMsg("@", me));
-
+			out.println("room:" + me.getRoom().getName());
+			
 			try {
 				while ((inputLn = in.readLine().trim()) != null) {
 					// if there are messages pending to be sent (e.g. Multicast
