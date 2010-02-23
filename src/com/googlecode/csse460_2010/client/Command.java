@@ -1,7 +1,7 @@
 package com.googlecode.csse460_2010.client;
 
 public class Command {
-	private final String clientCmd, serverCmd, helpMsg;
+	private final String clientCmd, serverCmd, helpMsg, reflectVariable;
 	private final String[] clientArgs, serverArgs;
 
 	/**
@@ -19,12 +19,13 @@ public class Command {
 	 *            the valid arguments on the server side, separated by a comma
 	 */
 	public Command(String clientCmd, String serverCmd, String helpMsg,
-			String clientArgs, String serverArgs) {
+			String clientArgs, String serverArgs, String special) {
 		this.clientCmd = clientCmd;
 		this.serverCmd = serverCmd;
 		this.helpMsg = helpMsg;
 		this.clientArgs = clientArgs.split(",");
 		this.serverArgs = serverArgs.split(",");
+		this.reflectVariable = special;
 	}
 
 	/**
@@ -51,6 +52,10 @@ public class Command {
 
 	public String getHelpMsg() {
 		return helpMsg;
+	}
+	
+	public String getReflectVar(){
+		return reflectVariable;
 	}
 
 	@Override

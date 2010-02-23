@@ -51,7 +51,8 @@ public class XMLParser {
 			cmd = new Command(current.getAttributeValue("client"), current
 					.getAttributeValue("server"), current.getTextNormalize(),
 					argsXML.getAttributeValue("serverValid"), argsXML
-							.getAttributeValue("clientValid"));
+							.getAttributeValue("clientValid"), argsXML
+							.getAttributeValue("special"));
 			cmds.put(current.getAttributeValue("client"), cmd);
 		}
 	}
@@ -66,14 +67,14 @@ public class XMLParser {
 		Element current;
 		while (msgsXMLIt.hasNext()) {
 			current = (Element) msgsXMLIt.next();
-			clientMsgs.put(current.getAttributeValue("id"), current
+			clientMsgs.put(current.getAttributeValue("name"), current
 					.getTextNormalize());
 		}
 		/*
 		 * Then we get the messages which are related to the information sent by
 		 * the server.
 		 */
-		msgsXML = gameMsgRoot.getChildren("message");
+		msgsXML = gameMsgRoot.getChildren("ServerMsg");
 		msgsXMLIt = msgsXML.iterator();
 		while (msgsXMLIt.hasNext()) {
 			current = (Element) msgsXMLIt.next();
@@ -90,7 +91,7 @@ public class XMLParser {
 	 *            the message to be parsed by the function
 	 * @param cls
 	 *            the class which contains the fields of the text variables
-	 * @return
+	 * @return the parsed string
 	 */
 	@SuppressWarnings("unchecked")
 	public static String parseMsg(String msg, Class cls) {
@@ -140,15 +141,32 @@ public class XMLParser {
 		return cnxPort;
 	}
 
-	public static HashMap<String, Command> getCmds() {
-		return cmds;
+	public static String getClientMsg(String key)
+			throws IllegalArgumentException {
+		try {
+			return clientMsgs.get(key);
+		} catch (NullPointerException e) {
+			throw new IllegalArgumentException(key
+					+ " is not a valid client message!");
+		}
 	}
 
-	public static HashMap<String, String> getServerMsgs() {
-		return serverMsgs;
+	public static String getServerMsg(String key)
+			throws IllegalArgumentException {
+		try {
+			return serverMsgs.get(key);
+		} catch (NullPointerException e) {
+			throw new IllegalArgumentException(key
+					+ " is not a valid server message!");
+		}
 	}
 
-	public static HashMap<String, String> getClientMsgs() {
-		return clientMsgs;
+	public static Command getCmd(String key) throws IllegalArgumentException {
+		try {
+			return cmds.get(key);
+		} catch (NullPointerException e) {
+			throw new IllegalArgumentException(key
+					+ " is not a valid command.");
+		}
 	}
 }
