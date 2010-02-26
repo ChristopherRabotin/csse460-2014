@@ -195,7 +195,7 @@ public class XMLParser {
 	/**
 	 * Getter for all the daemons defined in the server configuration XML file.
 	 * 
-	 * @return
+	 * @return daemons
 	 */
 	public static HashMap<String, Daemon> getDaemons() {
 		return daemons;
