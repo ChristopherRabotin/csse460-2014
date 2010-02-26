@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+This is the client configuration XML file.
+All the second level elements are necessary.  -->
 <data>
+	<!-- For the Cnx element, host, port and timeout are necessary. -->
 	<Cnx host="localhost" port="1024" timeout="2000" />
+	<!-- 
+		 For the Cmds element, the predefined elements are necessary unless the 
+		 Server code was changed.
+	-->
 	<Cmds>
 		<!--
 			The client attribute is what should be typed by the user. The server
 			attribute is what will be sent to the server. The content is the help
 			section. The clientValid attribute of the args element should be
 			typed by the user. The serverValid is what will be sent to the
-			server. A star (*) corresponds to any value.
+			server. A star (*) corresponds to any value. If the value is "none", then
+			the user must not input any argument when using that particular command.
 			If there is a special attribute, it corresponds to the variable in which
 			the client input will be stored (in Client.java). Make sure that variable
 			is defined as a String in Client.java or the reflection will lead to an
@@ -30,12 +39,24 @@
 			<args serverValid="*" clientValid="*" />
 			Followed by the attack you wish to learn.
 		</cmd>
+		<cmd client="godmode" server="godmode">
+			<args serverValid="none" clientValid="*"/>
+			The player's attack are ten times or powerful and his resistance to damage is ten times higher.
+		</cmd>
+		<cmd client="quit" sever="bye">
+			<args serverValid="none" clientValid="*"/>
+			If the client wishes to quit the game.
+		</cmd>
 	</Cmds>
+	<!--
+		The predefined ClientMsg are necessary. The predefined ServerMsg are
+		necessary unless the Server code has been altered. 
+	 -->
 	<GameMsgs>
 		<!--
 			The content of the messages is what will be printed out to the user.
 			Words preceded by a $ correspond to fields in the corresponding
-			class. @ correspond to the string following the message sent by the
+			class. @ correspond to the second part of the message sent by the
 			server.
 		-->
 		<ClientMsg name="welcome">
