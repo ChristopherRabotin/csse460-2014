@@ -1,5 +1,12 @@
 package com.googlecode.csse460_2010.client;
 
+/**
+ * This class stores all the available and valid commands defined in the XML
+ * file.
+ * 
+ * @author Christopher Rabotin
+ * 
+ */
 public class Command {
 	private final String clientCmd, serverCmd, helpMsg, reflectVariable;
 	private final String[] clientArgs, serverArgs;
@@ -40,31 +47,56 @@ public class Command {
 	 */
 	public String toServerCmd(String arg) throws IllegalArgumentException {
 		String srvArg = null;
-		for (int i = 0; i < clientArgs.length; i++) {
-			if (clientArgs[i].equals(arg))
-				srvArg = serverArgs[i];
-		}
-		if (srvArg == null)
+		if (serverArgs[0].equals("none")) {
+			return serverCmd;
+		} else if (clientArgs[0].equals("*")) {
+			if (arg != null && !arg.equals("")) {
+				return serverCmd + " " + arg;
+			}
 			throw new IllegalArgumentException(arg
 					+ " is not a valid argument for " + this.toString());
-		return serverCmd + " " + srvArg;
+		} else {
+			for (int i = 0; i < clientArgs.length; i++) {
+				if (clientArgs[i].equals(arg))
+					srvArg = serverArgs[i];
+			}
+			if (srvArg == null)
+				throw new IllegalArgumentException(arg
+						+ " is not a valid argument for " + this.toString());
+			return serverCmd + " " + srvArg;
+		}
 	}
 
+	/**
+	 * Getter of HelpMsg: the help message, i.e. the text contained in between
+	 * the two delimiters of &lt;cmd&gt;.
+	 * 
+	 * @return helpMsg
+	 */
 	public String getHelpMsg() {
 		return helpMsg;
 	}
-	
-	public String getReflectVar(){
+
+	/**
+	 * Getter for the reflection variable, i.e. the name of the variable on the
+	 * Client class.
+	 * 
+	 * @return reflectVariable
+	 */
+	public String getReflectVar() {
 		return reflectVariable;
 	}
 
+	/**
+	 * Overrides the toString function of Object.
+	 */
 	@Override
 	public String toString() {
-		String rtn = clientCmd+" [";
-		for (String tmp: clientArgs){
-			rtn += tmp+"|";
+		String rtn = clientCmd + " [";
+		for (String tmp : clientArgs) {
+			rtn += tmp + "|";
 		}
-		//TODO remove the trailing |
-		return rtn+"]";
+		// TODO remove the trailing |
+		return rtn + "]";
 	}
 }
