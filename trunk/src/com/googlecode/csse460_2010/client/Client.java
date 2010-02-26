@@ -10,6 +10,13 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 
+/**
+ * This is the main class of the Client part of the project. As the
+ * documentation specifies it, there are no input arguments necessary.
+ * 
+ * @author Christopher Rabotin
+ * 
+ */
 public class Client {
 	static private int port, timeout;
 	static private String host, name, inputLn, outputLn;
@@ -26,6 +33,22 @@ public class Client {
 	@SuppressWarnings("unused")
 	static private String room, latestDirection, latestAttack;
 
+	/**
+	 * This is the main function. No arguments are necessary.
+	 * <ul>
+	 * <li><b>Initialization:</b> load and parse the configuration file
+	 * (clientConf.xml). Then read host, port and timeout configuration.</li>
+	 * <li><b>Game startup:</b> print the welcome message and ask for the player
+	 * his/her name. Then connect to the host and send it the name of the player
+	 * (as defined in the server protocol).</li>
+	 * <li><b>Game play:</b> ask for a user input and read output from the
+	 * server. See documentation for processClientInput() and
+	 * processServerMsg(String).</li>
+	 * </ul>
+	 * 
+	 * @param args
+	 *            Unused.
+	 */
 	public static void main(String[] args) {
 		/*
 		 * We start by reading the XML file to communicate with the server.
@@ -45,7 +68,8 @@ public class Client {
 		 */
 		System.out.println(XMLParser.getClientMsg("welcome"));
 		try {
-			name = new BufferedReader(new InputStreamReader(System.in)).readLine();
+			name = new BufferedReader(new InputStreamReader(System.in))
+					.readLine();
 		} catch (IOException e1) {
 			e1.printStackTrace();
 			System.exit(0);
@@ -59,15 +83,15 @@ public class Client {
 			skt = new Socket();
 
 			/*
-			 * This method will block no more than timeoutMs. If the timeout
-			 * occurs, SocketTimeoutException is thrown.
+			 * This method will block no more than timeout (in milliseconds). If
+			 * the timeout occurs, SocketTimeoutException is thrown.
 			 */
 			skt.connect(sockaddr, timeout);
 			readFromSkt = new BufferedReader(new InputStreamReader(skt
 					.getInputStream()));
 			writeToSkt = new PrintWriter(skt.getOutputStream(), true);
 
-			writeToSkt.println("t");
+			writeToSkt.println(name);
 			while ((inputLn = readFromSkt.readLine()) != null) {
 				processServerMsg(inputLn);
 				outputLn = processClientInput();
@@ -77,18 +101,34 @@ public class Client {
 			}
 
 			readFromSkt.close();
+			writeToSkt.close();
 		} catch (Throwable e) {
 			e.printStackTrace();
 			System.exit(0);
 		}
 	}
 
+	/**
+	 * This function processed the client input. It starts by printing the
+	 * message to ask the user for his/her input. After reading the input, the
+	 * function extracts the <i>command</i> part and the <i>argument</i> part of
+	 * the input. The command part corresponds to the first word (each words are
+	 * considered separated by a space). What is called the argument is the
+	 * second word. Then the function calls XMLParser to get the corresponding
+	 * Command instance. Using reflection (java.lang.reflect) if the reflection
+	 * variable of the given Command instance is not null, we store in the
+	 * correct variable the <i>argument</i> of the input being processed.
+	 * Finally, we call the toServerCmd() method of Command instance.
+	 * 
+	 * @return the input of the user <i>translated</i> into the server protocol
+	 */
 	private static String processClientInput() {
 		System.out.println(XMLParser.getClientMsg("input"));
 		String toServer = null, in, cmd, arg, reflectVar;
 		Field fd;
 		try {
-			in = new BufferedReader(new InputStreamReader(System.in)).readLine();
+			in = new BufferedReader(new InputStreamReader(System.in))
+					.readLine();
 			cmd = in.split(" ")[0];
 			arg = in.split(" ")[1];
 			Command c = XMLParser.getCmd(cmd);
@@ -111,12 +151,32 @@ public class Client {
 		} catch (IllegalArgumentException e) {
 			System.out.println(XMLParser.getClientMsg("invalid"));
 			System.err.println(e);
-		} catch (IOException e){
-			System.err.println("Unable to read from input at this time!\n"+e);
+		} catch (IOException e) {
+			System.err.println("Unable to read from input at this time!\n" + e);
 		}
 		return toServer;
 	}
 
+	/**
+	 * This method processed the information sent by the server to the client.
+	 * The information is processed line by line. There are two kinds of data
+	 * sent by the server: the <i>raw</i> data and the <i>non-raw</i> data. Data
+	 * is considered <i>raw</i> when the first and last line are respectively
+	 * <b>raw</b> and <b>endraw</b>. If the data is <i>raw</i> we simply display
+	 * it to the player. Otherwise, it is a standard protocol message. Non-raw
+	 * data can have multiple commands on the same line. Therefore, we start by
+	 * extracting all the commands, which are separated by spaces when coming
+	 * from the server. Then we extract the argument and the command name from
+	 * each command. They are separated by <i>:</i>. Then the function fetches
+	 * the protocol translation (described in the client configuration file) and
+	 * replace every occurrence of <i>@</i> by the argument sent by the server.
+	 * Finally, the message to be shown to the player is parsed with the
+	 * reflection function: it replaces every word starting with a dollar sign
+	 * (<i>$</i>) with its variable value in the Client class.
+	 * 
+	 * @param str
+	 *            one line of the data sent by the server.
+	 */
 	public static void processServerMsg(String str) {
 		if (processRaw) {
 			/*
