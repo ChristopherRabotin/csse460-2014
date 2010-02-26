@@ -53,6 +53,7 @@ public class XMLParser {
 		parseAttacks();
 		parseDaemons();
 		parseRooms();
+		serverWelcomeMsg = getWelcomeMsg(serverWelcomeMsg, XMLParser.class);
 	}
 
 	/**
