@@ -8,8 +8,7 @@ import java.net.Socket;
 import java.util.Stack;
 
 /**
- * The Client class is in the MCServer class file as it is only called by the
- * MCServer class.
+ * This is the class which takes care of each client individually.
  * 
  * @author Christopher Rabotin
  * 
@@ -22,12 +21,21 @@ public class Client extends Thread {
 	private Player me;
 	private Stack<String> msgQ;
 
+	/**
+	 * Constructor for the Client. It checks whether a client is allowed to play
+	 * the game by checking the value of the boolean variable listening of
+	 * MCServer. If the client is not allowed to connect, we kill it immediatly.
+	 * 
+	 * @param socket
+	 *            socket on which the client will communicate.
+	 */
 	public Client(Socket socket) {
 		super("StirlingZygote#" + Stirling.getNoPlayers());
 		if (!MCServer.getListening())
 			try {
-				Stirling.log.info("Server should be dead but isn't!");
-				this.finalize();
+				Stirling.log
+						.info("Server should be dead: we're killing this new client.");
+				this.interrupt();
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
@@ -36,6 +44,10 @@ public class Client extends Thread {
 		Stirling.log.finest("New client");
 	}
 
+	/**
+	 * Main function of the client. Will repeat until the player or this closes
+	 * the connection (i.e. nothing is written on the socket).
+	 */
 	public void run() {
 		try {
 			out = new PrintWriter(socket.getOutputStream(), true);
@@ -45,37 +57,51 @@ public class Client extends Thread {
 			me = new Player(in.readLine().trim(), Stirling.getNoPlayers() + 1,
 					1000);
 			me.addAttack(XMLParser.getPlayersDefaultAttack());
-			Stirling.addPlayer(this); // we "register" our selves to the game
-			// engine
+			Stirling.addPlayer(this);
+			/*
+			 * we "register" our selves to the game engine
+			 */
 
-			// say hello to the new player
+			/*
+			 * say hello to the new player
+			 */
 			out.println(XMLParser.getWelcomeMsg("@", me));
 			out.println("room:" + me.getRoom().getName());
-			
+
 			try {
 				while ((inputLn = in.readLine().trim()) != null) {
-					// if there are messages pending to be sent (e.g. Multicast
-					// msg), we send them now!
+					/*
+					 * if there are messages pending to be sent (e.g. Multicast
+					 * msg), we send them now!
+					 */
 					while (msgQ.size() > 0) {
 						out.println(msgQ.peek());
-						msgQ.remove(0); // it's a sloppy implementation of a
-						// FIFO but it works.
+						msgQ.remove(0);
+						/*
+						 * it's a sloppy implementation of a FIFO but it works.
+						 */
 					}
-					// now we read an understand the information sent from the
-					// client
+					/*
+					 * now we read an understand the information sent from the
+					 * client
+					 */
 					if (inputLn.startsWith("bye")) {
 						killClient();
 					} else if (inputLn.startsWith("ping")) {
-						// enables to see multicast messages quickly
+						/*
+						 * enables to see multicast messages quickly
+						 */
 						out.println("pong");
 					} else if (inputLn.startsWith("godmode")) {
 						me.beatify();
 						out.println("Roger.");
 					} else if (inputLn.startsWith("killserver")) {
 						if (me.isBlessed()) {
-							out.println("granted"); // we send out the message
-							// directly because the
-							// server WILL shut down
+							out.println("granted");
+							/*
+							 * we send out the message directly because the
+							 * server WILL shut down
+							 */
 							Stirling.endGame(this);
 						} else {
 							outputLn = "denied";
@@ -85,7 +111,10 @@ public class Client extends Thread {
 					}
 					if (outputLn != null)
 						out.println(outputLn);
-					outputLn = ""; // reset the value
+					outputLn = "";
+					/*
+					 * reset the value
+					 */
 				}
 			} catch (IOException e) {
 				killClient();
@@ -96,10 +125,21 @@ public class Client extends Thread {
 		}
 	}
 
+	/**
+	 * Queue a message to be sent to the client. Used mostly for Multicast
+	 * messages.
+	 * 
+	 * @param msg
+	 *            the message to be sent to client
+	 */
 	public void queueMsg(String msg) {
 		msgQ.push(msg);
 	}
 
+	/**
+	 * Kill this client: remove it from the list of players and close the
+	 * socket.
+	 */
 	public void killClient() {
 		Stirling.rmPlayer(this);
 		out.close();
@@ -111,6 +151,11 @@ public class Client extends Thread {
 		}
 	}
 
+	/**
+	 * Return the Player instance of this Client instance.
+	 * 
+	 * @return
+	 */
 	public Player getPlayer() {
 		return me;
 	}

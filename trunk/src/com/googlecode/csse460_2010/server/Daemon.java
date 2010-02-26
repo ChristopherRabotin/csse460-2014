@@ -44,9 +44,10 @@ public class Daemon {
 		atks.add(e);
 	}
 
-	public ArrayList<Attack> getAttacks(){
+	public ArrayList<Attack> getAttacks() {
 		return atks;
 	}
+
 	/**
 	 * This function lowers the health of the daemon. It is synchronized in case
 	 * multiple players hit at the same time a same daemon.
@@ -60,36 +61,67 @@ public class Daemon {
 		if (health <= 0)
 			isAlive = false;
 	}
+
 	/**
 	 * Called when the daemon is supposed to attack.
+	 * 
 	 * @return Returns the attack the players trying to defeat it will receive.
 	 */
-	public Attack attack(){
+	public Attack attack() {
 		Random random = new Random();
 		return atks.get(random.nextInt(atks.size()));
 	}
-	
-	public void reset(){
+
+	/**
+	 * Called when a new game is about to start: the daemon is revived and his
+	 * health restored.
+	 */
+	public void reset() {
 		health = fullHealth;
 		isAlive = true;
 	}
-	
+
+	/**
+	 * Getter for the fullHealth of the daemon.
+	 * 
+	 * @return fullHealth
+	 */
 	public int getFullHealth() {
 		return fullHealth;
 	}
 
+	/**
+	 * Getter for the victory points this daemon offers.
+	 * 
+	 * @return victoryPoints
+	 */
 	public int getVictoryPoints() {
 		return victoryPoints;
 	}
 
+	/**
+	 * Getter for the health of the daemon.
+	 * 
+	 * @return health
+	 */
 	public int getHealth() {
 		return health;
 	}
 
+	/**
+	 * Getter for the name of the daemon.
+	 * 
+	 * @return name
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Checks whether the daemon is still alive.
+	 * 
+	 * @return isAlive
+	 */
 	public boolean isAlive() {
 		return isAlive;
 	}

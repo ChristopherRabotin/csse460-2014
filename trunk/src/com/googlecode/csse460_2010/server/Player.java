@@ -8,8 +8,14 @@ import java.util.ArrayList;
  * @author Christopher Rabotin
  */
 public class Player {
+	/**
+	 * There are only two types of States for the player: IDLE and in COMBAT
+	 * 
+	 * @author Christopher Rabotin
+	 * 
+	 */
 	public static enum States {
-		IDLE, COMBAT, GAMEOVER
+		IDLE, COMBAT
 	};
 
 	private States state;
@@ -61,8 +67,14 @@ public class Player {
 	public void addPoints(int tba) {
 		points += tba;
 	}
-	
-	public void lowerPoints(int tbl){
+
+	/**
+	 * Lower the player's points. This function is called only when the player
+	 * <i>learns</i> a new attack.
+	 * 
+	 * @param tbl
+	 */
+	public void lowerPoints(int tbl) {
 		points -= tbl;
 	}
 
@@ -84,6 +96,11 @@ public class Player {
 		}
 	}
 
+	/**
+	 * This method is called when a new game is about to start: it sends the
+	 * player to the starting room, revives him/her and puts him in the IDLE
+	 * state.
+	 */
 	public void reset() {
 		health = fullHealth;
 		room = XMLParser.getDefaultRoom();
@@ -92,48 +109,109 @@ public class Player {
 	}
 
 	// Generated getters and setters
+	/**
+	 * Changes the room of the player. If the new room has a daemon and it is
+	 * alive, then the player's state is changed to COMBAT.
+	 * 
+	 * @param r
+	 *            the room to which the player will be moved.
+	 */
 	public void setRoom(Room r) {
 		room = r;
 		if (r.getMeanny().isAlive())
 			state = States.COMBAT;
 	}
 
+	/**
+	 * Getter for the room of the player.
+	 * 
+	 * @return room
+	 */
 	public Room getRoom() {
 		return room;
 	}
 
+	/**
+	 * Getter for the player's points.
+	 * 
+	 * @return points
+	 */
 	public int getPoints() {
 		return points;
 	}
 
+	/**
+	 * Getter for the connection date of the player.
+	 * 
+	 * @return connectionDate
+	 */
 	public long getConnectionDate() {
 		return connectionDate;
 	}
 
+	/**
+	 * Getter for the player's health.
+	 * 
+	 * @return health
+	 */
 	public int getHealth() {
 		return health;
 	}
 
+	/**
+	 * Getter for the arraylist of the player's attacks.
+	 * 
+	 * @return atks
+	 */
 	public ArrayList<Attack> getAtks() {
 		return atks;
 	}
 
+	/**
+	 * Getter of the fullHealth variable.
+	 * 
+	 * @return fuulHealth
+	 */
 	public int getFullHealth() {
 		return fullHealth;
 	}
 
+	/**
+	 * Getter for the name of the player
+	 * 
+	 * @return name
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Getter for the id of the player.
+	 * 
+	 * @return id
+	 */
 	public int getId() {
 		return id;
 	}
 
+	/**
+	 * Setter for the state of the player.
+	 * 
+	 * @param state
+	 */
 	public void setState(States state) {
 		this.state = state;
 	}
 
+	/**
+	 * Getter for the state of the player. If the daemon which is in the
+	 * player's room is dead but the player is still in COMBAT state, then we
+	 * update the state of this player to IDLE. This race condition occurs when
+	 * two or more players are simultaneously fighting the same daemon: only the
+	 * player who defeats it gets his/her state changed.
+	 * 
+	 * @return
+	 */
 	public States getState() {
 		// this condition means that another player killed this daemon when both
 		// were in the room
@@ -144,14 +222,29 @@ public class Player {
 		return state;
 	}
 
+	/**
+	 * Getter to check if the current player is still alive.
+	 * 
+	 * @return
+	 */
 	public boolean isAlive() {
 		return isAlive;
 	}
 
+	/**
+	 * Call this method to change the player into a God of the game. The attacks
+	 * of a God are ten times as powerful and he/she only get ten times as less
+	 * damage when getting an attack.
+	 */
 	public void beatify() {
 		isBlessed = true;
 	}
 
+	/**
+	 * Checks whether a player is a God or not.
+	 * 
+	 * @return
+	 */
 	public boolean isBlessed() {
 		return isBlessed;
 	}

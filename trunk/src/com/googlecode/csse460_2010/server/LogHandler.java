@@ -8,10 +8,9 @@ import java.util.logging.XMLFormatter;
 /**
  * This is the logging class. It will enable the game to be launched as a
  * background application. The server admin can then access the log file and see
- * all the logging information. The output is an XML file. Based on @url
- * http://publib
+ * all the logging information. The output is an XML file. Based on <a>http://publib
  * .boulder.ibm.com/infocenter/wasinfo/v6r0/index.jsp?topic=/com.ibm
- * .websphere.express.doc/info/exp/ae/rtrb_createhandler.html
+ * .websphere.express.doc/info/exp/ae/rtrb_createhandler.html</a>
  * 
  * @author Christopher Rabotin
  * 
@@ -20,7 +19,10 @@ public class LogHandler extends Handler {
 
 	FileOutputStream fileOutputStream;
 	PrintWriter printWriter;
-
+/**
+ * Constructor.
+ * @param fn String representing the filename of the log 
+ */
 	public LogHandler(String fn) {
 		super();
 		if (fn == null || fn == "")
@@ -47,11 +49,15 @@ public class LogHandler extends Handler {
 
 	@Override
 	public void publish(LogRecord record) {
-		// ensure that this log record should be logged by this Handler
+		/*
+		 * Ensure that this log record should be logged by this Handler
+		 */
 		if (!isLoggable(record))
 			return;
 
-		// Output the formatted data to the file
+		/*
+		 * Output the formatted data to the file
+		 */
 		printWriter.println(getFormatter().format(record));
 
 	}

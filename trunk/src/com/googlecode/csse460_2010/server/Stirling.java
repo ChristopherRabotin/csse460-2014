@@ -24,7 +24,7 @@ public class Stirling {
 
 	/**
 	 * In the main function, Stirling starts by calling the XML parser. If no
-	 * argument is given, than the default config.xml file is used as the
+	 * argument is given, than the default serverConfig.xml file is used as the
 	 * configuration file.
 	 * 
 	 * @param args
@@ -65,11 +65,13 @@ public class Stirling {
 				+ whoasked.getId() + ") asked to kill the server.");
 		ArrayList<Client> copyOfPlayer = (ArrayList<Client>) players.clone();
 		for (Client c : copyOfPlayer) {
-			// messages to be received
+			/*
+			 * Send messages to each client.
+			 */
 			if (whoasked.getId() == c.getId()) {
 				/*
-				 * NOTE: we use the thread's ID instead of the player's.
-				 * We also do not yet kill the player who asked to kill the server.
+				 * NOTE: we use the thread's ID instead of the player's. We also
+				 * do not yet kill the player who asked to kill the server.
 				 */
 				continue;
 			}
@@ -80,12 +82,26 @@ public class Stirling {
 		MCServer.stopServer();
 	}
 
+	/**
+	 * This messages enqueues the message msg as a multicast message to all
+	 * users. It is synchronized in case multiple instances of
+	 * server/Client.java call it, e.g. multiple simultaneous connections.
+	 * 
+	 * @param msg
+	 *            multicast message
+	 */
 	synchronized public static void multicast(String msg) {
 		players.trimToSize();
 		for (Client c : players)
 			c.queueMsg("MC:" + msg);
 	}
 
+	/**
+	 * Adds a player to list of players.
+	 * 
+	 * @param p
+	 *            an instance of Client which represents the new player.
+	 */
 	synchronized public static void addPlayer(Client p) {
 		multicast("join " + p.getPlayer().getName());
 		players.add(p);
@@ -93,6 +109,13 @@ public class Stirling {
 				+ p.getPlayer().getId() + "; ThreadId=" + p.getId() + ")");
 	}
 
+	/**
+	 * Removes a player to list of players.
+	 * 
+	 * @param p
+	 *            an instance of Client which represents the player to be
+	 *            removed.
+	 */
 	synchronized public static void rmPlayer(Client p) {
 		players.remove(p);
 		multicast("quit " + p.getPlayer().getName());
@@ -100,11 +123,21 @@ public class Stirling {
 				+ p.getPlayer().getId() + "; ThreadId=" + p.getId() + ")");
 	}
 
+	/**
+	 * Gets the number of players.
+	 * 
+	 * @return returns the number of current players.
+	 */
 	public static int getNoPlayers() {
 		players.trimToSize();
 		return players.size();
 	}
 
+	/**
+	 * List of all the players, their health points and their current room.
+	 * 
+	 * @return the list of players formatted in raw data format.
+	 */
 	public static String getPlayersFormatted() {
 		players.trimToSize();
 		String rtn = "Name\t\tHealth\t\tPoints\t\tRoom\n\n";
@@ -118,6 +151,21 @@ public class Stirling {
 		return rtn;
 	}
 
+	/**
+	 * This function attacks the daemon which is in the room of player p with
+	 * the given attack a. The daemon will reply to that attack if it is still
+	 * alive. It is not synchronized because if it were the game would become a
+	 * turn by turn game. However, the access to functions isAlive and attack
+	 * from the daemon class are synchronized. In other words, is two players
+	 * attack the same daemon at the same time, one will have to wait during the
+	 * execution of his attack on the given daemon before this function returns.
+	 * 
+	 * @param p
+	 *            the player launching the attack
+	 * @param a
+	 *            the attack used by player p
+	 * @return the result of the attack.
+	 */
 	public static String attackDaemon(Player p, Attack a) {
 		log.finest("Player " + p.getName() + " (PlayerId=" + p.getId()
 				+ ") using attack " + a.getName());
@@ -127,7 +175,7 @@ public class Stirling {
 			rtn = "nocombat:deadd"; // with two ds as dead daemon
 		} else {
 			Random r = new Random();
-			float prob = r.nextFloat();// *(1+p.getPoints());
+			float prob = r.nextFloat();
 			int ouch = Math.round(prob * a.getDamage());
 			if (p.isBlessed())
 				ouch *= 10;
@@ -161,6 +209,11 @@ public class Stirling {
 		return rtn;
 	}
 
+	/**
+	 * Checks whether all the daemons are dead. If so, than the game is over. If
+	 * the game is over, than a new game will start after the restart time
+	 * specified in the server configuration XML file.
+	 */
 	public static void checkAllDaemonsDead() {
 		boolean allDead = true;
 		for (String ds : XMLParser.getDaemons().keySet()) {
@@ -194,18 +247,26 @@ public class Stirling {
 		}
 	}
 
+	/**
+	 * This function processes the client input, which is read from the socket.
+	 * 
+	 * @param player
+	 *            the player who's input is being processed
+	 * @param inputLn
+	 *            the input to be processed
+	 * @return a message for the client
+	 */
 	public static String processClientInput(Player player, String inputLn) {
 		log.finest("Player " + player.getName() + "(id=" + player.getId()
 				+ ") sent {" + inputLn + "}");
 		String[] cmdargs = inputLn.split(" ");
-		String outputLn = "", cmdarg = cmdargs[1]; // that's the subcommand
+		String outputLn = "", cmdarg = cmdargs[1]; // that's the argument
 		if (inputLn.startsWith("go")) { /* GO */
 			if (player.getState() != Player.States.IDLE) {
 				outputLn = "nomove";
 			} else {
 				try {
-					Room newRoom = player.getRoom().getExit(
-							Room.stringToDirection(cmdarg));
+					Room newRoom = player.getRoom().getExit(cmdarg);
 					player.setRoom(newRoom);
 					outputLn = "room:" + newRoom.getName();
 					if (newRoom.getMeanny().isAlive()) {
