@@ -26,14 +26,29 @@ public class Attack {
 		this.daemonReserved = daemonOnly;
 	}
 
+	/**
+	 * Getter for the name of the attack.
+	 * 
+	 * @return name
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Getter for the damage this attack does.
+	 * 
+	 * @return damage.
+	 */
 	public int getDamage() {
 		return damage;
 	}
-	
+
+	/**
+	 * Checks whether this attack is reserved for daemons only.
+	 * 
+	 * @return daemonReserved
+	 */
 	public boolean isDaemonReserved() {
 		return daemonReserved;
 	}

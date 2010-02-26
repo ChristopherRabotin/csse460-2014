@@ -31,17 +31,37 @@ public class XMLParser {
 	private static int serverPort, serverMaxConn, serverRestartTime;
 	private static String serverName, serverWelcomeMsg;
 
-	public static void loadNParseXML(String xmlF) throws JDOMException, IOException{
+	/**
+	 * This function loads and parse the XML file xmlF. To parse it calls the
+	 * methods parseServerConf(), parseAttacks(), parseDaemons() and
+	 * parseRooms() (in that order).
+	 * 
+	 * @param xmlF
+	 *            the XML file to be parsed
+	 * @throws JDOMException
+	 *             if the XML is not properly formatted
+	 * @throws IOException
+	 *             if the XML file cannot be read
+	 */
+	public static void loadNParseXML(String xmlF) throws JDOMException,
+			IOException {
 		xmlDoc = (new SAXBuilder()).build(new File(xmlF));
 		serverRoot = xmlDoc.getRootElement().getChild("ServerConfig");
 		protocolRoot = xmlDoc.getRootElement().getChild("Protocol");
-		parseServerConf();
 		gameRoot = xmlDoc.getRootElement().getChild("GameConfig");
+		parseServerConf();
 		parseAttacks();
 		parseDaemons();
 		parseRooms();
 	}
 
+	/**
+	 * This method parses the server configuration defined in the
+	 * &lt;ServerConfig/&gt; element. It stores the attribute <i>port</i> in
+	 * serverPort, the attribute <i>maxPlayers</i> in serverMaxConn, the
+	 * attribute <i>name</i> in serverName and the attribute <i>restartTime</i>
+	 * in serverRestartTime.
+	 */
 	private static void parseServerConf() {
 		serverPort = Integer.parseInt(serverRoot.getAttributeValue("port"));
 		serverMaxConn = Integer.parseInt(serverRoot
@@ -49,17 +69,26 @@ public class XMLParser {
 		serverName = serverRoot.getAttributeValue("name");
 		serverRestartTime = Integer.parseInt(serverRoot
 				.getAttributeValue("restartTime"));
-		serverRestartTime *= 1000; // it is defined in seconds but TimerTask
-		// works in milliseconds
+		serverRestartTime *= 1000;
+		/*
+		 * it is defined in seconds but TimerTask works in milliseconds
+		 */
 		serverWelcomeMsg = protocolRoot.getChildTextNormalize("WelcomeMsg");
-		// now let's convert all the server properties of the welcome message to
-		// their respective values
-		serverWelcomeMsg = getWelcomeMsg("$", XMLParser.class);
 		Stirling.log.config("Server has the following configuration:\nport = "
 				+ serverPort + "\nname = " + serverName + "\nmaxConn = "
 				+ serverMaxConn + "\nRestart time = " + serverRestartTime);
 	}
 
+	/**
+	 * This method parses the Attacks, defined in the
+	 * &lt;Attacks&gt;&lt;/Attacks&gt; element. Each
+	 * &lt;attack&gt;&lt;/attack&gt; element defined the name, the damage and
+	 * whether the attack is reserved for daemons. The parsed data is stored in
+	 * the attacks HashMap where the key is the name of the daemon. This method
+	 * also fetchs the default attack for each player, which is the attribute
+	 * <i>playersDefaultAttack</i> of the second level
+	 * &lt;Attack&gt;&lt;Attacks&gt; element.
+	 */
 	@SuppressWarnings("unchecked")
 	private static void parseAttacks() {
 		List attacksList = gameRoot.getChild("Attacks").getChildren("attack");
@@ -79,6 +108,13 @@ public class XMLParser {
 				.getAttributeValue("playersDefaultAttack"));
 	}
 
+	/**
+	 * This method parses the Daemons, defined in the
+	 * &lt;Daemons&gt;&lt;/Daemons&gt; element. Each
+	 * &lt;daemon&gt;&lt;/daemon&gt; element defined the name, the health, the
+	 * victory points and the attacks of each daemon. The parsed data is stored
+	 * in the daemons HashMap where the key is the name of the daemon.
+	 */
 	@SuppressWarnings("unchecked")
 	private static void parseDaemons() {
 		List daemonsList = gameRoot.getChild("Daemons").getChildren("daemon");
@@ -101,6 +137,16 @@ public class XMLParser {
 		}
 	}
 
+	/**
+	 * This method parses the rooms in server's XML configuration file. The
+	 * rooms are in the &lt;Rooms&gt;&lt;/Rooms&gt; second level element. Each
+	 * room is defined in an &lt;room&gt;&lt;/room&gt; element. Each room can
+	 * have up to four exits, one in each of the following directions:
+	 * up,down,left,right. In this method, we start by parsing the rooms. Once
+	 * that is done, we parse the exits. That enables the XML file to define
+	 * rooms in what ever order and to reference them (via the &lt;exit/&gt;
+	 * element) in whatever order as well.
+	 */
 	@SuppressWarnings("unchecked")
 	private static void parseRooms() {
 		String name, meannyName;
@@ -109,6 +155,9 @@ public class XMLParser {
 		Element currentRoom, currentExit;
 		List roomsList = gameRoot.getChild("Rooms").getChildren("room"), exitsList;
 		Iterator roomsIt = roomsList.iterator(), exitsIt;
+		/*
+		 * First we fill in the HashMap with all the rooms
+		 */
 		while (roomsIt.hasNext()) {
 			currentRoom = (Element) roomsIt.next();
 			name = currentRoom.getAttributeValue("name");
@@ -118,19 +167,23 @@ public class XMLParser {
 			else
 				meanny = null;
 			room = new Room(name, meanny);
-			rooms.put(room.getName(), room); // we add the room to be able to
-			// add the exits
-
+			rooms.put(room.getName(), room);
+		}
+		/*
+		 * Then for each defined room in XML, we fetch its exits and update the
+		 * room.
+		 */
+		roomsIt = roomsList.iterator();
+		while (roomsIt.hasNext()) {
+			currentRoom = (Element) roomsIt.next();
 			exitsList = currentRoom.getChildren("exit");
 			exitsIt = exitsList.iterator();
 			while (exitsIt.hasNext()) {
 				currentExit = (Element) exitsIt.next();
-				room.addExit(rooms.get(currentExit.getAttributeValue("room")),
+				rooms.get(currentRoom.getAttributeValue("name")).addExit(
+						rooms.get(currentExit.getAttributeValue("room")),
 						currentExit.getAttributeValue("direction"));
 			}
-			rooms.remove(room.getName()); // now we delete the room to update it
-			rooms.put(room.getName(), room); // and update
-
 		}
 		defaultRoom = rooms.get(gameRoot.getChild("Rooms").getAttributeValue(
 				"default"));
@@ -139,33 +192,64 @@ public class XMLParser {
 
 	}
 
+	/**
+	 * Getter for all the daemons defined in the server configuration XML file.
+	 * 
+	 * @return
+	 */
 	public static HashMap<String, Daemon> getDaemons() {
 		return daemons;
 	}
 
+	/**
+	 * Getter for all the rooms defined in the server configuration XML file.
+	 * 
+	 * @return rooms
+	 */
 	public static HashMap<String, Room> getRooms() {
 		return rooms;
 	}
 
+	/**
+	 * Getter for all the attacks defined in the server configuration XML file.
+	 * 
+	 * @return attacks
+	 */
 	public static HashMap<String, Attack> getAttacks() {
 		return attacks;
 	}
 
+	/**
+	 * Getter for serverPort.
+	 * 
+	 * @return serverPort
+	 */
 	public static int getServerPort() {
 		return serverPort;
 	}
 
+	/**
+	 * Getter for serverMaxConn, which is the maximum number of connections the
+	 * server is allowed to accept.
+	 * 
+	 * @return serverMaxConn
+	 */
 	public static int getServerMaxConn() {
 		return serverMaxConn;
 	}
 
+	/**
+	 * Getter for the serverName.
+	 * 
+	 * @return serverName
+	 */
 	public static String getServerName() {
 		return serverName;
 	}
 
 	/**
 	 * Parses the serverWelcomeMsg to replace all the occurrences of variables
-	 * with their actual value
+	 * with their actual value.
 	 * 
 	 * @param var
 	 *            the first character of the variable ($ or @, etc.)
@@ -250,14 +334,29 @@ public class XMLParser {
 
 	}
 
+	/**
+	 * Getter for defaultRoom.
+	 * 
+	 * @return defaultRoom
+	 */
 	public static Room getDefaultRoom() {
 		return defaultRoom;
 	}
 
+	/**
+	 * Getter for the playersDefaultAttack.
+	 * 
+	 * @return playersDefaultAttack
+	 */
 	public static Attack getPlayersDefaultAttack() {
 		return playersDefaultAttack;
 	}
 
+	/**
+	 * Getter for the serverRestartTime.
+	 * 
+	 * @return serverRestartTime
+	 */
 	public static int getServerRestartTime() {
 		return serverRestartTime;
 	}
