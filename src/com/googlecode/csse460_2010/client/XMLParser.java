@@ -21,7 +21,7 @@ import org.jdom.input.SAXBuilder;
  * 
  */
 public class XMLParser {
-	private static int cnxPort, cnxTimeout;
+	private static int cnxPort, cnxTimeout, cnxPingTime;
 	private static String cnxHost;
 	private static Document xmlDoc;
 	private static Element cnxRoot, cmdsRoot, gameMsgRoot;
@@ -62,6 +62,7 @@ public class XMLParser {
 		cnxHost = cnxRoot.getAttributeValue("host");
 		cnxPort = Integer.parseInt(cnxRoot.getAttributeValue("port"));
 		cnxTimeout = Integer.parseInt(cnxRoot.getAttributeValue("timeout"));
+		cnxPingTime = Integer.parseInt(cnxRoot.getAttributeValue("pingTime"));
 	}
 
 	/**
@@ -200,7 +201,15 @@ public class XMLParser {
 	public static int getCnxPort() {
 		return cnxPort;
 	}
-
+	
+	/**
+	 * Getter of cnxPingTime.
+	 * 
+	 * @return cnxPingTime
+	 */
+	public static int getCnxPingTime() {
+		return cnxPingTime;
+	}
 	/**
 	 * Getter for a particular client message.
 	 * 
