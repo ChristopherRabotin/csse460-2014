@@ -92,6 +92,10 @@ public class Client {
 			writeToSkt = new PrintWriter(skt.getOutputStream(), true);
 
 			writeToSkt.println(name);
+			/*
+			 * Now we start the ping timer
+			 */
+			
 			while ((inputLn = readFromSkt.readLine()) != null) {
 				processServerMsg(inputLn);
 				outputLn = processClientInput();
@@ -214,5 +218,9 @@ public class Client {
 				System.out.println(toClient);
 			}
 		}
+	}
+	
+	public static PrintWriter getWriteToSkt(){
+		return writeToSkt;
 	}
 }
