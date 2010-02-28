@@ -10,9 +10,9 @@ public class SendPing extends TimerTask{
 	 */
 	public SendPing(){
 		/*
-		 * cnxPingTime is in seconds so me multiply it by 1000 to get milliseconds.
+		 * cnxPingTime is in milliseconds already.
 		 */
-		pingTimer.scheduleAtFixedRate(this, 0, XMLParser.getCnxPingTime()*1000);
+		pingTimer.scheduleAtFixedRate(this, 0, XMLParser.getCnxPingTime());
 	}
 	public static void init(){
 		pingTimer.scheduleAtFixedRate(new SendPing(), 0, XMLParser.getCnxPingTime()*1000);

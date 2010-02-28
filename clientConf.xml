@@ -3,8 +3,8 @@
 This is the client configuration XML file.
 All the second level elements are necessary.  -->
 <data>
-	<!-- For the Cnx element, host, port, timeout and pingTime are necessary. -->
-	<Cnx host="localhost" port="1024" timeout="2000" pingTime="0.5"/>
+	<!-- For the Cnx element, host, port, timeout and pingTime(ms) are necessary. -->
+	<Cnx host="localhost" port="1024" timeout="2000" pingTime="500"/>
 	<!-- 
 		 For the Cmds element, the predefined elements are necessary unless the 
 		 Server code was changed.
