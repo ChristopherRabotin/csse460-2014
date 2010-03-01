@@ -73,7 +73,7 @@ public class XMLParser {
 	 */
 	@SuppressWarnings("unchecked")
 	private static void parseCmds() {
-		List cmdsXML = cmdsRoot.getChildren("cmds");
+		List cmdsXML = cmdsRoot.getChildren("cmd");
 		Iterator cmdsXMLIt = cmdsXML.iterator();
 		Element current, argsXML;
 		Command cmd;
