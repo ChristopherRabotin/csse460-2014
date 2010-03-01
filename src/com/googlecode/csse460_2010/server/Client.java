@@ -69,7 +69,8 @@ public class Client extends Thread {
 			out.println("room:" + me.getRoom().getName());
 
 			try {
-				while ((inputLn = in.readLine().trim()) != null) {
+				while ((inputLn = in.readLine()) != null) {
+					inputLn = inputLn.trim();
 					/*
 					 * if there are messages pending to be sent (e.g. Multicast
 					 * msg), we send them now!
