@@ -50,7 +50,7 @@
 				<exit direction="down" room="Salon" />
 			</room>
 			<room name="Stables" daemon="DuchessOfDistruction">
-				<exit direction="left" room="Kithcen" />
+				<exit direction="left" room="Kitchen" />
 			</room>
 			<room name="ServantsQuarters" daemon="SpecturalMenace">
 				<exit direction="up" room="Stables" />
