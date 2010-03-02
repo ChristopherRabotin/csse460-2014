@@ -89,7 +89,7 @@
 		<Daemons>
 			<daemon name="Meanny" health="100" value="10" attacks="Flames,Crush" />
 			<daemon name="RabidRabbit" health="105" value="50" attacks="Maul,AbdomenSlice" />
-			<daemon name="FireGremlin" health="105" value="50" attacks="Flames,RockBask" />
+			<daemon name="FireGremlin" health="105" value="50" attacks="Flames,RockBash" />
 			<daemon name="LakeHydra" health="110" value="100" attacks="StranglingVines,Suffocate" />
 			<daemon name="FlyingIceBeast" health="115" value="150" attacks="IceNeedles,Vortex" />
 			<daemon name="RockGollum" health="125" value="200" attacks="RockBash,EarthShock" />
