@@ -54,7 +54,7 @@ public class Client {
 		 * We start by reading the XML file to communicate with the server.
 		 */
 		try {
-			XMLParser.loadNParse("clientConf.xml");
+			XMLParser.loadNParse("./src/com/googlecode/csse460_2010/client/clientConf.xml");
 		} catch (Throwable e) {
 			System.err.println("Error while loading the XML file!");
 			e.printStackTrace();

@@ -1,5 +1,6 @@
 package com.googlecode.csse460_2010.server;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
@@ -32,6 +33,7 @@ public class LogHandler extends Handler {
 			fileOutputStream = new FileOutputStream(fn);
 			printWriter = new PrintWriter(fileOutputStream);
 			setFormatter(new XMLFormatter());
+			printWriter.println("<Records>");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -39,7 +41,13 @@ public class LogHandler extends Handler {
 
 	@Override
 	public void close() throws SecurityException {
+		printWriter.println("</Records>");
 		printWriter.close();
+		try {
+			fileOutputStream.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
