@@ -107,10 +107,11 @@ public class Client {
 				else
 					continue;
 				if (!processRaw) {
-					outputLn = processClientInput();
-					if (outputLn != null) {
-						writeToSkt.println(outputLn);
-					}
+					do {
+						outputLn = processClientInput();
+					} while (outputLn == null);
+					writeToSkt.println(outputLn);
+
 				}
 			}
 
@@ -164,11 +165,8 @@ public class Client {
 				}
 			}
 		} catch (IllegalArgumentException e) {
-			System.out.println(XMLParser.getClientMsg("invalid").replace("@", e.getMessage()));
-			/*
-			 * Now we ask for the user input again
-			 */
-			processClientInput();
+			System.out.println(XMLParser.getClientMsg("invalid").replace("@",
+					e.getMessage()));
 		} catch (IOException e) {
 			System.err.println("Unable to read from input at this time!\n" + e);
 		}
@@ -196,22 +194,23 @@ public class Client {
 	 *            one line of the data sent by the server.
 	 */
 	public static void processServerMsg(String str) {
-		if (processRaw) {
+		if (str.startsWith("raw")) {
 			/*
-			 * if we are processing a raw input then we simply output it, no
-			 * questions asked
+			 * we don't print out anything as endraw is on its own line
 			 */
-			System.out.println(str);
+			processRaw = true;
 		} else if (str.startsWith("endraw")) {
 			/*
 			 * we don't print out anything as endraw is on its own line
 			 */
 			processRaw = false;
-		} else if (str.startsWith("raw")) {
+		} else if (processRaw) {
 			/*
-			 * we don't print out anything as endraw is on its own line
+			 * if we are processing a raw input then we simply output it, no
+			 * questions asked. It is the last of the "raw" treatment otherwise
+			 * the "endraw" is never reached.
 			 */
-			processRaw = true;
+			System.out.println(str);
 		} else {
 			/*
 			 * then we look up the meaning in the XMLParser class.
