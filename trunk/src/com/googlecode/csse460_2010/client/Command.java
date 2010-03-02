@@ -53,18 +53,25 @@ public class Command {
 			if (arg != null && !arg.equals("")) {
 				return serverCmd + " " + arg;
 			}
-			throw new IllegalArgumentException(arg
-					+ " is not a valid argument for " + this.toString());
+			throw new IllegalArgumentException(this.toString());
 		} else {
 			for (int i = 0; i < clientArgs.length; i++) {
 				if (clientArgs[i].equals(arg))
 					srvArg = serverArgs[i];
 			}
 			if (srvArg == null)
-				throw new IllegalArgumentException(arg
-						+ " is not a valid argument for " + this.toString());
+				throw new IllegalArgumentException(this.toString());
 			return serverCmd + " " + srvArg;
 		}
+	}
+
+	/**
+	 * Returns whether this command needs an argument or not.
+	 * 
+	 * @return whether this command needs an argument or not.
+	 */
+	public boolean requestsArgument() {
+		return !serverArgs[0].equals("none");
 	}
 
 	/**

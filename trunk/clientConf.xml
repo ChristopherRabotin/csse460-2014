@@ -70,8 +70,11 @@ All the second level elements are necessary.  -->
 			Please enter your next move:
 		</ClientMsg>
 		<ClientMsg name="invalid">
-			Invalid command. Type help for more information.
+			Invalid command. The correct usage is @.
 		</ClientMsg>
+		<ServerMsg for="MC">
+			Global notice: @
+		</ServerMsg>
 		<ServerMsg for="welcome">
 			Welcome to @. 
 		</ServerMsg>
@@ -79,7 +82,7 @@ All the second level elements are necessary.  -->
 			You may not flee from your current combat. Be victorious and you will be able to move. 
 		</ServerMsg>
 		<ServerMsg for="noexit">
-			No such exit: $latestDirection from $room.
+			No such exit: @ from $room.
 		</ServerMsg>
 		<ServerMsg for="fighting">
 			You are now fighting daemon @!
@@ -113,6 +116,12 @@ All the second level elements are necessary.  -->
 		</ServerMsg>
 		<ServerMsg for="atkBunknown">
 			The attack @ does not exists.
+		</ServerMsg>
+		<ServerMsg for="deady">
+			You are dead.
+		</ServerMsg>
+		<ServerMsg for="dead">
+			The daemon is dead!
 		</ServerMsg>
 	</GameMsgs>
 </data>

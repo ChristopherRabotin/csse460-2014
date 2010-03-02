@@ -65,8 +65,8 @@ public class Client extends Thread {
 			/*
 			 * say hello to the new player
 			 */
-			out.println(XMLParser.getWelcomeMsg("@", me));
-			out.println("room:" + me.getRoom().getName());
+			out.println(XMLParser.getWelcomeMsg("@", me) + "|room:"
+					+ me.getRoom().getName());
 
 			try {
 				while ((inputLn = in.readLine()) != null) {
@@ -90,9 +90,10 @@ public class Client extends Thread {
 						killClient();
 					} else if (inputLn.startsWith("ping")) {
 						/*
-						 * enables to see multicast messages quickly
+						 * enables to see multicast messages quickly We don't
+						 * answer the ping, it is only used to flush the
+						 * mulicast messages.
 						 */
-						out.println("pong");
 					} else if (inputLn.startsWith("godmode")) {
 						me.beatify();
 						out.println("Roger.");
