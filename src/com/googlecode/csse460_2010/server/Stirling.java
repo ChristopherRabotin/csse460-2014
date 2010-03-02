@@ -293,6 +293,15 @@ public class Stirling {
 				}
 				outputLn += "\nendraw";
 
+			}  else if (cmdarg.equals("myattacks")) { /* SHOW MYATTACKS */
+				outputLn = "raw\n";
+				outputLn += "Name\t\tDamage\n\n";
+				ArrayList<Attack> atks = player.getAtks();
+				for(Attack atk:atks){
+					outputLn += atk.getName() + "\t\t" + atk.getDamage() + "\n";
+				}
+				outputLn += "\nendraw";
+
 			} else if (cmdarg.equals("points")) { /* SHOW POINTS */
 				outputLn = "health:" + player.getHealth() + "/"
 						+ player.getFullHealth() + "|points:"

@@ -28,8 +28,8 @@ All the second level elements are necessary.  -->
 			one room to another.
 		</cmd>
 		<cmd client="show" server="show">
-			<args serverValid="attacks,daemons,players,points" clientValid="attacks,daemons,players,points" />
-			Followed by either 'attacks', 'daemons', 'players' or 'points'.
+			<args serverValid="attacks,daemons,players,points,exits,myattacks" clientValid="attacks,daemons,players,points,exits,myattacks" />
+			Followed by either 'attacks', 'myattacks', 'daemons', 'players', 'points' or 'room'.
 		</cmd>
 		<cmd client="fight" server="attack" special="latestAttack">
 			<args serverValid="*" clientValid="*" />
