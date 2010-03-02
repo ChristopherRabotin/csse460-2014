@@ -192,12 +192,12 @@ public class Stirling {
 				ouch = Math.round(prob
 						* d.getAttacks().get(whichOne).getDamage());
 				p.lowerHealth(ouch);
-				rtn += " hurty:" + ouch; // hurt you
+				rtn += "|hurty:" + ouch; // hurt you
 				log.finest("Daemon " + d.getName() + " hurt player "
 						+ p.getName() + " (PlayerId=" + p.getId() + " by "
 						+ ouch + ") health points.");
 				if (!p.isAlive()) {
-					rtn += " deady";
+					rtn += "|deady";
 				}
 			} else {
 				log.finest("... and killed it!");
@@ -270,7 +270,7 @@ public class Stirling {
 					player.setRoom(newRoom);
 					outputLn = "room:" + newRoom.getName();
 					if (newRoom.getMeanny().isAlive()) {
-						outputLn += " fighting:"
+						outputLn += "|fighting:"
 								+ newRoom.getMeanny().getName();
 					}
 				} catch (NullPointerException e) {
@@ -295,7 +295,7 @@ public class Stirling {
 
 			} else if (cmdarg.equals("points")) { /* SHOW POINTS */
 				outputLn = "health:" + player.getHealth() + "/"
-						+ player.getFullHealth() + " points:"
+						+ player.getFullHealth() + "|points:"
 						+ player.getPoints();
 			} else if (cmdarg.equals("daemons")) { /* SHOW DAEMONS */
 				outputLn = "raw\n";

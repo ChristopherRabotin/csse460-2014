@@ -95,12 +95,22 @@ public class Client {
 			/*
 			 * Now we start the ping timer
 			 */
-			
+			new SendPing();
+
 			while ((inputLn = readFromSkt.readLine()) != null) {
-				processServerMsg(inputLn);
-				outputLn = processClientInput();
-				if (outputLn != null) {
-					writeToSkt.println(outputLn);
+				if (inputLn.length() > 0)
+					processServerMsg(inputLn);
+				/*
+				 * The server may send empty messages so we want to wait for
+				 * actual data to arrive to ask for the user new input
+				 */
+				else
+					continue;
+				if (!processRaw) {
+					outputLn = processClientInput();
+					if (outputLn != null) {
+						writeToSkt.println(outputLn);
+					}
 				}
 			}
 
@@ -128,33 +138,37 @@ public class Client {
 	 */
 	private static String processClientInput() {
 		System.out.println(XMLParser.getClientMsg("input"));
-		String toServer = null, in, cmd, arg, reflectVar;
+		String toServer = null, in, arg, reflectVar;
 		Field fd;
 		try {
 			in = new BufferedReader(new InputStreamReader(System.in))
 					.readLine();
-			cmd = in.split(" ")[0];
-			arg = in.split(" ")[1];
-			Command c = XMLParser.getCmd(cmd);
-			toServer = c.toServerCmd(arg);
-			reflectVar = c.getReflectVar();
-			if (reflectVar != null) {
-				try {
-					fd = Client.class.getDeclaredField(reflectVar);
-					fd.setAccessible(true);
-					fd.set(Client.class, arg);
-				} catch (Throwable e) {
-					System.err
-							.println("No such field ["
-									+ reflectVar
-									+ "]. Make sure it is defined in client/Client.java.");
-					e.printStackTrace();
-					System.exit(0);
+			Command c = XMLParser.getCmd(in.split(" ")[0]);
+			if (c.requestsArgument()) {
+				arg = in.split(" ")[1];
+				toServer = c.toServerCmd(arg);
+				reflectVar = c.getReflectVar();
+				if (reflectVar != null) {
+					try {
+						fd = Client.class.getDeclaredField(reflectVar);
+						fd.setAccessible(true);
+						fd.set(Client.class, arg);
+					} catch (Throwable e) {
+						System.err
+								.println("No such field ["
+										+ reflectVar
+										+ "]. Make sure it is defined in client/Client.java.");
+						e.printStackTrace();
+						System.exit(0);
+					}
 				}
 			}
 		} catch (IllegalArgumentException e) {
-			System.out.println(XMLParser.getClientMsg("invalid"));
-			System.err.println(e);
+			System.out.println(XMLParser.getClientMsg("invalid").replace("@", e.getMessage()));
+			/*
+			 * Now we ask for the user input again
+			 */
+			processClientInput();
 		} catch (IOException e) {
 			System.err.println("Unable to read from input at this time!\n" + e);
 		}
@@ -190,19 +204,19 @@ public class Client {
 			System.out.println(str);
 		} else if (str.startsWith("endraw")) {
 			/*
-			 * we don't print out anything as endraw is on it own line
+			 * we don't print out anything as endraw is on its own line
 			 */
 			processRaw = false;
-		} else if (!str.startsWith("raw")) {
+		} else if (str.startsWith("raw")) {
 			/*
-			 * we don't print out anything as endraw is on it own line
+			 * we don't print out anything as endraw is on its own line
 			 */
 			processRaw = true;
 		} else {
 			/*
 			 * then we look up the meaning in the XMLParser class.
 			 */
-			String[] cmds = str.split(" "), args;
+			String[] cmds = str.split("\\|"), args;
 			String toClient = "";
 			for (String cmd : cmds) {
 				args = cmd.split(":");
@@ -219,8 +233,8 @@ public class Client {
 			}
 		}
 	}
-	
-	public static PrintWriter getWriteToSkt(){
+
+	public static PrintWriter getWriteToSkt() {
 		return writeToSkt;
 	}
 }
