@@ -69,8 +69,11 @@ All the second level elements are necessary.  -->
 		<ClientMsg name="input">
 			Please enter your next move:
 		</ClientMsg>
-		<ClientMsg name="invalid">
-			Invalid command. The correct usage is @.
+		<ClientMsg name="invalidCmd">
+			Invalid command @.
+		</ClientMsg>
+		<ClientMsg name="invalidArg">
+			Invalid command usage. The correct usage is @.
 		</ClientMsg>
 		<ServerMsg for="MC">
 			Global notice: @
