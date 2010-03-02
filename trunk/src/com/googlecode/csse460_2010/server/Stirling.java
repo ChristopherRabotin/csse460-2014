@@ -43,6 +43,7 @@ public class Stirling {
 			log.info("Loaded XML.");
 		} catch (Throwable e) {
 			log.severe("Error while loading XML:\n" + e);
+			e.printStackTrace();
 		}
 		try {
 			MCServer.startServer();
