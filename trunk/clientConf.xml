@@ -23,7 +23,7 @@ All the second level elements are necessary.  -->
 			error.
 		-->
 		<cmd client="move" server="go" special="latestDirection">
-			<args clientValid="north,south,east,west" serverValid="up,down,left,right" />
+			<args clientValid="north,south,west,east" serverValid="up,down,left,right" />
 			Followed by the direction up/down/left/right enable you to move from
 			one room to another.
 		</cmd>

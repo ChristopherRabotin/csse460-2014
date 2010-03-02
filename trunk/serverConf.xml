@@ -22,7 +22,7 @@
 		</WelcomeMsg>
 	</Protocol>
 	<GameConfig>
-		<Rooms default="outside">
+		<Rooms default="Courtyard">
 			<!--
 				Make sure to put the rooms with no exits first and have all the room
 				in hierarchical order. A room CANNOT reference another room as an
@@ -30,26 +30,96 @@
 				In other words, the final room cannot not have ANY exits and all
 				rooms are a point of no return.
 			-->
-			<room name="finalroom" daemon="BigBoss">
+			<room name="ThroneRoom" daemon="EarthDestroyer">
 			</room>
-			<room name="ontheleft" daemon="Meanny">
-				<exit direction="left" room="finalroom" />
+			<room name="GrandHall" daemon="LostKnight">
+				<exit direction="up" room="ThroneRoom" />
 			</room>
-			<room name="entrance" daemon="Meanny">
-				<exit direction="left" room="ontheleft" />
+			<room name="Staircase" daemon="TerrorShaman">
+				<exit direction="up" room="GrandHall" />
 			</room>
-			<room name="outside" daemon="none">
-				<exit direction="up" room="entrance" />
+			<room name="Ballroom" daemon="WanderingInferno">
+				<exit direction="left" room="Staircase" />
+			</room>
+			<room name="DinningHall" daemon="TombZombie">
+				<exit direction="down" room="Ballroom" />
+				<exit direction="up" room="Staircase" />
+			</room>
+			<room name="Kitchen" daemon="TremblingTree">
+				<exit direction="left" room="DinningHall" />
+				<exit direction="down" room="Salon" />
+			</room>
+			<room name="Stables" daemon="DuchessOfDistruction">
+				<exit direction="left" room="Kithcen" />
+			</room>
+			<room name="ServantsQuarters" daemon="SpecturalMenace">
+				<exit direction="up" room="Stables" />
+				<exit direction="down" room="Kitchen" />
+			</room>
+			<room name="Salon" daemon="Banshee">
+				<exit direction="right" room="ServantsQuarters" />
+				<exit direction="left" room="Stables" />
+			</room>
+			<room name="Hallway" daemon="FireGremlin">
+				<exit direction="up" room="Salon" />
+				<exit direction="left" room="Ballroom" />
+			</room>
+			<room name="Conservatory" daemon="RockGollem">
+				<exit direction="right" room="Hallway" />
+			</room>
+			<room name="Library" daemon="FlyingIceBeast">
+				<exit direction="right" room="Conservatory" />
+			</room>
+			<room name="Gardens" daemon="LakeHydra">
+				<exit direction="up" room="Library" />
+				<exit direction="right" room="Conservatory" />
+			</room>
+			<room name="Atrium" daemon="RabidRabbit">
+				<exit direction="right" room="Gardens" />
+			</room>
+			<room name="Entryway" daemon="Meanny">
+				<exit direction="up" room="Atrium" />
+				<exit direction="left" room="Gardens" />
+			</room>
+			<room name="Courtyard" daemon="none">
+				<exit direction="up" room="Entryway" />
+				<exit direction="left" room="Gardens" />
 			</room>
 		</Rooms>
 		<Daemons>
-			<daemon name="Meanny" health="100" value="10" attacks="flames,crush" />
-			<daemon name="BigBoss" health="500" value="1000" attacks="crush,BFG" />
+			<daemon name="Meanny" health="100" value="10" attacks="Flames,Crush" />
+			<daemon name="RabidRabbit" health="105" value="50" attacks="Maul,AbdomenSlice" />
+			<daemon name="FireGremlin" health="105" value="50" attacks="Flames,RockBask" />
+			<daemon name="LakeHydra" health="110" value="100" attacks="StranglingVines,Suffocate" />
+			<daemon name="FlyingIceBeast" health="115" value="150" attacks="IceNeedles,Vortex" />
+			<daemon name="RockGollum" health="125" value="200" attacks="RockBash,EarthShock" />
+			<daemon name="Banshee" health="200" value="250" attacks="Vortex,EngulfingShadow" />
+			<daemon name="SpecturalMenace" health="250" value="300" attacks="LightningStorm,Suffocate" />
+			<daemon name="DuchessOfDistruction" health="300" value="400" attacks="Suffocate,EngulfingShadow" />
+			<daemon name="TremblingTree" health="325" value="500" attacks="StranglingVines,EarthShock" />
+			<daemon name="TombZombie" health="350" value="600" attacks="Shackle,DaggerShower" />
+			<daemon name="WanderingInferno" health="375" value="700" attacks="Flames,LightningStorm" />
+			<daemon name="TerrorShaman" health="400" value="750" attacks="LightningStorm,EarthShock" />
+			<daemon name="LostKnight" health="425" value="775" attacks="EngulfingShadow,ComsumingFear" />
+			<daemon name="EarthDestroyer" health="500" value="1000" attacks="Crush,BFG" />
 		</Daemons>
 		<Attacks playersDefaultAttack="sword">
-			<attack name="sword" damage="10" daemonOnly="false" />
-			<attack name="flames" damage="20" daemonOnly="false" />
-			<attack name="crush" damage="30" daemonOnly="true" />
+			<attack name="Sword" damage="10" daemonOnly="false" />
+			<attack name="Flames" damage="20" daemonOnly="false" />
+			<attack name="RockBash" damage="5" daemonOnly="true" />
+			<attack name="Maul" damage="5" daemonOnly="true" />
+			<attack name="StranglingVines" damage="5" daemonOnly="true" />
+			<attack name="AbdomenSlice" damage="10" daemonOnly="true" />
+			<attack name="Suffocate" damage="10" daemonOnly="true" />
+			<attack name="IceNeeldes" damage="10" daemonOnly="true" />
+			<attack name="Vortex" damage="15" daemonOnly="true" />
+			<attack name="Shackle" damage="15" daemonOnly="true" />
+			<attack name="LightningStorm" damage="15" daemonOnly="true" />
+			<attack name="DaggerShower" damage="20" daemonOnly="true" />
+			<attack name="EarthShock" damage="25" daemonOnly="true" />
+			<attack name="Crush" damage="30" daemonOnly="true" />
+			<attack name="EngulfingShadow" damage="35" daemonOnly="true" />
+			<attack name="ConsumingFear" damage="40" daemonOnly="true" />
 			<attack name="BFG" damage="50" daemonOnly="true" />
 		</Attacks>
 	</GameConfig>
