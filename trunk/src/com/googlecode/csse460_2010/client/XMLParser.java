@@ -82,8 +82,8 @@ public class XMLParser {
 			argsXML = current.getChild("args");
 			cmd = new Command(current.getAttributeValue("client"), current
 					.getAttributeValue("server"), current.getTextNormalize(),
-					argsXML.getAttributeValue("serverValid"), argsXML
-							.getAttributeValue("clientValid"), argsXML
+					argsXML.getAttributeValue("clientValid"), argsXML
+							.getAttributeValue("serverValid"), argsXML
 							.getAttributeValue("special"));
 			cmds.put(current.getAttributeValue("client"), cmd);
 		}
