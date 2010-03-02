@@ -172,7 +172,7 @@ public class Stirling {
 		String rtn = "";
 		Daemon d = p.getRoom().getMeanny();
 		if (!d.isAlive()) {
-			rtn = "nocombat:deadd"; // with two ds as dead daemon
+			rtn = "nocombatBnobody"; // with two ds as dead daemon
 		} else {
 			Random r = new Random();
 			float prob = r.nextFloat();
@@ -203,6 +203,7 @@ public class Stirling {
 				log.finest("... and killed it!");
 				p.addPoints(d.getVictoryPoints());
 				p.setState(Player.States.IDLE);
+				rtn += "|deadd";
 			}
 		}
 		checkAllDaemonsDead();
