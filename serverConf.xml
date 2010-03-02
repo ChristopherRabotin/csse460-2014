@@ -100,7 +100,7 @@
 			<daemon name="TombZombie" health="350" value="600" attacks="Shackle,DaggerShower" />
 			<daemon name="WanderingInferno" health="375" value="700" attacks="Flames,LightningStorm" />
 			<daemon name="TerrorShaman" health="400" value="750" attacks="LightningStorm,EarthShock" />
-			<daemon name="LostKnight" health="425" value="775" attacks="EngulfingShadow,ComsumingFear" />
+			<daemon name="LostKnight" health="425" value="775" attacks="EngulfingShadow,ConsumingFear" />
 			<daemon name="EarthDestroyer" health="500" value="1000" attacks="Crush,BFG" />
 		</Daemons>
 		<Attacks playersDefaultAttack="Sword">

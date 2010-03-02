@@ -33,7 +33,8 @@ public class Room {
 		 * @return the direction as a Direction
 		 * @throws IllegalArgumentException
 		 */
-		public static Directions toDirection(String direction) throws IllegalArgumentException{
+		public static Directions toDirection(String direction)
+				throws IllegalArgumentException {
 			Directions rtn = null;
 			if (direction.equals("up")) {
 				rtn = Directions.up;
@@ -46,7 +47,8 @@ public class Room {
 			} else {
 				Stirling.log.severe("Asked for direction " + direction
 						+ " which doesn't exist!");
-				throw new IllegalArgumentException("Unkown direction "+direction);
+				throw new IllegalArgumentException("Unkown direction "
+						+ direction);
 			}
 			return rtn;
 		}
@@ -114,7 +116,8 @@ public class Room {
 					+ " is invalid!");
 			ex.printStackTrace();
 			/*
-			 * We stop the game immediately if there is an unknown direction in the XML file. 
+			 * We stop the game immediately if there is an unknown direction in
+			 * the XML file.
 			 */
 			System.exit(0);
 		}
@@ -133,8 +136,9 @@ public class Room {
 	}
 
 	/**
-	 * Returns the list of exits for this room.
-	 * A typical exit is formatted as:
+	 * Returns the list of exits for this room. A typical exit is formatted as:
+	 * exit:DIRECTION:NAME:DAEMON
+	 * 
 	 * @return the list of exits formatted (in raw data).
 	 */
 	public String getExitsFormatted() {
