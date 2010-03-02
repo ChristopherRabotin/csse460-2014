@@ -111,7 +111,7 @@
 			<attack name="StranglingVines" damage="5" daemonOnly="true" />
 			<attack name="AbdomenSlice" damage="10" daemonOnly="true" />
 			<attack name="Suffocate" damage="10" daemonOnly="true" />
-			<attack name="IceNeeldes" damage="10" daemonOnly="true" />
+			<attack name="IceNeedles" damage="10" daemonOnly="true" />
 			<attack name="Vortex" damage="15" daemonOnly="true" />
 			<attack name="Shackle" damage="15" daemonOnly="true" />
 			<attack name="LightningStorm" damage="15" daemonOnly="true" />
