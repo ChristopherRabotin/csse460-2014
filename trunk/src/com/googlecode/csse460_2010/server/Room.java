@@ -137,15 +137,20 @@ public class Room {
 
 	/**
 	 * Returns the list of exits for this room. A typical exit is formatted as:
-	 * exit:DIRECTION:NAME:DAEMON
+	 * exit:NAME. Exits in all directions are printed, the name is null if there
+	 * is no exit.
 	 * 
 	 * @return the list of exits formatted (in raw data).
 	 */
 	public String getExitsFormatted() {
 		String rtn = "";
-		for (Directions d : exits.keySet()) {
-			Room r = exits.get(d);
-			rtn += d + ":" + r.name + ":" + r.meanny.getName() + "\n";
+		for (Directions d : Directions.values()) {
+			try {
+				String rn = exits.get(d).name;
+				rtn += "exit:" + rn + "|";
+			} catch (NullPointerException e) {
+				rtn += "exit:null|";
+			}
 		}
 		return rtn;
 	}
