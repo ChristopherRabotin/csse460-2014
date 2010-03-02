@@ -132,5 +132,8 @@ All the second level elements are necessary.  -->
 		<ServerMsg for="hurty">
 			You were wounded @ health points.
 		</ServerMsg>
+		<ServerMsg for="exits">
+			The exits of $room are @ (in direction order).
+		</ServerMsg>
 	</GameMsgs>
 </data>

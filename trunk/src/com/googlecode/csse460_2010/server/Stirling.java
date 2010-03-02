@@ -324,9 +324,8 @@ public class Stirling {
 					outputLn += "\nendraw";
 				}
 			} else if (cmdarg.equals("exits")) { /* SHOW EXITS */
-				outputLn = "raw\n";
+				outputLn = "exits:";
 				outputLn += player.getRoom().getExitsFormatted();
-				outputLn += "\nendraw";
 			}
 		} else if (inputLn.startsWith("attack")) { /* ATTACK */
 			if (player.getState() != Player.States.COMBAT) {

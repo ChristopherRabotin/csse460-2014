@@ -147,9 +147,9 @@ public class Room {
 		for (Directions d : Directions.values()) {
 			try {
 				String rn = exits.get(d).name;
-				rtn += "exit:" + rn + "|";
+				rtn += rn + ", ";
 			} catch (NullPointerException e) {
-				rtn += "exit:null|";
+				rtn += "null, ";
 			}
 		}
 		return rtn;
