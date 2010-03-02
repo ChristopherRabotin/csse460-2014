@@ -103,7 +103,7 @@
 			<daemon name="LostKnight" health="425" value="775" attacks="EngulfingShadow,ComsumingFear" />
 			<daemon name="EarthDestroyer" health="500" value="1000" attacks="Crush,BFG" />
 		</Daemons>
-		<Attacks playersDefaultAttack="sword">
+		<Attacks playersDefaultAttack="Sword">
 			<attack name="Sword" damage="10" daemonOnly="false" />
 			<attack name="Flames" damage="20" daemonOnly="false" />
 			<attack name="RockBash" damage="5" daemonOnly="true" />

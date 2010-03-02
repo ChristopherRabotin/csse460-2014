@@ -134,7 +134,7 @@ public class Room {
 
 	/**
 	 * Returns the list of exits for this room.
-	 * 
+	 * A typical exit is formatted as:
 	 * @return the list of exits formatted (in raw data).
 	 */
 	public String getExitsFormatted() {
