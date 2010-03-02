@@ -126,5 +126,11 @@ All the second level elements are necessary.  -->
 		<ServerMsg for="dead">
 			The daemon is dead!
 		</ServerMsg>
+		<ServerMsg for="hurtd">
+			The daemon was wounded @ health points!
+		</ServerMsg>
+		<ServerMsg for="hurty">
+			You were wounded @ health points.
+		</ServerMsg>
 	</GameMsgs>
 </data>
