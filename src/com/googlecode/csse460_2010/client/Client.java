@@ -139,14 +139,24 @@ public class Client {
 	 */
 	private static String processClientInput() {
 		System.out.println(XMLParser.getClientMsg("input"));
-		String toServer = null, in, arg, reflectVar;
+		String toServer = null, in, cmd, arg, reflectVar;
 		Field fd;
 		try {
 			in = new BufferedReader(new InputStreamReader(System.in))
 					.readLine();
-			Command c = XMLParser.getCmd(in.split(" ")[0]);
+			cmd = in.split(" ")[0];
+			Command c = XMLParser.getCmd(cmd);
+			if (c == null) {
+				System.out.println(XMLParser.getClientMsg("invalidCmd")
+						.replace("@", cmd));
+				return toServer;
+			}
 			if (c.requestsArgument()) {
-				arg = in.split(" ")[1];
+				try {
+					arg = in.split(" ")[1];
+				} catch (ArrayIndexOutOfBoundsException e) {
+					throw new IllegalArgumentException(c.toString());
+				}
 				toServer = c.toServerCmd(arg);
 				reflectVar = c.getReflectVar();
 				if (reflectVar != null) {
@@ -165,8 +175,8 @@ public class Client {
 				}
 			}
 		} catch (IllegalArgumentException e) {
-			System.out.println(XMLParser.getClientMsg("invalid").replace("@",
-					e.getMessage()));
+			System.out.println(XMLParser.getClientMsg("invalidArg").replace(
+					"@", e.getMessage()));
 		} catch (IOException e) {
 			System.err.println("Unable to read from input at this time!\n" + e);
 		}
