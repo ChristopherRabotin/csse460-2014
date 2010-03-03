@@ -60,7 +60,7 @@ All the second level elements are necessary.  -->
 			server.
 		-->
 		<ClientMsg name="welcome">
-			Welcome to the game! Please enter your name:
+			Welcome to Death to the Destroyer: The Citadel of Terror! Noble knight pMalease enter your name:
 		</ClientMsg>
 		<ClientMsg name="nameThx">
 			Thank you! We are now establishing a connection with $cnxHost

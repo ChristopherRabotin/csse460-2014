@@ -43,26 +43,21 @@
 			</room>
 			<room name="DinningHall" daemon="TombZombie">
 				<exit direction="down" room="Ballroom" />
-				<exit direction="up" room="Staircase" />
 			</room>
 			<room name="Kitchen" daemon="TremblingTree">
 				<exit direction="left" room="DinningHall" />
-				<exit direction="down" room="Salon" />
 			</room>
 			<room name="Stables" daemon="DuchessOfDistruction">
 				<exit direction="left" room="Kitchen" />
 			</room>
 			<room name="ServantsQuarters" daemon="SpecturalMenace">
 				<exit direction="up" room="Stables" />
-				<exit direction="down" room="Kitchen" />
 			</room>
 			<room name="Salon" daemon="Banshee">
 				<exit direction="right" room="ServantsQuarters" />
-				<exit direction="left" room="Stables" />
 			</room>
 			<room name="Hallway" daemon="FireGremlin">
 				<exit direction="up" room="Salon" />
-				<exit direction="left" room="Ballroom" />
 			</room>
 			<room name="Conservatory" daemon="RockGollem">
 				<exit direction="right" room="Hallway" />
@@ -72,18 +67,15 @@
 			</room>
 			<room name="Gardens" daemon="LakeHydra">
 				<exit direction="up" room="Library" />
-				<exit direction="right" room="Conservatory" />
 			</room>
 			<room name="Atrium" daemon="RabidRabbit">
 				<exit direction="right" room="Gardens" />
 			</room>
 			<room name="Entryway" daemon="Meanny">
 				<exit direction="up" room="Atrium" />
-				<exit direction="left" room="Gardens" />
 			</room>
 			<room name="Courtyard" daemon="none">
 				<exit direction="up" room="Entryway" />
-				<exit direction="left" room="Gardens" />
 			</room>
 		</Rooms>
 		<Daemons>
