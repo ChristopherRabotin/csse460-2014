@@ -60,7 +60,7 @@ All the second level elements are necessary.  -->
 			server.
 		-->
 		<ClientMsg name="welcome">
-			Welcome to Death to the Destroyer: The Citadel of Terror! Noble knight pMalease enter your name:
+			Welcome to Death to the Destroyer: The Citadel of Terror! Noble knight.	Please enter your name:
 		</ClientMsg>
 		<ClientMsg name="nameThx">
 			Thank you! We are now establishing a connection with $cnxHost
@@ -75,8 +75,14 @@ All the second level elements are necessary.  -->
 		<ClientMsg name="invalidArg">
 			Invalid command usage. The correct usage is @.
 		</ClientMsg>
-		<ServerMsg for="MC">
-			Global notice: @
+		<ServerMsg for="MCjoin">
+			Player @ joined the game.
+		</ServerMsg>
+		<ServerMsg for="MCquit">
+			Player @ quit the game.
+		</ServerMsg>
+		<ServerMsg for="MCkilled">
+			Daemon @ is now dead!
 		</ServerMsg>
 		<ServerMsg for="welcome">
 			Welcome to @. 
@@ -123,7 +129,7 @@ All the second level elements are necessary.  -->
 		<ServerMsg for="deady">
 			You are dead.
 		</ServerMsg>
-		<ServerMsg for="dead">
+		<ServerMsg for="deadd">
 			The daemon is dead!
 		</ServerMsg>
 		<ServerMsg for="hurtd">
@@ -133,7 +139,10 @@ All the second level elements are necessary.  -->
 			You were wounded @ health points.
 		</ServerMsg>
 		<ServerMsg for="exits">
-			The exits of $room are @ (in direction order).
+			The exits of your current room are @ (in direction order).
+		</ServerMsg>
+		<ServerMsg for="Granted">
+			You are now in godmode.
 		</ServerMsg>
 	</GameMsgs>
 </data>

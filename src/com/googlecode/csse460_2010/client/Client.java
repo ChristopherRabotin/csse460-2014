@@ -54,7 +54,8 @@ public class Client {
 		 * We start by reading the XML file to communicate with the server.
 		 */
 		try {
-			XMLParser.loadNParse("./src/com/googlecode/csse460_2010/client/clientConf.xml");
+			XMLParser
+					.loadNParse("./src/com/googlecode/csse460_2010/client/clientConf.xml");
 		} catch (Throwable e) {
 			System.err.println("Error while loading the XML file!");
 			e.printStackTrace();
@@ -173,7 +174,8 @@ public class Client {
 						System.exit(0);
 					}
 				}
-			}
+			} else
+				toServer = c.toServerCmd("");
 		} catch (IllegalArgumentException e) {
 			System.out.println(XMLParser.getClientMsg("invalidArg").replace(
 					"@", e.getMessage()));
@@ -214,6 +216,10 @@ public class Client {
 			 * we don't print out anything as endraw is on its own line
 			 */
 			processRaw = false;
+		} else if (str.startsWith("endMC")) {
+			/*
+			 * we don't do anything here, it is just to catch the message from the server.
+			 */
 		} else if (processRaw) {
 			/*
 			 * if we are processing a raw input then we simply output it, no
@@ -243,7 +249,29 @@ public class Client {
 		}
 	}
 
+	/**
+	 * Used by SendPing to send the ping.
+	 * 
+	 * @return
+	 */
 	public static PrintWriter getWriteToSkt() {
 		return writeToSkt;
+	}
+
+	/**
+	 * This method is called by SendPing. Without it, the multicast messages
+	 * aren't "live".
+	 */
+	public static void flushSocketData() {
+		String tmpInputLn;
+		try {
+			while (!(tmpInputLn = readFromSkt.readLine()).equals("endMC")) {
+				if (tmpInputLn.length() > 0)
+					processServerMsg(tmpInputLn);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 }

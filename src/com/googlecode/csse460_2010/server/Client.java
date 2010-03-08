@@ -73,7 +73,9 @@ public class Client extends Thread {
 					inputLn = inputLn.trim();
 					/*
 					 * if there are messages pending to be sent (e.g. Multicast
-					 * msg), we send them now!
+					 * msg), we send them now! To notify the client that we have
+					 * finished sending the multicast messages, we send him
+					 * "endMC".
 					 */
 					while (msgQ.size() > 0) {
 						out.println(msgQ.peek());
@@ -82,6 +84,7 @@ public class Client extends Thread {
 						 * it's a sloppy implementation of a FIFO but it works.
 						 */
 					}
+					out.println("endMC");
 					/*
 					 * now we read an understand the information sent from the
 					 * client
@@ -96,7 +99,7 @@ public class Client extends Thread {
 						 */
 					} else if (inputLn.startsWith("godmode")) {
 						me.beatify();
-						out.println("Roger.");
+						out.println("Granted");
 					} else if (inputLn.startsWith("killserver")) {
 						if (me.isBlessed()) {
 							out.println("granted");
