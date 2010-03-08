@@ -104,7 +104,7 @@ public class Stirling {
 	 *            an instance of Client which represents the new player.
 	 */
 	synchronized public static void addPlayer(Client p) {
-		multicast("join " + p.getPlayer().getName());
+		multicast("MCjoin:" + p.getPlayer().getName());
 		players.add(p);
 		log.finest("Added player " + p.getPlayer().getName() + " (PlayerId="
 				+ p.getPlayer().getId() + "; ThreadId=" + p.getId() + ")");
@@ -119,7 +119,7 @@ public class Stirling {
 	 */
 	synchronized public static void rmPlayer(Client p) {
 		players.remove(p);
-		multicast("quit " + p.getPlayer().getName());
+		multicast("MCquit:" + p.getPlayer().getName());
 		log.finest("Removed player " + p.getPlayer().getName() + " (PlayerId="
 				+ p.getPlayer().getId() + "; ThreadId=" + p.getId() + ")");
 	}
@@ -205,6 +205,7 @@ public class Stirling {
 				p.addPoints(d.getVictoryPoints());
 				p.setState(Player.States.IDLE);
 				rtn += "|deadd";
+				multicast("MCkilled:"+d.getName());
 			}
 		}
 		checkAllDaemonsDead();
@@ -283,6 +284,7 @@ public class Stirling {
 			if (cmdarg.equals("players")) { /* SHOW PLAYERS */
 				outputLn = "raw\n";
 				outputLn += Stirling.getPlayersFormatted();
+				outputLn += "\nendraw";
 			} else if (cmdarg.equals("attacks")) { /* SHOW ATTACKS */
 				outputLn = "raw\n";
 				outputLn += "Name\t\tDamage\t\tDaemon reserved\n\n";
@@ -321,7 +323,7 @@ public class Stirling {
 					for (Attack atk : tmp.getAttacks()) {
 						outputLn += atk.getName() + " ";
 					}
-					outputLn="\n";
+					outputLn+="\n";
 				}
 				outputLn += "endraw";
 			} else if (cmdarg.equals("exits")) { /* SHOW EXITS */
