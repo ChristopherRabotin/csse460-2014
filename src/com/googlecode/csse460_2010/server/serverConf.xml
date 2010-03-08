@@ -24,11 +24,8 @@
 	<GameConfig>
 		<Rooms default="Courtyard">
 			<!--
-				Make sure to put the rooms with no exits first and have all the room
-				in hierarchical order. A room CANNOT reference another room as an
-				exit if it has not been PREVIOUSLY defined! That will lead to a NPE.
-				In other words, the final room cannot not have ANY exits and all
-				rooms are a point of no return.
+				Make sure to define the exit from room X to room Y,
+				and the exit from room Y back to room X.
 			-->
 			<room name="ThroneRoom" daemon="Destroyer">
 			</room>
@@ -37,32 +34,44 @@
 			</room>
 			<room name="Staircase" daemon="Shaman">
 				<exit direction="up" room="GrandHall" />
+				<exit direction="down" room="Staircase" />
 			</room>
 			<room name="Ballroom" daemon="Inferno">
 				<exit direction="left" room="Staircase" />
+				<exit direction="right" room="Salon" />
+				<exit direction="up" room="DinningHall" />
+				<exit direction="down" room="Conservatory" />
 			</room>
 			<room name="DinningHall" daemon="Zombie">
 				<exit direction="down" room="Ballroom" />
+				<exit direction="right" room="Kitchen" />
 			</room>
 			<room name="Kitchen" daemon="Rotgot">
 				<exit direction="left" room="DinningHall" />
+				<exit direction="down" room="Salon" />
 			</room>
 			<room name="Stables" daemon="Distruction">
 				<exit direction="left" room="Kitchen" />
 			</room>
 			<room name="Chapel" daemon="Menace">
 				<exit direction="up" room="Stables" />
+				<exit direction="left" room="Salon" />
 			</room>
 			<room name="Salon" daemon="Banshee">
+				<exit direction="left" room="Ballroom" />
 				<exit direction="right" room="Chapel" />
+				<exit direction="up" room="Kitchen" />
 			</room>
 			<room name="Hallway" daemon="Gremlin">
 				<exit direction="up" room="Salon" />
 			</room>
 			<room name="Conservatory" daemon="Gollem">
+				<exit direction="up" room="Ballroom" />
 				<exit direction="right" room="Hallway" />
+				<exit direction="left" room="Library" />
 			</room>
 			<room name="Library" daemon="Beast">
+				<exit direction="up" room="Staircase" />
 				<exit direction="right" room="Conservatory" />
 			</room>
 			<room name="Gardens" daemon="Hydra">
@@ -70,9 +79,11 @@
 			</room>
 			<room name="Atrium" daemon="Ghost">
 				<exit direction="right" room="Gardens" />
+				<exit direction="down" room="Entryway" />
 			</room>
 			<room name="Entryway" daemon="Meanny">
 				<exit direction="up" room="Atrium" />
+				<exit direction="left" room="Gardens" />
 			</room>
 			<room name="Courtyard" daemon="none">
 				<exit direction="up" room="Entryway" />
