@@ -256,7 +256,7 @@ public class XMLParser {
 	 *            the first character of the variable ($ or @, etc.)
 	 * @param obj
 	 *            an instance which contains the fields of the text variables
-	 * @return
+	 * @return the parsed welcome message.
 	 */
 	@SuppressWarnings("unchecked")
 	public static String getWelcomeMsg(String var, Object obj) {
@@ -301,7 +301,7 @@ public class XMLParser {
 	 *            the first character of the variable ($ or @, etc.)
 	 * @param cls
 	 *            the class which contains the fields of the text variables
-	 * @return
+	 * @return the parsed welcome message.
 	 */
 	@SuppressWarnings("unchecked")
 	public static String getWelcomeMsg(String var, Class cls) {

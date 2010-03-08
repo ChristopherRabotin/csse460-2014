@@ -33,7 +33,7 @@ public class Client {
 	 * they may not be used.
 	 */
 	@SuppressWarnings("unused")
-	static private String room, latestDirection, latestAttack;
+	static private String latestDirection, latestAttack;
 
 	/**
 	 * This is the main function. No arguments are necessary.
