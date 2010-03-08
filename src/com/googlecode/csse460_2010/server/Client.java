@@ -84,7 +84,6 @@ public class Client extends Thread {
 						 * it's a sloppy implementation of a FIFO but it works.
 						 */
 					}
-					out.println("endMC");
 					/*
 					 * now we read an understand the information sent from the
 					 * client
@@ -146,6 +145,7 @@ public class Client extends Thread {
 	 * socket.
 	 */
 	public void killClient() {
+		out.println("quit");
 		Stirling.rmPlayer(this);
 		out.close();
 		try {

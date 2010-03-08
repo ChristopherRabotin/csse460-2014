@@ -95,7 +95,8 @@ public class Command {
 	}
 
 	/**
-	 * Overrides the toString function of Object.
+	 * Overrides the toString function of Object. The output is cmd_name
+	 * [cmd_arg1 | cmd_arg2 | ... ]
 	 */
 	@Override
 	public String toString() {
@@ -105,5 +106,15 @@ public class Command {
 		}
 		// TODO remove the trailing |
 		return rtn + "]";
+	}
+
+	/**
+	 * Getter for the serverCmd. It is used to know if the player wants to quit
+	 * the game or not.
+	 * 
+	 * @return
+	 */
+	public String getServerCmd() {
+		return serverCmd;
 	}
 }

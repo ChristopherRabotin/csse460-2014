@@ -26,6 +26,7 @@ public class Client {
 	static private boolean processRaw = false;
 	static private BufferedReader readFromSkt;
 	static private PrintWriter writeToSkt;
+	static private Thread userInputThread;
 	/*
 	 * These variables will be used in the reflection which is why Java thinks
 	 * they may not be used.
@@ -107,12 +108,30 @@ public class Client {
 				 */
 				else
 					continue;
-				if (!processRaw) {
-					do {
-						outputLn = processClientInput();
-					} while (outputLn == null);
-					writeToSkt.println(outputLn);
+				if (!processRaw
+						&& (userInputThread == null || !userInputThread
+								.isAlive())) {
+					/*
+					 * we create a new thread to deal with the input of the
+					 * user. That way the MC messages send by the server are
+					 * received in time. If we are already asking for user
+					 * input, we don't ask again. There is only an esthetic
+					 * problem since the last line is the one from the multicast
+					 * message.
+					 */
 
+					userInputThread = new Thread("User Input Thread") {
+						public void run() {
+							/*
+							 * Loops until the user inputs a valid command
+							 */
+							do {
+								outputLn = processClientInput();
+							} while (outputLn == null);
+							writeToSkt.println(outputLn);
+						}
+					};
+					userInputThread.start();
 				}
 			}
 
@@ -176,6 +195,11 @@ public class Client {
 				}
 			} else
 				toServer = c.toServerCmd("");
+			if(c.getServerCmd().equals("quit")){
+				XMLParser.getClientMsg("quit");
+//TODO close all the streams
+				System.exit(0);
+			}
 		} catch (IllegalArgumentException e) {
 			System.out.println(XMLParser.getClientMsg("invalidArg").replace(
 					"@", e.getMessage()));
@@ -216,10 +240,6 @@ public class Client {
 			 * we don't print out anything as endraw is on its own line
 			 */
 			processRaw = false;
-		} else if (str.startsWith("endMC")) {
-			/*
-			 * we don't do anything here, it is just to catch the message from the server.
-			 */
 		} else if (processRaw) {
 			/*
 			 * if we are processing a raw input then we simply output it, no
@@ -258,20 +278,4 @@ public class Client {
 		return writeToSkt;
 	}
 
-	/**
-	 * This method is called by SendPing. Without it, the multicast messages
-	 * aren't "live".
-	 */
-	public static void flushSocketData() {
-		String tmpInputLn;
-		try {
-			while (!(tmpInputLn = readFromSkt.readLine()).equals("endMC")) {
-				if (tmpInputLn.length() > 0)
-					processServerMsg(tmpInputLn);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-	}
 }

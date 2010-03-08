@@ -76,7 +76,7 @@ public class Stirling {
 				 */
 				continue;
 			}
-			c.queueMsg("MC:Server shutting down. Good bye.");
+			c.queueMsg("MCdying");
 			c.killClient();
 		}
 		whoasked.killClient();
@@ -94,7 +94,7 @@ public class Stirling {
 	synchronized public static void multicast(String msg) {
 		players.trimToSize();
 		for (Client c : players)
-			c.queueMsg("MC:" + msg);
+			c.queueMsg(msg);
 	}
 
 	/**
