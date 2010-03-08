@@ -47,6 +47,10 @@ All the second level elements are necessary.  -->
 			<args serverValid="none" clientValid="*"/>
 			If the client wishes to quit the game.
 		</cmd>
+		<cmd client="iwin" server="iwin">
+			<args serverValid="none" clientValid="*"/>
+			Cheating is bad!
+		</cmd>
 	</Cmds>
 	<!--
 		The predefined ClientMsg are necessary. The predefined ServerMsg are
@@ -90,6 +94,12 @@ All the second level elements are necessary.  -->
 		</ServerMsg>
 		<ServerMsg for="MCkilled">
 			Daemon @ is now dead!
+		</ServerMsg>
+		<ServerMsg for="MCwin">
+			Good job! All the daemons are dead. A new game will start in @ seconds.
+		</ServerMsg>
+		<ServerMsg for="MCng">
+			A new game has started.
 		</ServerMsg>
 		<ServerMsg for="welcome">
 			Welcome to @. 

@@ -210,7 +210,7 @@ public class Player {
 	 * two or more players are simultaneously fighting the same daemon: only the
 	 * player who defeats it gets his/her state changed.
 	 * 
-	 * @return
+	 * @return the state of the player.
 	 */
 	public States getState() {
 		// this condition means that another player killed this daemon when both
@@ -225,7 +225,7 @@ public class Player {
 	/**
 	 * Getter to check if the current player is still alive.
 	 * 
-	 * @return
+	 * @return whether the player is alive or not.
 	 */
 	public boolean isAlive() {
 		return isAlive;
@@ -243,7 +243,7 @@ public class Player {
 	/**
 	 * Checks whether a player is a God or not.
 	 * 
-	 * @return
+	 * @return whether the player is in godmode or not.
 	 */
 	public boolean isBlessed() {
 		return isBlessed;

@@ -272,7 +272,7 @@ public class Client {
 	/**
 	 * Used by SendPing to send the ping.
 	 * 
-	 * @return
+	 * @return the PrintWrite descriptor.
 	 */
 	public static PrintWriter getWriteToSkt() {
 		return writeToSkt;

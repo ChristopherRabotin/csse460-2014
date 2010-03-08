@@ -112,7 +112,7 @@ public class Command {
 	 * Getter for the serverCmd. It is used to know if the player wants to quit
 	 * the game or not.
 	 * 
-	 * @return
+	 * @return the serverCmd
 	 */
 	public String getServerCmd() {
 		return serverCmd;

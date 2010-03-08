@@ -159,7 +159,7 @@ public class Client extends Thread {
 	/**
 	 * Return the Player instance of this Client instance.
 	 * 
-	 * @return
+	 * @return the player isntance of this Client instance.
 	 */
 	public Player getPlayer() {
 		return me;
