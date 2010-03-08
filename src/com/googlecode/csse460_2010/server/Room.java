@@ -104,7 +104,7 @@ public class Room {
 	 */
 	public void addExit(Room e, String direction) {
 		try {
-			exits.put(Directions.toDirection(direction), e);
+			exits.put(Directions.valueOf(direction), e);
 			Stirling.log.config("Added exit " + e.getName() + " " + direction
 					+ " from " + this.name);
 		} catch (IllegalArgumentException ex) {
@@ -132,7 +132,7 @@ public class Room {
 	 * @return the exit for the given direction
 	 */
 	public Room getExit(String where) {
-		return exits.get(Directions.toDirection(where));
+		return exits.get(Directions.valueOf(where));
 	}
 
 	/**

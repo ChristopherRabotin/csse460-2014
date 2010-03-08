@@ -78,7 +78,7 @@
 				<exit direction="up" room="Library" />
 			</room>
 			<room name="Atrium" daemon="Ghost">
-				<exit direction="right" room="Gardens" />
+				<exit direction="left" room="Gardens" />
 				<exit direction="down" room="Entryway" />
 			</room>
 			<room name="Entryway" daemon="Meanny">

@@ -6,16 +6,16 @@ import java.util.TimerTask;
 public class SendPing extends TimerTask{
 	private static Timer pingTimer = new Timer();
 	/**
-	 * The constructor is to called to initialize the timer task.
+	 * This method initializes the timer task.
 	 */
-	public SendPing(){
-		/*
-		 * cnxPingTime is in milliseconds already.
-		 */
-		pingTimer.scheduleAtFixedRate(this, 0, XMLParser.getCnxPingTime());
-	}
 	public static void init(){
-		pingTimer.scheduleAtFixedRate(new SendPing(), 0, XMLParser.getCnxPingTime()*1000);
+		pingTimer.scheduleAtFixedRate(new SendPing(), 0, XMLParser.getCnxPingTime());
+	}
+	/**
+	 * This method stops the timer task.
+	 */
+	public static void kill(){
+		pingTimer.cancel();
 	}
 	/**
 	 * This is the method which takes care of sending the "ping" message to the
