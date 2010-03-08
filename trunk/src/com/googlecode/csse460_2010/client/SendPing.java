@@ -26,7 +26,6 @@ public class SendPing extends TimerTask{
 	@Override
 	public void run() {
 		Client.getWriteToSkt().println("ping");
-		Client.flushSocketData();
 	}
 	
 }

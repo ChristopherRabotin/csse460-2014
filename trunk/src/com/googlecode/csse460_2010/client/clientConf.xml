@@ -76,6 +76,12 @@ All the second level elements are necessary.  -->
 		<ClientMsg name="invalidArg">
 			Invalid command usage. The correct usage is @.
 		</ClientMsg>
+		<ClientMsg for="quit">
+			Thank you for playing the game. Have a good day!
+		</ClientMsg>
+		<ServerMsg for="MCdying">
+			The game server is going down for halt now. Have a good day.
+		</ServerMsg>
 		<ServerMsg for="MCjoin">
 			Player @ joined the game.
 		</ServerMsg>
