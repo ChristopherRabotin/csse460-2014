@@ -111,7 +111,7 @@ All the second level elements are necessary.  -->
 			You may not flee from your current combat. Be victorious and you will be able to move. 
 		</ServerMsg>
 		<ServerMsg for="noexit">
-			No such exit: @ from $room.
+			There is no exit @ of your current room.
 		</ServerMsg>
 		<ServerMsg for="fighting">
 			You are now fighting daemon @!
