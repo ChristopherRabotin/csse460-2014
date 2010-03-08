@@ -205,7 +205,7 @@ public class Stirling {
 				p.addPoints(d.getVictoryPoints());
 				p.setState(Player.States.IDLE);
 				rtn += "|deadd";
-				multicast("MCkilled:"+d.getName());
+				multicast("MCkilled:" + d.getName());
 			}
 		}
 		checkAllDaemonsDead();
@@ -218,36 +218,31 @@ public class Stirling {
 	 * specified in the server configuration XML file.
 	 */
 	public static void checkAllDaemonsDead() {
-		boolean allDead = true;
-		for (String ds : XMLParser.getDaemons().keySet()) {
-			if (XMLParser.getDaemons().get(ds).isAlive()) {
-				allDead = false;
-				break; // no need to continue searching, at least one is alive.
-			}
+		for (Daemon grr : XMLParser.getDaemons().values()) {
+			if (grr.isAlive())
+				return; // no need to continue searching, at least one is alive.
 		}
-		if (allDead) {
-			log.info("All daemons are dead. The server will restart in "
-					+ (XMLParser.getServerRestartTime()) / 1000 + " seconds.");
-			multicast("victory. Reset in " + XMLParser.getServerRestartTime()
-					+ " seconds.");
-			// now we restart the server after X seconds
-			TimerTask resetTask = new TimerTask() {
-				@Override
-				public void run() {
-					log.info("Restarting server now.");
-					// start be setting all the players back to the original
-					// room
-					for (Client c : players) {
-						c.getPlayer().reset();
-					}
-					for (String ds : XMLParser.getDaemons().keySet()) {
-						XMLParser.getDaemons().get(ds).reset();
-					}
-					multicast("A new game has started.");
+		log.info("All daemons are dead. The server will restart in "
+				+ (XMLParser.getServerRestartTime()) / 1000 + " seconds.");
+		multicast("MCwin:" + XMLParser.getServerRestartTime());
+		// now we restart the server after X seconds
+		TimerTask resetTask = new TimerTask() {
+			@Override
+			public void run() {
+				log.info("Restarting server now.");
+				// start be setting all the players back to the original
+				// room
+				for (Client c : players) {
+					c.getPlayer().reset();
 				}
-			};
-			(new Timer()).schedule(resetTask, XMLParser.getServerRestartTime());
-		}
+				for (String ds : XMLParser.getDaemons().keySet()) {
+					XMLParser.getDaemons().get(ds).reset();
+				}
+				multicast("MCng");
+			}
+		};
+		(new Timer()).schedule(resetTask, XMLParser.getServerRestartTime());
+
 	}
 
 	/**
@@ -297,11 +292,11 @@ public class Stirling {
 				}
 				outputLn += "\nendraw";
 
-			}  else if (cmdarg.equals("myattacks")) { /* SHOW MYATTACKS */
+			} else if (cmdarg.equals("myattacks")) { /* SHOW MYATTACKS */
 				outputLn = "raw\n";
 				outputLn += "Name\t\tDamage\n\n";
 				ArrayList<Attack> atks = player.getAtks();
-				for(Attack atk:atks){
+				for (Attack atk : atks) {
 					outputLn += atk.getName() + "\t\t" + atk.getDamage() + "\n";
 				}
 				outputLn += "\nendraw";
@@ -323,7 +318,7 @@ public class Stirling {
 					for (Attack atk : tmp.getAttacks()) {
 						outputLn += atk.getName() + " ";
 					}
-					outputLn+="\n";
+					outputLn += "\n";
 				}
 				outputLn += "endraw";
 			} else if (cmdarg.equals("exits")) { /* SHOW EXITS */
@@ -361,6 +356,19 @@ public class Stirling {
 				}
 			} catch (NullPointerException e) {
 				outputLn = "atkBunknown:" + cmdarg;
+			}
+		} else if (inputLn.startsWith("iwin")) { /* IWIN */
+			if (player.isBlessed()) {
+				for (Daemon grr : XMLParser.getDaemons().values()) {
+					if (grr.isAlive()) {
+						grr.lowerHealth(grr.getFullHealth());
+						multicast("MCkilled:" + grr.getName());
+					}
+				}
+				/*
+				 * We call checkAllDaemonsDead just to restart the server.
+				 */
+				checkAllDaemonsDead();
 			}
 		}
 		return outputLn;
