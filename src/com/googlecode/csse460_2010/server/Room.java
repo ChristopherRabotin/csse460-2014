@@ -24,34 +24,6 @@ public class Room {
 		 * Here are defined the valid directions.
 		 */
 		up, down, left, right;
-		/**
-		 * Converts a direction expressed as a String to its equivalent in the
-		 * Direction enum class.
-		 * 
-		 * @param direction
-		 *            the direction as a String
-		 * @return the direction as a Direction
-		 * @throws IllegalArgumentException
-		 */
-		public static Directions toDirection(String direction)
-				throws IllegalArgumentException {
-			Directions rtn = null;
-			if (direction.equals("up")) {
-				rtn = Directions.up;
-			} else if (direction.equals("down")) {
-				rtn = Directions.down;
-			} else if (direction.equals("left")) {
-				rtn = Directions.left;
-			} else if (direction.equals("right")) {
-				rtn = Directions.right;
-			} else {
-				Stirling.log.severe("Asked for direction " + direction
-						+ " which doesn't exist!");
-				throw new IllegalArgumentException("Unkown direction "
-						+ direction);
-			}
-			return rtn;
-		}
 
 		/**
 		 * Converts a direction expressed in the enum Direction to its

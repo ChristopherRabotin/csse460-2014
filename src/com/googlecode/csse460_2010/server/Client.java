@@ -76,7 +76,8 @@ public class Client extends Thread {
 					 * msg), we send them now!
 					 */
 					while (msgQ.size() > 0) {
-						out.println(msgQ.peek());
+						String tmp = msgQ.firstElement();
+						out.println(tmp);
 						out.flush();
 						msgQ.remove(0);
 						/*
