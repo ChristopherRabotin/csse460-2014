@@ -79,21 +79,21 @@
 			</room>
 		</Rooms>
 		<Daemons>
-			<daemon name="Meanny" health="100" value="10" attacks="Flames,Crush" />
-			<daemon name="Ghost" health="105" value="50" attacks="Maul,ASlice" />
-			<daemon name="Gremlin" health="105" value="50" attacks="Flames,Bash" />
-			<daemon name="Hydra" health="110" value="100" attacks="Vines,Suffocate" />
-			<daemon name="Beast" health="115" value="150" attacks="Needles,Vortex" />
-			<daemon name="Gollum" health="125" value="200" attacks="RBash,Shock" />
-			<daemon name="Banshee" health="200" value="250" attacks="Vortex,Shadow" />
-			<daemon name="Menace" health="250" value="300" attacks="Storm,Suffocate" />
-			<daemon name="Distruction" health="300" value="400" attacks="Suffocate,Shadow" />
-			<daemon name="Rotgut" health="325" value="500" attacks="Vines,Shock" />
-			<daemon name="Zombie" health="350" value="600" attacks="Shackle,Storm" />
-			<daemon name="Inferno" health="375" value="700" attacks="Flames,Lightning" />
-			<daemon name="Shaman" health="400" value="750" attacks="Storm,Shock" />
-			<daemon name="Knight" health="425" value="775" attacks="Shadow,Fear" />
-			<daemon name="Destroyer" health="500" value="1000" attacks="Crush,BFG" />
+			<daemon name="Meanny" health="10" value="10" attacks="Flames,Crush" />
+			<daemon name="Ghost" health="15" value="50" attacks="Maul,ASlice" />
+			<daemon name="Gremlin" health="15" value="50" attacks="Flames,Bash" />
+			<daemon name="Hydra" health="25" value="100" attacks="Vines,Suffocate" />
+			<daemon name="Beast" health="25" value="150" attacks="Needles,Vortex" />
+			<daemon name="Gollum" health="35" value="200" attacks="RBash,Shock" />
+			<daemon name="Banshee" health="35" value="250" attacks="Vortex,Shadow" />
+			<daemon name="Menace" health="45" value="300" attacks="Storm,Suffocate" />
+			<daemon name="Distruction" health="45" value="400" attacks="Suffocate,Shadow" />
+			<daemon name="Rotgut" health="55" value="500" attacks="Vines,Shock" />
+			<daemon name="Zombie" health="60" value="600" attacks="Shackle,Storm" />
+			<daemon name="Inferno" health="65" value="700" attacks="Flames,Lightning" />
+			<daemon name="Shaman" health="75" value="750" attacks="Storm,Shock" />
+			<daemon name="Knight" health="80" value="775" attacks="Shadow,Fear" />
+			<daemon name="Destroyer" health="100" value="1000" attacks="Crush,BFG" />
 		</Daemons>
 		<Attacks playersDefaultAttack="Sword">
 			<attack name="Sword" damage="10" daemonOnly="false" />
