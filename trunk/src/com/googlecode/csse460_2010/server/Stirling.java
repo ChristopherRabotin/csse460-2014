@@ -369,6 +369,8 @@ public class Stirling {
 				 * We call checkAllDaemonsDead just to restart the server.
 				 */
 				checkAllDaemonsDead();
+			}else{
+				outputLn="denied";
 			}
 		}
 		return outputLn;

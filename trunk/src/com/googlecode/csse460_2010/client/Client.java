@@ -140,7 +140,7 @@ public class Client {
 					userInputThread.start();
 				}
 			}
-			XMLParser.getClientMsg("quit");
+			System.out.println(XMLParser.getClientMsg("quit"));
 			SendPing.kill();
 			readFromSkt.close();
 			writeToSkt.close();
@@ -202,7 +202,7 @@ public class Client {
 				}
 			} else
 				toServer = c.toServerCmd("");
-			if(c.getServerCmd().equals("quit")){
+			if(c.getServerCmd().equals("bye")){
 				quitting=true;
 			}
 		} catch (IllegalArgumentException e) {

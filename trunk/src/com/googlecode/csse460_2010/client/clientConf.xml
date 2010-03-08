@@ -164,5 +164,8 @@ All the second level elements are necessary.  -->
 		<ServerMsg for="Granted">
 			You are now in godmode.
 		</ServerMsg>
+		<ServerMsg for="denied">
+			You do not have permission to execute this action.
+		</ServerMsg>
 	</GameMsgs>
 </data>
