@@ -85,13 +85,13 @@ public class Stirling {
 
 	/**
 	 * This messages enqueues the message msg as a multicast message to all
-	 * users. It is synchronized in case multiple instances of
-	 * server/Client.java call it, e.g. multiple simultaneous connections.
+	 * users. It is not synchronized because it is only called by Stirling,
+	 * which is static and has only one thread.
 	 * 
 	 * @param msg
 	 *            multicast message
 	 */
-	synchronized public static void multicast(String msg) {
+	public static void multicast(String msg) {
 		players.trimToSize();
 		for (Client c : players)
 			c.queueMsg(msg);
@@ -224,7 +224,7 @@ public class Stirling {
 		}
 		log.info("All daemons are dead. The server will restart in "
 				+ (XMLParser.getServerRestartTime()) / 1000 + " seconds.");
-		multicast("MCwin:" + XMLParser.getServerRestartTime());
+		multicast("MCwin:" + XMLParser.getServerRestartTime() / 1000);
 		// now we restart the server after X seconds
 		TimerTask resetTask = new TimerTask() {
 			@Override

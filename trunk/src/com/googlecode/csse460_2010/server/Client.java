@@ -73,12 +73,11 @@ public class Client extends Thread {
 					inputLn = inputLn.trim();
 					/*
 					 * if there are messages pending to be sent (e.g. Multicast
-					 * msg), we send them now! To notify the client that we have
-					 * finished sending the multicast messages, we send him
-					 * "endMC".
+					 * msg), we send them now!
 					 */
 					while (msgQ.size() > 0) {
 						out.println(msgQ.peek());
+						out.flush();
 						msgQ.remove(0);
 						/*
 						 * it's a sloppy implementation of a FIFO but it works.
@@ -145,7 +144,6 @@ public class Client extends Thread {
 	 * socket.
 	 */
 	public void killClient() {
-		out.println("quit");
 		Stirling.rmPlayer(this);
 		out.close();
 		try {

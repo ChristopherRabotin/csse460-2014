@@ -43,11 +43,11 @@ All the second level elements are necessary.  -->
 			<args serverValid="none" clientValid="*"/>
 			The player's attack are ten times or powerful and his resistance to damage is ten times higher.
 		</cmd>
-		<cmd client="quit" sever="bye">
+		<cmd client="quit" server="bye">
 			<args serverValid="none" clientValid="*"/>
 			If the client wishes to quit the game.
 		</cmd>
-		<cmd client="iwin" server="iwin">
+		<cmd client="iwin" server="iwin champagne">
 			<args serverValid="none" clientValid="*"/>
 			Cheating is bad!
 		</cmd>
@@ -80,8 +80,11 @@ All the second level elements are necessary.  -->
 		<ClientMsg name="invalidArg">
 			Invalid command usage. The correct usage is @.
 		</ClientMsg>
-		<ClientMsg for="quit">
+		<ClientMsg name="quit">
 			Thank you for playing the game. Have a good day!
+		</ClientMsg>
+		<ClientMsg name="cnxErr">
+			Sorry, could not connect to server @. Make sure it's up and running.
 		</ClientMsg>
 		<ServerMsg for="MCdying">
 			The game server is going down for halt now. Have a good day.

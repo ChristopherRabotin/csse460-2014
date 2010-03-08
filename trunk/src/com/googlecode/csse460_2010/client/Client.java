@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
+import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -23,7 +24,7 @@ public class Client {
 	static private InetAddress addr;
 	static private SocketAddress sockaddr;
 	static private Socket skt;
-	static private boolean processRaw = false;
+	static private boolean processRaw = false, quitting=false;
 	static private BufferedReader readFromSkt;
 	static private PrintWriter writeToSkt;
 	static private Thread userInputThread;
@@ -88,7 +89,12 @@ public class Client {
 			 * This method will block no more than timeout (in milliseconds). If
 			 * the timeout occurs, SocketTimeoutException is thrown.
 			 */
-			skt.connect(sockaddr, timeout);
+			try{
+				skt.connect(sockaddr, timeout);
+			}catch (ConnectException e){
+				System.out.println(XMLParser.getClientMsg("cnxErr").replace("@", host+":"+port));
+				System.exit(0);
+			}
 			readFromSkt = new BufferedReader(new InputStreamReader(skt
 					.getInputStream()));
 			writeToSkt = new PrintWriter(skt.getOutputStream(), true);
@@ -97,9 +103,9 @@ public class Client {
 			/*
 			 * Now we start the ping timer
 			 */
-			new SendPing();
+			SendPing.init();
 
-			while ((inputLn = readFromSkt.readLine()) != null) {
+			while ((inputLn = readFromSkt.readLine()) != null && !quitting) {
 				if (inputLn.length() > 0)
 					processServerMsg(inputLn);
 				/*
@@ -134,7 +140,8 @@ public class Client {
 					userInputThread.start();
 				}
 			}
-
+			XMLParser.getClientMsg("quit");
+			SendPing.kill();
 			readFromSkt.close();
 			writeToSkt.close();
 		} catch (Throwable e) {
@@ -196,9 +203,7 @@ public class Client {
 			} else
 				toServer = c.toServerCmd("");
 			if(c.getServerCmd().equals("quit")){
-				XMLParser.getClientMsg("quit");
-//TODO close all the streams
-				System.exit(0);
+				quitting=true;
 			}
 		} catch (IllegalArgumentException e) {
 			System.out.println(XMLParser.getClientMsg("invalidArg").replace(
