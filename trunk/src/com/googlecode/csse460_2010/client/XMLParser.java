@@ -228,7 +228,7 @@ public class XMLParser {
 		String rtn = clientMsgs.get(key);
 		if (rtn == null)
 			throw new IllegalArgumentException(key
-					+ " is not a valid server message!");
+					+ " is not a valid client message!");
 		return rtn;
 	}
 

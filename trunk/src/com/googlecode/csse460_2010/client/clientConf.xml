@@ -68,12 +68,18 @@ All the second level elements are necessary.  -->
 			class. @ correspond to the second part of the message sent by the
 			server.
 		-->
+		<ClientMsg name="guiTitle">
+			CSSE 460 Game
+		</ClientMsg>
 		<ClientMsg name="helpIntro">
 			Usage for
 		</ClientMsg>
 		<ClientMsg name="welcome">
 			Welcome to Death to the Destroyer: The Citadel of Terror! 
-			Noble knight. Please enter your name:
+			Noble knight.
+		</ClientMsg>
+		<ClientMsg name="askName">
+		 	Please enter your name.
 		</ClientMsg>
 		<ClientMsg name="nameThx">
 			Thank you! We are now establishing a connection with $cnxHost
