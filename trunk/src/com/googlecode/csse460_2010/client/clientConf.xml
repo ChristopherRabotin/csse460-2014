@@ -71,6 +71,12 @@ All the second level elements are necessary.  -->
 		<ClientMsg name="guiTitle">
 			CSSE 460 Game
 		</ClientMsg>
+		<ClientMsg name="errTitle">
+			Error
+		</ClientMsg>
+		<ClientMsg name="mcTitle">
+			Multicast message
+		</ClientMsg>
 		<ClientMsg name="helpIntro">
 			Usage for
 		</ClientMsg>

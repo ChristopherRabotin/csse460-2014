@@ -80,7 +80,7 @@ public class Client {
 		 * Then we print the welcome message to the user.
 		 */
 		ui.stdMsg(XMLParser.getClientMsg("welcome"));
-		name = ui.getUserInput(XMLParser.getClientMsg("askName"));
+		name = ui.getUserCmdInput(XMLParser.getClientMsg("askName"));
 		ui.stdMsg(XMLParser.parseMsg(XMLParser.getClientMsg("nameThx"),
 				XMLParser.class));
 		try {
@@ -172,7 +172,7 @@ public class Client {
 	private static String processClientInput() {
 		String toServer = null, in, cmd, arg, reflectVar;
 		Field fd;
-		in = ui.getUserInput(XMLParser.getClientMsg("input"));
+		in = ui.getUserCmdInput(XMLParser.getClientMsg("input"));
 		try {
 			in = in.toLowerCase(); /* case sensitive is a pain */
 			cmd = in.split(" ")[0];
@@ -223,7 +223,7 @@ public class Client {
 				ui.stdMsg(helpC.getHelpMsg());
 			}
 		} catch (IllegalArgumentException e) {
-			ui.stdMsg(e.getMessage());
+			ui.errMsg(e.getMessage());
 		}
 		return toServer;
 	}
@@ -283,7 +283,11 @@ public class Client {
 					toClient = toClient.replaceAll("@", args[1]);
 				}
 				toClient = XMLParser.parseMsg(toClient, Client.class);
-				ui.stdMsg(toClient);
+				if(args[0].startsWith("MC")){
+					ui.mcMsg(toClient);
+				}else{
+					ui.stdMsg(toClient);
+				}
 			}
 		}
 	}

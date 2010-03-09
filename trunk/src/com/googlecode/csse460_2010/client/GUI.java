@@ -15,7 +15,6 @@ public class GUI extends JFrame implements UIFactory {
 	private javax.swing.JScrollPane jScrollPane = null;
 	private javax.swing.JTextArea jTextArea = null;
 
-
 	/**
 	 * This method initializes
 	 * 
@@ -55,7 +54,7 @@ public class GUI extends JFrame implements UIFactory {
 				.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
 			public void windowClosing(java.awt.event.WindowEvent e) {
-				//TODO this
+				// TODO this
 			}
 		});
 		this.setVisible(true);
@@ -123,7 +122,7 @@ public class GUI extends JFrame implements UIFactory {
 			jButton2.setText("Exit");
 			jButton2.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					//TODO this
+					// TODO this
 				}
 			});
 		}
@@ -141,7 +140,7 @@ public class GUI extends JFrame implements UIFactory {
 			jButton3.setText("Exit");
 			jButton3.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					//TODO this
+					// TODO this
 				}
 			});
 		}
@@ -174,7 +173,7 @@ public class GUI extends JFrame implements UIFactory {
 				public void keyTyped(java.awt.event.KeyEvent e) {
 					if (e.isAltDown()
 							&& e.getKeyChar() == java.awt.event.KeyEvent.VK_C) {
-						//TODO cheat!
+						// TODO cheat!
 					}
 				}
 			});
@@ -184,7 +183,8 @@ public class GUI extends JFrame implements UIFactory {
 
 	@Override
 	public void mcMsg(String msg) {
-		JOptionPane.showMessageDialog(this, msg);
+		JOptionPane.showMessageDialog(this, msg, XMLParser
+				.getClientMsg("mcTitle"), JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	@Override
@@ -193,14 +193,24 @@ public class GUI extends JFrame implements UIFactory {
 	}
 
 	@Override
-	public String getUserInput(String title) {
-		return JOptionPane.showInputDialog(title);
+	public String getUserCmdInput(String title) {
+		String rtn = null;
+		do {
+			rtn = JOptionPane.showInputDialog(title);
+		} while (rtn == null || rtn.equals(""));
+		return rtn;
 	}
 
 	@Override
 	public void errMsg(String msg) {
-		JOptionPane.showMessageDialog(this, msg, "Error",
-				JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(this, msg, XMLParser
+				.getClientMsg("errTitle"), JOptionPane.ERROR_MESSAGE);
 
+	}
+
+	@Override
+	public String getUserGlbInput(String title) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
