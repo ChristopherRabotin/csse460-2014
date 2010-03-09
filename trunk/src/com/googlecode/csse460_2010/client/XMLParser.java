@@ -201,7 +201,7 @@ public class XMLParser {
 	public static int getCnxPort() {
 		return cnxPort;
 	}
-	
+
 	/**
 	 * Getter of cnxPingTime.
 	 * 
@@ -210,6 +210,7 @@ public class XMLParser {
 	public static int getCnxPingTime() {
 		return cnxPingTime;
 	}
+
 	/**
 	 * Getter for a particular client message.
 	 * 
@@ -224,12 +225,11 @@ public class XMLParser {
 	 */
 	public static String getClientMsg(String key)
 			throws IllegalArgumentException {
-		try {
-			return clientMsgs.get(key);
-		} catch (NullPointerException e) {
+		String rtn = clientMsgs.get(key);
+		if (rtn == null)
 			throw new IllegalArgumentException(key
-					+ " is not a valid client message!");
-		}
+					+ " is not a valid server message!");
+		return rtn;
 	}
 
 	/**
@@ -246,12 +246,11 @@ public class XMLParser {
 	 */
 	public static String getServerMsg(String key)
 			throws IllegalArgumentException {
-		try {
-			return serverMsgs.get(key);
-		} catch (NullPointerException e) {
+		String rtn = serverMsgs.get(key);
+		if (rtn == null)
 			throw new IllegalArgumentException(key
 					+ " is not a valid server message!");
-		}
+		return rtn;
 	}
 
 	/**
@@ -265,10 +264,10 @@ public class XMLParser {
 	 *             thrown. This happens if the player input an invalid command.
 	 */
 	public static Command getCmd(String key) throws IllegalArgumentException {
-		try {
-			return cmds.get(key);
-		} catch (NullPointerException e) {
-			throw new IllegalArgumentException(key + " is not a valid command.");
-		}
+		Command rtn = cmds.get(key);
+		if (rtn == null)
+			throw new IllegalArgumentException(XMLParser.getClientMsg(
+			"invalidCmd").replace("@", key));
+		return rtn;
 	}
 }
