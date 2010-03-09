@@ -32,11 +32,20 @@ public interface UIFactory {
 	public void errMsg(String msg);
 
 	/**
-	 * This method is called to get the user input.
+	 * This method is called to get the command input by the user.
 	 * 
 	 * @param title
 	 *            the title of the input message
-	 * @return the user input
+	 * @return the user's input
 	 */
-	public String getUserInput(String title);
+	public String getUserCmdInput(String title);
+
+	/**
+	 * This method is called to get normal input.
+	 * 
+	 * @param title
+	 *            the title of the input message
+	 * @return the user's input
+	 */
+	public String getUserGlbInput(String title);
 }

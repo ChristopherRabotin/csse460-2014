@@ -17,13 +17,13 @@ public class TUI implements UIFactory {
 	}
 
 	@Override
-	public String getUserInput(String title) {
+	public String getUserCmdInput(String title) {
 		String in = null;
 		try {
 			in = new BufferedReader(new InputStreamReader(System.in))
 					.readLine();
 		} catch (IOException e) {
-			System.out.println("Unable to read from input at this time!\n" + e);
+			System.err.println("Unable to read from input at this time!\n" + e);
 		}
 		return in;
 	}
@@ -31,6 +31,11 @@ public class TUI implements UIFactory {
 	@Override
 	public void errMsg(String msg) {
 		System.err.println(msg);
+	}
+
+	@Override
+	public String getUserGlbInput(String title) {
+		return getUserCmdInput(title);
 	}
 
 }
