@@ -24,7 +24,7 @@ All the second level elements are necessary.  -->
 		-->
 		<cmd client="move" server="go" special="latestDirection">
 			<args clientValid="north,south,west,east" serverValid="up,down,left,right" />
-			Followed by the direction up/down/left/right enable you to move from
+			Followed by the direction north,south,west,east enable you to move from
 			one room to another.
 		</cmd>
 		<cmd client="show" server="show">
@@ -45,11 +45,16 @@ All the second level elements are necessary.  -->
 		</cmd>
 		<cmd client="quit" server="bye">
 			<args serverValid="none" clientValid="*"/>
-			If the client wishes to quit the game.
+			To quit the game.
 		</cmd>
 		<cmd client="iwin" server="iwin champagne">
 			<args serverValid="none" clientValid="*"/>
 			Cheating is bad!
+		</cmd>
+		<cmd client="help" server="help">
+			<args serverValid="none" clientValid="*"/>
+			Followed by the command you need help with. Between the brackets are the valid arguments. If
+			the valid argument is *, then any argument is valid.
 		</cmd>
 	</Cmds>
 	<!--
@@ -63,6 +68,9 @@ All the second level elements are necessary.  -->
 			class. @ correspond to the second part of the message sent by the
 			server.
 		-->
+		<ClientMsg name="helpIntro">
+			Usage for
+		</ClientMsg>
 		<ClientMsg name="welcome">
 			Welcome to Death to the Destroyer: The Citadel of Terror! 
 			Noble knight. Please enter your name:

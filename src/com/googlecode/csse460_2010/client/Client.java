@@ -24,7 +24,7 @@ public class Client {
 	static private InetAddress addr;
 	static private SocketAddress sockaddr;
 	static private Socket skt;
-	static private boolean processRaw = false, quitting=false;
+	static private boolean processRaw = false, quitting = false;
 	static private BufferedReader readFromSkt;
 	static private PrintWriter writeToSkt;
 	static private Thread userInputThread;
@@ -89,10 +89,11 @@ public class Client {
 			 * This method will block no more than timeout (in milliseconds). If
 			 * the timeout occurs, SocketTimeoutException is thrown.
 			 */
-			try{
+			try {
 				skt.connect(sockaddr, timeout);
-			}catch (ConnectException e){
-				System.out.println(XMLParser.getClientMsg("cnxErr").replace("@", host+":"+port));
+			} catch (ConnectException e) {
+				System.out.println(XMLParser.getClientMsg("cnxErr").replace(
+						"@", host + ":" + port));
 				System.exit(0);
 			}
 			readFromSkt = new BufferedReader(new InputStreamReader(skt
@@ -171,18 +172,19 @@ public class Client {
 		try {
 			in = new BufferedReader(new InputStreamReader(System.in))
 					.readLine();
+			in = in.toLowerCase(); /* case sensitive is a pain */
 			cmd = in.split(" ")[0];
 			Command c = XMLParser.getCmd(cmd);
 			if (c == null) {
-				System.out.println(XMLParser.getClientMsg("invalidCmd")
-						.replace("@", cmd));
-				return toServer;
+				throw new IllegalArgumentException(XMLParser.getClientMsg(
+						"invalidCmd").replace("@", cmd));
 			}
 			if (c.requestsArgument()) {
 				try {
 					arg = in.split(" ")[1];
 				} catch (ArrayIndexOutOfBoundsException e) {
-					throw new IllegalArgumentException(c.toString());
+					throw new IllegalArgumentException(XMLParser.getClientMsg("invalidArg").replace(
+							"@",c.toString()));
 				}
 				toServer = c.toServerCmd(arg);
 				reflectVar = c.getReflectVar();
@@ -202,12 +204,25 @@ public class Client {
 				}
 			} else
 				toServer = c.toServerCmd("");
-			if(c.getServerCmd().equals("bye")){
-				quitting=true;
+			if (c.getServerCmd().equals("bye")) { /* QUIT */
+				quitting = true;
+			} else if (c.getServerCmd().equals("help")) { /* HELP */
+				toServer = null; /* to not send it to the server */
+				try {
+					arg = in.split(" ")[1];
+				} catch (ArrayIndexOutOfBoundsException e) {
+					throw new IllegalArgumentException(XMLParser.getClientMsg("invalidArg").replace(
+							"@",c.toString()));
+				}
+				Command helpC = XMLParser.getCmd(arg);
+				if (helpC == null) {
+					throw new IllegalArgumentException(XMLParser.getClientMsg(
+							"invalidCmd").replace("@", arg));
+				}
+				System.out.println(helpC.getHelpMsg());
 			}
 		} catch (IllegalArgumentException e) {
-			System.out.println(XMLParser.getClientMsg("invalidArg").replace(
-					"@", e.getMessage()));
+			System.out.println(e.getMessage());
 		} catch (IOException e) {
 			System.err.println("Unable to read from input at this time!\n" + e);
 		}

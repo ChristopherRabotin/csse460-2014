@@ -75,13 +75,14 @@ public class Command {
 	}
 
 	/**
-	 * Getter of HelpMsg: the help message, i.e. the text contained in between
-	 * the two delimiters of &lt;cmd&gt;.
+	 * Returns the helpIntro message, the command name and the help message,
+	 * i.e. the text contained in between the two delimiters of &lt;cmd&gt;.
 	 * 
-	 * @return helpMsg
+	 * @return a detailed help message
 	 */
 	public String getHelpMsg() {
-		return helpMsg;
+		return XMLParser.getClientMsg("helpIntro") + " " + this + " : "
+				+ helpMsg;
 	}
 
 	/**
