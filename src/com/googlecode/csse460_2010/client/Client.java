@@ -31,6 +31,7 @@ public class Client {
 	private static BufferedReader readFromSkt;
 	private static PrintWriter writeToSkt;
 	private static Thread userInputThread;
+	private static UIFactory ui;
 	/*
 	 * These variables will be used in the reflection which is why Java thinks
 	 * they may not be used.
@@ -52,7 +53,7 @@ public class Client {
 	 * </ul>
 	 * 
 	 * @param args
-	 *            Unused.
+	 *            If "tui" is specified than the text user interface is used.
 	 */
 	public static void main(String[] args) {
 		/*
@@ -69,9 +70,17 @@ public class Client {
 		timeout = XMLParser.getCnxTimeout();
 		host = XMLParser.getCnxHost();
 		/*
+		 * Now we find which user interface to use.
+		 */
+		if(args.length>0 && args[0].contains("tui")){
+			ui = new TUI();
+		}else{
+			ui = new GUI();
+		}
+		/*
 		 * Then we print the welcome message to the user.
 		 */
-		System.out.println(XMLParser.getClientMsg("welcome"));
+		ui.stdMsg(XMLParser.getClientMsg("welcome"));
 		try {
 			name = new BufferedReader(new InputStreamReader(System.in))
 					.readLine();
@@ -79,7 +88,7 @@ public class Client {
 			e1.printStackTrace();
 			System.exit(0);
 		}
-		System.out.println(XMLParser.parseMsg(
+		ui.stdMsg(XMLParser.parseMsg(
 				XMLParser.getClientMsg("nameThx"), XMLParser.class));
 		try {
 			addr = InetAddress.getByName(host);
@@ -94,7 +103,7 @@ public class Client {
 			try {
 				skt.connect(sockaddr, timeout);
 			} catch (ConnectException e) {
-				System.out.println(XMLParser.getClientMsg("cnxErr").replace(
+				ui.stdMsg(XMLParser.getClientMsg("cnxErr").replace(
 						"@", host + ":" + port));
 				System.exit(0);
 			}
@@ -143,7 +152,7 @@ public class Client {
 					userInputThread.start();
 				}
 			}
-			System.out.println(XMLParser.getClientMsg("quit"));
+			ui.stdMsg(XMLParser.getClientMsg("quit"));
 			SendPing.kill();
 			readFromSkt.close();
 			writeToSkt.close();
@@ -168,7 +177,7 @@ public class Client {
 	 * @return the input of the user <i>translated</i> into the server protocol
 	 */
 	private static String processClientInput() {
-		System.out.println(XMLParser.getClientMsg("input"));
+		ui.stdMsg(XMLParser.getClientMsg("input"));
 		String toServer = null, in, cmd, arg, reflectVar;
 		Field fd;
 		try {
@@ -221,12 +230,12 @@ public class Client {
 					throw new IllegalArgumentException(XMLParser.getClientMsg(
 							"invalidCmd").replace("@", arg));
 				}
-				System.out.println(helpC.getHelpMsg());
+				ui.stdMsg(helpC.getHelpMsg());
 			}
 		} catch (IllegalArgumentException e) {
-			System.out.println(e.getMessage());
+			ui.stdMsg(e.getMessage());
 		} catch (IOException e) {
-			System.err.println("Unable to read from input at this time!\n" + e);
+			ui.stdMsg("Unable to read from input at this time!\n" + e);
 		}
 		return toServer;
 	}
@@ -268,7 +277,7 @@ public class Client {
 			 * questions asked. It is the last of the "raw" treatment otherwise
 			 * the "endraw" is never reached.
 			 */
-			System.out.println(str);
+			ui.stdMsg(str);
 		} else {
 			/*
 			 * then we look up the meaning in the XMLParser class.
@@ -286,7 +295,7 @@ public class Client {
 					toClient = toClient.replaceAll("@", args[1]);
 				}
 				toClient = XMLParser.parseMsg(toClient, Client.class);
-				System.out.println(toClient);
+				ui.stdMsg(toClient);
 			}
 		}
 	}
