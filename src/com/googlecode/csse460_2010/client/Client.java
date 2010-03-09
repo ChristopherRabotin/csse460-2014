@@ -1,7 +1,6 @@
 package com.googlecode.csse460_2010.client;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
@@ -63,33 +62,27 @@ public class Client {
 			XMLParser.loadNParse(xmlFile);
 		} catch (Throwable e) {
 			System.err.println("Error while loading the XML file!");
-			e.printStackTrace();
+			System.err.println(""+e.getStackTrace());
 			System.exit(0);
 		}
 		port = XMLParser.getCnxPort();
 		timeout = XMLParser.getCnxTimeout();
 		host = XMLParser.getCnxHost();
 		/*
-		 * Now we find which user interface to use.
+		 * Then we find which user interface to use.
 		 */
-		if(args.length>0 && args[0].contains("tui")){
+		if (args.length > 0 && args[0].contains("tui")) {
 			ui = new TUI();
-		}else{
+		} else {
 			ui = new GUI();
 		}
 		/*
 		 * Then we print the welcome message to the user.
 		 */
 		ui.stdMsg(XMLParser.getClientMsg("welcome"));
-		try {
-			name = new BufferedReader(new InputStreamReader(System.in))
-					.readLine();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-			System.exit(0);
-		}
-		ui.stdMsg(XMLParser.parseMsg(
-				XMLParser.getClientMsg("nameThx"), XMLParser.class));
+		name = ui.getUserInput(XMLParser.getClientMsg("askName"));
+		ui.stdMsg(XMLParser.parseMsg(XMLParser.getClientMsg("nameThx"),
+				XMLParser.class));
 		try {
 			addr = InetAddress.getByName(host);
 			sockaddr = new InetSocketAddress(addr, port);
@@ -103,8 +96,8 @@ public class Client {
 			try {
 				skt.connect(sockaddr, timeout);
 			} catch (ConnectException e) {
-				ui.stdMsg(XMLParser.getClientMsg("cnxErr").replace(
-						"@", host + ":" + port));
+				ui.errMsg(XMLParser.getClientMsg("cnxErr").replace("@",
+						host + ":" + port));
 				System.exit(0);
 			}
 			readFromSkt = new BufferedReader(new InputStreamReader(skt
@@ -177,12 +170,10 @@ public class Client {
 	 * @return the input of the user <i>translated</i> into the server protocol
 	 */
 	private static String processClientInput() {
-		ui.stdMsg(XMLParser.getClientMsg("input"));
 		String toServer = null, in, cmd, arg, reflectVar;
 		Field fd;
+		in = ui.getUserInput(XMLParser.getClientMsg("input"));
 		try {
-			in = new BufferedReader(new InputStreamReader(System.in))
-					.readLine();
 			in = in.toLowerCase(); /* case sensitive is a pain */
 			cmd = in.split(" ")[0];
 			Command c = XMLParser.getCmd(cmd);
@@ -205,11 +196,10 @@ public class Client {
 						fd.setAccessible(true);
 						fd.set(Client.class, arg);
 					} catch (Throwable e) {
-						System.err
-								.println("No such field ["
+						ui.errMsg("No such field ["
 										+ reflectVar
 										+ "]. Make sure it is defined in client/Client.java.");
-						e.printStackTrace();
+						ui.errMsg(""+e.getStackTrace());
 						System.exit(0);
 					}
 				}
@@ -234,8 +224,6 @@ public class Client {
 			}
 		} catch (IllegalArgumentException e) {
 			ui.stdMsg(e.getMessage());
-		} catch (IOException e) {
-			ui.stdMsg("Unable to read from input at this time!\n" + e);
 		}
 		return toServer;
 	}

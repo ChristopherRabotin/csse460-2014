@@ -1,8 +1,9 @@
 package com.googlecode.csse460_2010.client;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
-public class GUI extends JFrame implements UIFactory{
+public class GUI extends JFrame implements UIFactory {
 
 	private static final long serialVersionUID = 1L;
 	private javax.swing.JPanel jContentPane = null;
@@ -14,11 +15,9 @@ public class GUI extends JFrame implements UIFactory{
 	private javax.swing.JScrollPane jScrollPane = null;
 	private javax.swing.JTextArea jTextArea = null;
 
-	private boolean hasChanged = false;
-	private static final String title = "Simple Text Editor";
 
 	/**
-	 * This method initializes 
+	 * This method initializes
 	 * 
 	 */
 	public GUI() {
@@ -51,15 +50,15 @@ public class GUI extends JFrame implements UIFactory{
 	private void initialize() {
 		this.setContentPane(getJContentPane());
 		this.setSize(480, 284);
-		this.setTitle(title);
+		this.setTitle(XMLParser.getClientMsg("guiTitle"));
 		this
 				.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
 			public void windowClosing(java.awt.event.WindowEvent e) {
-				doExit();
+				//TODO this
 			}
 		});
-
+		this.setVisible(true);
 	}
 
 	/**
@@ -106,7 +105,7 @@ public class GUI extends JFrame implements UIFactory{
 			jButton1.setText("Save File");
 			jButton1.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					//saveFile();
+					// saveFile();
 				}
 			});
 		}
@@ -124,12 +123,13 @@ public class GUI extends JFrame implements UIFactory{
 			jButton2.setText("Exit");
 			jButton2.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					doExit();
+					//TODO this
 				}
 			});
 		}
 		return jButton2;
 	}
+
 	/**
 	 * This method initializes jButton3
 	 * 
@@ -141,12 +141,13 @@ public class GUI extends JFrame implements UIFactory{
 			jButton3.setText("Exit");
 			jButton3.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					doExit();
+					//TODO this
 				}
 			});
 		}
 		return jButton3;
 	}
+
 	/**
 	 * This method initializes jScrollPane
 	 * 
@@ -168,11 +169,12 @@ public class GUI extends JFrame implements UIFactory{
 	private javax.swing.JTextArea getJTextArea() {
 		if (jTextArea == null) {
 			jTextArea = new javax.swing.JTextArea();
+			jTextArea.setEditable(false);
 			jTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
 				public void keyTyped(java.awt.event.KeyEvent e) {
-					if (!hasChanged) {
-						setTitle(title + " *");
-						hasChanged = true;
+					if (e.isAltDown()
+							&& e.getKeyChar() == java.awt.event.KeyEvent.VK_C) {
+						//TODO cheat!
 					}
 				}
 			});
@@ -180,28 +182,25 @@ public class GUI extends JFrame implements UIFactory{
 		return jTextArea;
 	}
 
-	private void doExit() {
-		if (hasChanged) {
-			
-		}
-		System.exit(0);
-	}
-
 	@Override
 	public void mcMsg(String msg) {
-		// TODO Auto-generated method stub
-		
+		JOptionPane.showMessageDialog(this, msg);
 	}
 
 	@Override
 	public void stdMsg(String msg) {
-		// TODO Auto-generated method stub
-		
+		jTextArea.append(msg + "\n");
 	}
 
 	@Override
-	public String getUserInput() {
-		// TODO Auto-generated method stub
-		return null;
+	public String getUserInput(String title) {
+		return JOptionPane.showInputDialog(title);
 	}
-} //  @jve:visual-info  decl-index=0 visual-constraint="20,27"
+
+	@Override
+	public void errMsg(String msg) {
+		JOptionPane.showMessageDialog(this, msg, "Error",
+				JOptionPane.ERROR_MESSAGE);
+
+	}
+}

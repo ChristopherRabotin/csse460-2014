@@ -1,5 +1,9 @@
 package com.googlecode.csse460_2010.client;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 public class TUI implements UIFactory {
 
 	@Override
@@ -13,9 +17,20 @@ public class TUI implements UIFactory {
 	}
 
 	@Override
-	public String getUserInput() {
-		// TODO Auto-generated method stub
-		return null;
+	public String getUserInput(String title) {
+		String in = null;
+		try {
+			in = new BufferedReader(new InputStreamReader(System.in))
+					.readLine();
+		} catch (IOException e) {
+			System.out.println("Unable to read from input at this time!\n" + e);
+		}
+		return in;
+	}
+
+	@Override
+	public void errMsg(String msg) {
+		System.err.println(msg);
 	}
 
 }
