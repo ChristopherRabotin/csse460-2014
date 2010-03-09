@@ -19,7 +19,9 @@ import java.util.logging.Logger;
  */
 public class Stirling {
 	private static ArrayList<Client> players = new ArrayList<Client>();
-	private static String xmlFile = "./src/com/googlecode/csse460_2010/server/serverConf.xml";
+	private static String xmlFile = ClassLoader.getSystemClassLoader()
+			.getResource("./com/googlecode/csse460_2010/server/serverConf.xml")
+			.getPath();
 	public final static Logger log = Logger.getLogger(Stirling.class.getName());
 
 	/**
@@ -369,8 +371,8 @@ public class Stirling {
 				 * We call checkAllDaemonsDead just to restart the server.
 				 */
 				checkAllDaemonsDead();
-			}else{
-				outputLn="denied";
+			} else {
+				outputLn = "denied";
 			}
 		}
 		return outputLn;
