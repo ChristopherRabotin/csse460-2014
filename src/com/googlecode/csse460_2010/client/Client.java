@@ -19,15 +19,18 @@ import java.net.SocketAddress;
  * 
  */
 public class Client {
-	static private int port, timeout;
-	static private String host, name, inputLn, outputLn;
-	static private InetAddress addr;
-	static private SocketAddress sockaddr;
-	static private Socket skt;
-	static private boolean processRaw = false, quitting = false;
-	static private BufferedReader readFromSkt;
-	static private PrintWriter writeToSkt;
-	static private Thread userInputThread;
+	private static int port, timeout;
+	private static String host, name, inputLn, outputLn;
+	private static String xmlFile = ClassLoader.getSystemClassLoader()
+			.getResource("./com/googlecode/csse460_2010/client/clientConf.xml")
+			.getPath();
+	private static InetAddress addr;
+	private static SocketAddress sockaddr;
+	private static Socket skt;
+	private static boolean processRaw = false, quitting = false;
+	private static BufferedReader readFromSkt;
+	private static PrintWriter writeToSkt;
+	private static Thread userInputThread;
 	/*
 	 * These variables will be used in the reflection which is why Java thinks
 	 * they may not be used.
@@ -56,8 +59,7 @@ public class Client {
 		 * We start by reading the XML file to communicate with the server.
 		 */
 		try {
-			XMLParser
-					.loadNParse("./src/com/googlecode/csse460_2010/client/clientConf.xml");
+			XMLParser.loadNParse(xmlFile);
 		} catch (Throwable e) {
 			System.err.println("Error while loading the XML file!");
 			e.printStackTrace();
@@ -183,8 +185,8 @@ public class Client {
 				try {
 					arg = in.split(" ")[1];
 				} catch (ArrayIndexOutOfBoundsException e) {
-					throw new IllegalArgumentException(XMLParser.getClientMsg("invalidArg").replace(
-							"@",c.toString()));
+					throw new IllegalArgumentException(XMLParser.getClientMsg(
+							"invalidArg").replace("@", c.toString()));
 				}
 				toServer = c.toServerCmd(arg);
 				reflectVar = c.getReflectVar();
@@ -211,8 +213,8 @@ public class Client {
 				try {
 					arg = in.split(" ")[1];
 				} catch (ArrayIndexOutOfBoundsException e) {
-					throw new IllegalArgumentException(XMLParser.getClientMsg("invalidArg").replace(
-							"@",c.toString()));
+					throw new IllegalArgumentException(XMLParser.getClientMsg(
+							"invalidArg").replace("@", c.toString()));
 				}
 				Command helpC = XMLParser.getCmd(arg);
 				if (helpC == null) {
