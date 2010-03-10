@@ -1,6 +1,7 @@
 package com.googlecode.csse460_2010.client;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -157,10 +158,7 @@ public class Client {
 					userInputThread.start();
 				}
 			}
-			ui.stdMsg(XMLParser.getClientMsg("quit"));
-			SendPing.kill();
-			readFromSkt.close();
-			writeToSkt.close();
+			die();
 		} catch (Throwable e) {
 			ui.errMsg(e.getMessage());
 			e.printStackTrace();
@@ -325,5 +323,16 @@ public class Client {
 	 */
 	public static void sendOnSkt(String msg) {
 		writeToSkt.println(msg);
+	}
+	
+	public static void die(){
+		ui.stdMsg(XMLParser.getClientMsg("quit"));
+		SendPing.kill();
+		try {
+			readFromSkt.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		writeToSkt.close();
 	}
 }
