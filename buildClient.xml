@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Client Jar for Project CSSE460">
+    <!--ANT 1.7 is required                                        -->
+    <target name="create_run_jar">
+        <jar destfile="/home/noxon/client.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Main-Class" value="com.googlecode.csse460_2010.client.Client"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <fileset dir="/home/noxon/Workspace/CSSE460/bin"/>
+            <zipfileset excludes="META-INF/*.SF" src="/home/noxon/Workspace/CSSE460/lib/jdom.jar"/>
+        </jar>
+    </target>
+</project>

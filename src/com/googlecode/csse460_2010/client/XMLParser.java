@@ -2,6 +2,7 @@ package com.googlecode.csse460_2010.client;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -40,9 +41,9 @@ public class XMLParser {
 	 * @throws IOException
 	 *             if the XML file cannot be read
 	 */
-	public static void loadNParse(String xmlF) throws JDOMException,
+	public static void loadNParse(InputStream xmlF) throws JDOMException,
 			IOException {
-		xmlDoc = (new SAXBuilder()).build(new File(xmlF));
+		xmlDoc = (new SAXBuilder()).build(xmlF);
 		cnxRoot = xmlDoc.getRootElement().getChild("Cnx");
 		cmdsRoot = xmlDoc.getRootElement().getChild("Cmds");
 		gameMsgRoot = xmlDoc.getRootElement().getChild("GameMsgs");

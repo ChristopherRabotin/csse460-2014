@@ -1,6 +1,10 @@
 package com.googlecode.csse460_2010.server;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -19,9 +23,7 @@ import java.util.logging.Logger;
  */
 public class Stirling {
 	private static ArrayList<Client> players = new ArrayList<Client>();
-	private static String xmlFile = ClassLoader.getSystemClassLoader()
-			.getResource("./com/googlecode/csse460_2010/server/serverConf.xml")
-			.getPath();
+	private static InputStream xmlFile;
 	public final static Logger log = Logger.getLogger(Stirling.class.getName());
 
 	/**
@@ -30,6 +32,7 @@ public class Stirling {
 	 * configuration file.
 	 * 
 	 * @param args
+	 *            you can specify the XML to use.
 	 */
 	public static void main(String[] args) {
 		LogHandler lh = new LogHandler(null);
@@ -37,9 +40,17 @@ public class Stirling {
 		log.setLevel(Level.ALL);
 		log.info("Starting game...");
 		if (args.length > 0) {
-			xmlFile = args[0];
+			try {
+				xmlFile = new FileInputStream(new File(args[0]));
+				log.fine("Using configuration file " + xmlFile);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+				System.exit(0);
+			}
+		} else {
+			xmlFile = Stirling.class.getResourceAsStream("serverConf.xml");
+			log.fine("Using default configuration file (serverConf.xml)");
 		}
-		log.fine("Using configuration file " + xmlFile);
 		try {
 			XMLParser.loadNParseXML(xmlFile);
 			log.info("Loaded XML.");

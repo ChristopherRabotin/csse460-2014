@@ -1,7 +1,7 @@
 package com.googlecode.csse460_2010.server;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -43,9 +43,9 @@ public class XMLParser {
 	 * @throws IOException
 	 *             if the XML file cannot be read
 	 */
-	public static void loadNParseXML(String xmlF) throws JDOMException,
+	public static void loadNParseXML(InputStream xmlF) throws JDOMException,
 			IOException {
-		xmlDoc = (new SAXBuilder()).build(new File(xmlF));
+		xmlDoc = (new SAXBuilder()).build(xmlF);
 		serverRoot = xmlDoc.getRootElement().getChild("ServerConfig");
 		protocolRoot = xmlDoc.getRootElement().getChild("Protocol");
 		gameRoot = xmlDoc.getRootElement().getChild("GameConfig");

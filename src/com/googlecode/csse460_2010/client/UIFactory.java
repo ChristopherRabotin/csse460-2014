@@ -32,13 +32,13 @@ public interface UIFactory {
 	public void errMsg(String msg);
 
 	/**
-	 * This method is called to get the command input by the user.
+	 * This method is called to get and write on socket the command input by the
+	 * user. To write on the client socket, use Client.sendOnSkt(String).
 	 * 
 	 * @param title
 	 *            the title of the input message
-	 * @return the user's input
 	 */
-	public String getUserCmdInput(String title);
+	public void getNSendCmdInput(String title);
 
 	/**
 	 * This method is called to get normal input.

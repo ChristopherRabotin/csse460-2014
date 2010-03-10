@@ -77,6 +77,18 @@ All the second level elements are necessary.  -->
 		<ClientMsg name="mcTitle">
 			Multicast message
 		</ClientMsg>
+		<ClientMsg name="confirmExit">
+			Are you sure you wish to quit the game?
+		</ClientMsg>
+		<ClientMsg name="askAtk">
+			Enter the attack you wish to use.
+		</ClientMsg>
+		<ClientMsg name="askLearn">
+			Enter the attack you wish to learn.
+		</ClientMsg>
+		<ClientMsg name="askHelp">
+			Enter the command for which you need help.
+		</ClientMsg>
 		<ClientMsg name="helpIntro">
 			Usage for
 		</ClientMsg>
