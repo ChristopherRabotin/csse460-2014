@@ -113,7 +113,7 @@ public class XMLParser {
 			attacks.put(name.toLowerCase(), new Attack(name, damage, daemonOnly));
 		}
 		playersDefaultAttack = attacks.get(gameRoot.getChild("Attacks")
-				.getAttributeValue("playersDefaultAttack"));
+				.getAttributeValue("playersDefaultAttack").toLowerCase());
 	}
 
 	/**
@@ -140,7 +140,7 @@ public class XMLParser {
 			// now we split the attacks and add each attack to the daemon
 			String[] eachAtk = allAtks.split(",");
 			for (String atk : eachAtk) {
-				Attack tba = attacks.get(atk);
+				Attack tba = attacks.get(atk.toLowerCase());
 				if (tba == null) {
 					Stirling.log.severe("No such Attack '" + atk
 							+ "'(for daemon '" + name

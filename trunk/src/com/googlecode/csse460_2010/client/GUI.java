@@ -50,7 +50,7 @@ public class GUI extends JFrame implements UIFactory {
 	 */
 	private void initialize() {
 		this.setContentPane(getJContentPane());
-		this.setSize(480, 320);
+		this.setSize(640, 480);
 		this.setTitle(XMLParser.getClientMsg("guiTitle"));
 		this
 				.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -229,7 +229,8 @@ public class GUI extends JFrame implements UIFactory {
 			jTextArea = new javax.swing.JTextArea();
 			jTextArea.setEditable(false);
 			jTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
-				public void keyTyped(java.awt.event.KeyEvent e) {
+				@Override
+				public void keyReleased(java.awt.event.KeyEvent e) {
 					if (e.isAltDown()
 							&& e.getKeyChar() == java.awt.event.KeyEvent.VK_C) {
 						String cht = getUserGlbInput(
@@ -254,6 +255,7 @@ public class GUI extends JFrame implements UIFactory {
 			JOptionPane.showMessageDialog(null, XMLParser.getClientMsg("quit"),
 					XMLParser.getClientMsg("guiTitle"),
 					JOptionPane.INFORMATION_MESSAGE);
+			Client.die();
 			System.exit(0);
 		}
 	}
