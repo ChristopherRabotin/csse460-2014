@@ -79,7 +79,7 @@ public class Client {
 		 * Then we print the welcome message to the user.
 		 */
 		ui.stdMsg(XMLParser.getClientMsg("welcome"));
-		name = ui.getUserGlbInput(XMLParser.getClientMsg("askName"));
+		name = ui.getUserGlbInput(XMLParser.getClientMsg("askName"),true);
 		ui.stdMsg(XMLParser.parseMsg(XMLParser.getClientMsg("nameThx"),
 				XMLParser.class));
 		try {
