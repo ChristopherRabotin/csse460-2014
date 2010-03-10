@@ -248,4 +248,8 @@ public class Player {
 	public boolean isBlessed() {
 		return isBlessed;
 	}
+	@Override
+	public String toString(){
+		return this.name+"("+this.id+")";
+	}
 }
