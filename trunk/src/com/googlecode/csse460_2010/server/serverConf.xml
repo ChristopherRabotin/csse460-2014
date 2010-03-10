@@ -91,11 +91,11 @@
 		</Rooms>
 		<Daemons>
 			<daemon name="Meanny" health="10" value="10" attacks="Flames,Crush" />
-			<daemon name="Ghost" health="15" value="50" attacks="Maul,ASlice" />
+			<daemon name="Ghost" health="15" value="50" attacks="Maul,Slice" />
 			<daemon name="Gremlin" health="15" value="50" attacks="Flames,Bash" />
 			<daemon name="Hydra" health="25" value="100" attacks="Vines,Suffocate" />
 			<daemon name="Beast" health="25" value="150" attacks="Needles,Vortex" />
-			<daemon name="Gollum" health="35" value="200" attacks="RBash,Shock" />
+			<daemon name="Gollum" health="35" value="200" attacks="Bash,Shock" />
 			<daemon name="Banshee" health="35" value="250" attacks="Vortex,Shadow" />
 			<daemon name="Menace" health="45" value="300" attacks="Storm,Suffocate" />
 			<daemon name="Distruction" health="45" value="400" attacks="Suffocate,Shadow" />

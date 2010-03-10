@@ -110,7 +110,7 @@ public class XMLParser {
 			damage = Integer.parseInt(current.getAttributeValue("damage"));
 			daemonOnly = Boolean.parseBoolean(current
 					.getAttributeValue("daemonOnly"));
-			attacks.put(name, new Attack(name, damage, daemonOnly));
+			attacks.put(name.toLowerCase(), new Attack(name, damage, daemonOnly));
 		}
 		playersDefaultAttack = attacks.get(gameRoot.getChild("Attacks")
 				.getAttributeValue("playersDefaultAttack"));
@@ -139,8 +139,16 @@ public class XMLParser {
 			meanny = new Daemon(name, maxhealth, value);
 			// now we split the attacks and add each attack to the daemon
 			String[] eachAtk = allAtks.split(",");
-			for (String atk : eachAtk)
-				meanny.addAttack(attacks.get(atk));
+			for (String atk : eachAtk) {
+				Attack tba = attacks.get(atk);
+				if (tba == null) {
+					Stirling.log.severe("No such Attack '" + atk
+							+ "'(for daemon '" + name
+							+ "'! Cannot proceed until XML is corrected!");
+					System.exit(0);
+				}
+				meanny.addAttack(tba);
+			}
 			daemons.put(name, meanny);
 		}
 	}
