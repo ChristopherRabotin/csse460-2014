@@ -8,10 +8,12 @@ public class GUI extends JFrame implements UIFactory {
 	private static final long serialVersionUID = 1L;
 	private javax.swing.JPanel jContentPane = null;
 	private javax.swing.JPanel jPanel = null;
-	private javax.swing.JButton jButton = null;
-	private javax.swing.JButton jButton1 = null;
-	private javax.swing.JButton jButton2 = null;
-	private javax.swing.JButton jButton3 = null;
+	private javax.swing.JButton jBShow = null;
+	private javax.swing.JButton jBGo = null;
+	private javax.swing.JButton jBAttack = null;
+	private javax.swing.JButton jBLearn = null;
+	private javax.swing.JButton jBHelp = null;
+	private javax.swing.JButton jBBye = null;
 	private javax.swing.JScrollPane jScrollPane = null;
 	private javax.swing.JTextArea jTextArea = null;
 
@@ -54,7 +56,7 @@ public class GUI extends JFrame implements UIFactory {
 				.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
 			public void windowClosing(java.awt.event.WindowEvent e) {
-				// TODO this
+				doExit();
 			}
 		});
 		this.setVisible(true);
@@ -68,83 +70,128 @@ public class GUI extends JFrame implements UIFactory {
 	private javax.swing.JPanel getJPanel() {
 		if (jPanel == null) {
 			jPanel = new javax.swing.JPanel();
-			jPanel.add(getJButton(), null);
-			jPanel.add(getJButton1(), null);
-			jPanel.add(getJButton2(), null);
-			jPanel.add(getJButton3(), null);
+			jPanel.add(getJBShow(), null);
+			jPanel.add(getJBGo(), null);
+			jPanel.add(getJBAttack(), null);
+			jPanel.add(getJBLearn(), null);
+			jPanel.add(getJBHelp(), null);
+			jPanel.add(getJBBye(), null);
 		}
 		return jPanel;
 	}
 
 	/**
-	 * This method initializes jButton
+	 * This method initializes jBShow
 	 * 
 	 * @return javax.swing.JButton
 	 */
-	private javax.swing.JButton getJButton() {
-		if (jButton == null) {
-			jButton = new javax.swing.JButton();
-			jButton.setText("Load File");
-			jButton.addActionListener(new java.awt.event.ActionListener() {
+	private javax.swing.JButton getJBShow() {
+		if (jBShow == null) {
+			jBShow = new javax.swing.JButton();
+			jBShow.setText("Show");
+			jBShow.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 				}
 			});
 		}
-		return jButton;
+		return jBShow;
 	}
 
 	/**
-	 * This method initializes jButton1
+	 * This method initializes jBGo
 	 * 
 	 * @return javax.swing.JButton
 	 */
-	private javax.swing.JButton getJButton1() {
-		if (jButton1 == null) {
-			jButton1 = new javax.swing.JButton();
-			jButton1.setText("Save File");
-			jButton1.addActionListener(new java.awt.event.ActionListener() {
+	private javax.swing.JButton getJBGo() {
+		if (jBGo == null) {
+			jBGo = new javax.swing.JButton();
+			jBGo.setText("Move");
+			jBGo.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					// saveFile();
+					// TODO
 				}
 			});
 		}
-		return jButton1;
+		return jBGo;
 	}
 
 	/**
-	 * This method initializes jButton2
+	 * This method initializes jBAttack
 	 * 
 	 * @return javax.swing.JButton
 	 */
-	private javax.swing.JButton getJButton2() {
-		if (jButton2 == null) {
-			jButton2 = new javax.swing.JButton();
-			jButton2.setText("Exit");
-			jButton2.addActionListener(new java.awt.event.ActionListener() {
+	private javax.swing.JButton getJBAttack() {
+		if (jBAttack == null) {
+			jBAttack = new javax.swing.JButton();
+			jBAttack.setText("Fight");
+			jBAttack.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					// TODO this
+					String atk = getUserGlbInput(XMLParser
+							.getClientMsg("askAtk"));
+					Client.processClientInput("fight " + atk);
 				}
 			});
 		}
-		return jButton2;
+		return jBAttack;
 	}
 
 	/**
-	 * This method initializes jButton3
+	 * This method initializes jBLearn
 	 * 
 	 * @return javax.swing.JButton
 	 */
-	private javax.swing.JButton getJButton3() {
-		if (jButton3 == null) {
-			jButton3 = new javax.swing.JButton();
-			jButton3.setText("Exit");
-			jButton3.addActionListener(new java.awt.event.ActionListener() {
+	private javax.swing.JButton getJBLearn() {
+		if (jBLearn == null) {
+			jBLearn = new javax.swing.JButton();
+			jBLearn.setText("Learn");
+			jBLearn.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					// TODO this
+					String atk = getUserGlbInput(XMLParser
+							.getClientMsg("askLearn"));
+					Client.processClientInput("learn " + atk);
 				}
 			});
 		}
-		return jButton3;
+		return jBLearn;
+	}
+
+	/**
+	 * This method initializes jBHelp
+	 * 
+	 * @return javax.swing.JButton
+	 */
+	private javax.swing.JButton getJBHelp() {
+		if (jBHelp == null) {
+			jBHelp = new javax.swing.JButton();
+			jBHelp.setText("Help");
+			jBHelp.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					String atk = getUserGlbInput(XMLParser
+							.getClientMsg("askHelp"));
+					Client.processClientInput("help " + atk);
+				}
+			});
+		}
+		return jBHelp;
+	}
+
+	/**
+	 * This method initializes jBBye
+	 * 
+	 * @return javax.swing.JButton
+	 */
+
+	private javax.swing.JButton getJBBye() {
+		if (jBBye == null) {
+			jBBye = new javax.swing.JButton();
+			jBBye.setText("Exit");
+			jBLearn.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					doExit();
+				}
+			});
+		}
+		return jBBye;
 	}
 
 	/**
@@ -181,6 +228,22 @@ public class GUI extends JFrame implements UIFactory {
 		return jTextArea;
 	}
 
+	/**
+	 * This method is called when the client wishes to quit the game.
+	 */
+	private void doExit() {
+		int n = JOptionPane.showConfirmDialog(null, XMLParser
+				.getClientMsg("confirmExit"), XMLParser
+				.getClientMsg("guiTitle"), JOptionPane.YES_NO_OPTION);
+		if (n == JOptionPane.YES_OPTION) {
+			JOptionPane.showMessageDialog(null, XMLParser
+					.getClientMsg("quit"), XMLParser
+					.getClientMsg("guiTitle"),
+					JOptionPane.ERROR_MESSAGE);
+			System.exit(0);
+		}
+	}
+
 	@Override
 	public void mcMsg(String msg) {
 		JOptionPane.showMessageDialog(this, msg, XMLParser
@@ -190,15 +253,15 @@ public class GUI extends JFrame implements UIFactory {
 	@Override
 	public void stdMsg(String msg) {
 		jTextArea.append(msg + "\n");
+		jTextArea.setCaretPosition(jTextArea.getText().length());
 	}
 
 	@Override
-	public String getUserCmdInput(String title) {
-		String rtn = null;
-		do {
-			rtn = JOptionPane.showInputDialog(title);
-		} while (rtn == null || rtn.equals(""));
-		return rtn;
+	public void getNSendCmdInput(String title) {
+		/*
+		 * We don't do anything here because the command input is done with the
+		 * buttons of the GUI.
+		 */
 	}
 
 	@Override
@@ -210,7 +273,11 @@ public class GUI extends JFrame implements UIFactory {
 
 	@Override
 	public String getUserGlbInput(String title) {
-		// TODO Auto-generated method stub
-		return null;
+		String rtn = null;
+		do {
+			rtn = JOptionPane.showInputDialog(title);
+		} while (rtn == null || rtn.equals(""));
+		return rtn;
 	}
+
 }

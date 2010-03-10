@@ -1,6 +1,7 @@
 package com.googlecode.csse460_2010.client;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
@@ -9,6 +10,8 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
+
+import com.googlecode.csse460_2010.server.Stirling;
 
 /**
  * This is the main class of the Client part of the project. As the
@@ -19,10 +22,8 @@ import java.net.SocketAddress;
  */
 public class Client {
 	private static int port, timeout;
-	private static String host, name, inputLn, outputLn;
-	private static String xmlFile = ClassLoader.getSystemClassLoader()
-			.getResource("./com/googlecode/csse460_2010/client/clientConf.xml")
-			.getPath();
+	private static String host, name, inputLn;
+	private static InputStream xmlFile = Stirling.class.getResourceAsStream("serverConf.xml");
 	private static InetAddress addr;
 	private static SocketAddress sockaddr;
 	private static Socket skt;
@@ -62,7 +63,7 @@ public class Client {
 			XMLParser.loadNParse(xmlFile);
 		} catch (Throwable e) {
 			System.err.println("Error while loading the XML file!");
-			System.err.println(""+e.getStackTrace());
+			System.err.println("" + e.getStackTrace());
 			System.exit(0);
 		}
 		port = XMLParser.getCnxPort();
@@ -80,7 +81,7 @@ public class Client {
 		 * Then we print the welcome message to the user.
 		 */
 		ui.stdMsg(XMLParser.getClientMsg("welcome"));
-		name = ui.getUserCmdInput(XMLParser.getClientMsg("askName"));
+		name = ui.getUserGlbInput(XMLParser.getClientMsg("askName"));
 		ui.stdMsg(XMLParser.parseMsg(XMLParser.getClientMsg("nameThx"),
 				XMLParser.class));
 		try {
@@ -134,12 +135,11 @@ public class Client {
 					userInputThread = new Thread("User Input Thread") {
 						public void run() {
 							/*
-							 * Loops until the user inputs a valid command
+							 * We call the ui's get and n command input.
 							 */
-							do {
-								outputLn = processClientInput();
-							} while (outputLn == null);
-							writeToSkt.println(outputLn);
+							ui
+									.getNSendCmdInput(XMLParser
+											.getClientMsg("input"));
 						}
 					};
 					userInputThread.start();
@@ -167,12 +167,16 @@ public class Client {
 	 * correct variable the <i>argument</i> of the input being processed.
 	 * Finally, we call the toServerCmd() method of Command instance.
 	 * 
-	 * @return the input of the user <i>translated</i> into the server protocol
+	 * @param in
+	 *            the input to be tested as a valid (or not) command.
+	 * @return the input of the user <i>translated</i> into the server protocol.
+	 *         If the <i>translation</i> is not successful, null is returned.
+	 *         <b>Warning:</b> the return value must be tested before sending
+	 *         the information on the socket!
 	 */
-	private static String processClientInput() {
-		String toServer = null, in, cmd, arg, reflectVar;
+	public static String processClientInput(String in) {
+		String toServer = null, cmd, arg, reflectVar;
 		Field fd;
-		in = ui.getUserCmdInput(XMLParser.getClientMsg("input"));
 		try {
 			in = in.toLowerCase(); /* case sensitive is a pain */
 			cmd = in.split(" ")[0];
@@ -196,10 +200,11 @@ public class Client {
 						fd.setAccessible(true);
 						fd.set(Client.class, arg);
 					} catch (Throwable e) {
-						ui.errMsg("No such field ["
+						ui
+								.errMsg("No such field ["
 										+ reflectVar
 										+ "]. Make sure it is defined in client/Client.java.");
-						ui.errMsg(""+e.getStackTrace());
+						ui.errMsg("" + e.getStackTrace());
 						System.exit(0);
 					}
 				}
@@ -283,9 +288,9 @@ public class Client {
 					toClient = toClient.replaceAll("@", args[1]);
 				}
 				toClient = XMLParser.parseMsg(toClient, Client.class);
-				if(args[0].startsWith("MC")){
+				if (args[0].startsWith("MC")) {
 					ui.mcMsg(toClient);
-				}else{
+				} else {
 					ui.stdMsg(toClient);
 				}
 			}
@@ -293,12 +298,14 @@ public class Client {
 	}
 
 	/**
-	 * Used by SendPing to send the ping.
+	 * Used to send information on the socket. It is used by the UIs and
+	 * SendPing.<b>Warning:</b> this method does not test whether the
+	 * information to be sent is correct or not!
 	 * 
-	 * @return the PrintWrite descriptor.
+	 * @param msg
+	 *            the message to be sent (without the trailing new line)
 	 */
-	public static PrintWriter getWriteToSkt() {
-		return writeToSkt;
+	public static void sendOnSkt(String msg) {
+		writeToSkt.println(msg);
 	}
-
 }
