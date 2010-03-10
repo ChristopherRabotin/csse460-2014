@@ -118,4 +118,22 @@ public class Command {
 	public String getServerCmd() {
 		return serverCmd;
 	}
+
+	/**
+	 * Getter for the clientCmd. It is used in the GUI.
+	 * 
+	 * @return the clientCmd
+	 */
+	public String getClientCmd() {
+		return clientCmd;
+	}
+
+	/**
+	 * Getter for clientArgs. It is used in the GUI for the selection.
+	 * 
+	 * @return the clientArgs
+	 */
+	public String[] getClientArgs() {
+		return clientArgs;
+	}
 }

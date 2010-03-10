@@ -96,15 +96,19 @@ public class Room {
 	}
 
 	/**
-	 * Returns the exit for the given direction. <b>Warning:</b> this function
-	 * returns a null pointer if there is no exit for the given direction.
+	 * Returns the exit for the given direction.
 	 * 
 	 * @param where
 	 *            direction as a string
+	 * @throws NullPointerException
+	 *             if there is no exit in that direction.
 	 * @return the exit for the given direction
 	 */
-	public Room getExit(String where) {
-		return exits.get(Directions.valueOf(where));
+	public Room getExit(String where) throws NullPointerException {
+		Room rtn = exits.get(Directions.valueOf(where));
+		if (rtn == null)
+			throw new NullPointerException();
+		return rtn;
 	}
 
 	/**

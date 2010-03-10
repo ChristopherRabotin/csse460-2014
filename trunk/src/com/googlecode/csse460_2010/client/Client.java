@@ -11,6 +11,8 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 
+import javax.swing.UIManager;
+
 /**
  * This is the main class of the Client part of the project. As the
  * documentation specifies it, there are no input arguments necessary.
@@ -21,7 +23,8 @@ import java.net.SocketAddress;
 public class Client {
 	private static int port, timeout;
 	private static String host, name, inputLn;
-	private static InputStream xmlFile = Client.class.getResourceAsStream("clientConf.xml");
+	private static InputStream xmlFile = Client.class
+			.getResourceAsStream("clientConf.xml");
 	private static InetAddress addr;
 	private static SocketAddress sockaddr;
 	private static Socket skt;
@@ -73,13 +76,24 @@ public class Client {
 		if (args.length > 0 && args[0].contains("tui")) {
 			ui = new TUI();
 		} else {
+			/*
+			 * We set the look in feel to the system's
+			 */
+			try {
+				UIManager.setLookAndFeel(UIManager
+						.getSystemLookAndFeelClassName());
+			} catch (Exception e) {
+				System.err.println("System look n feel not supported.\n"
+						+ "Switching to Java Metla LnF.");
+				e.printStackTrace();
+			}
 			ui = new GUI();
 		}
 		/*
 		 * Then we print the welcome message to the user.
 		 */
 		ui.stdMsg(XMLParser.getClientMsg("welcome"));
-		name = ui.getUserGlbInput(XMLParser.getClientMsg("askName"),true);
+		name = ui.getUserGlbInput(XMLParser.getClientMsg("askName"), true);
 		ui.stdMsg(XMLParser.parseMsg(XMLParser.getClientMsg("nameThx"),
 				XMLParser.class));
 		try {
@@ -148,7 +162,13 @@ public class Client {
 			readFromSkt.close();
 			writeToSkt.close();
 		} catch (Throwable e) {
+			ui.errMsg(e.getMessage());
 			e.printStackTrace();
+			try {
+				Thread.sleep(3000);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
 			System.exit(0);
 		}
 	}
