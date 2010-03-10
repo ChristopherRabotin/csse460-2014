@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="javadoc">
+    <target name="javadoc">
+        <javadoc access="private" author="true" classpath="lib/jdom.jar" destdir="doc" doctitle="CSSE406 - March 2010 - Rabotin &amp; Scarborough" nodeprecated="true" nodeprecatedlist="true" noindex="false" nonavbar="false" notree="false" packagenames="com.googlecode.csse460_2010.server,com.googlecode.csse460_2010.client" source="1.6" sourcepath="src" splitindex="true" use="true" version="true"/>
+    </target>
+</project>
