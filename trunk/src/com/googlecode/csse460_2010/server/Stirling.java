@@ -33,7 +33,8 @@ public class Stirling {
 	 * configuration file.
 	 * 
 	 * @param args
-	 *            you can specify the XML to use.
+	 *            you can specify the XML to use OR another port number. You
+	 *            can't specify both.
 	 */
 	public static void main(String[] args) {
 		LogHandler lh = new LogHandler(null);
