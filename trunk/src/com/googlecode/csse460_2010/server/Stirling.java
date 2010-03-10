@@ -247,6 +247,7 @@ public class Stirling {
 				// room
 				for (Client c : players) {
 					c.getPlayer().reset();
+					c.sendOnSkt("room:" + XMLParser.getDefaultRoom().getName());
 				}
 				for (String ds : XMLParser.getDaemons().keySet()) {
 					XMLParser.getDaemons().get(ds).reset();

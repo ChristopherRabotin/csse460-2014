@@ -149,6 +149,16 @@ public class Client extends Thread {
 	}
 
 	/**
+	 * This function is only used when we reset the player. It's to notify him
+	 * that he is now in the default room again.
+	 * 
+	 * @param msg the message to be sent.
+	 */
+	public void sendOnSkt(String msg) {
+		out.println(msg);
+	}
+
+	/**
 	 * Kill this client: remove it from the list of players and close the
 	 * socket.
 	 */
