@@ -255,6 +255,11 @@ public class GUI extends JFrame implements UIFactory {
 			JOptionPane.showMessageDialog(null, XMLParser.getClientMsg("quit"),
 					XMLParser.getClientMsg("guiTitle"),
 					JOptionPane.INFORMATION_MESSAGE);
+			/*
+			 * We make the GUI invisible as it may take up to ten seconds to
+			 * close the connection.
+			 */
+			this.setVisible(false);
 			Client.die();
 			System.exit(0);
 		}
@@ -271,15 +276,21 @@ public class GUI extends JFrame implements UIFactory {
 	private void showChoiceDialog(final Command c) {
 		final javax.swing.JFrame frame = new JFrame(c.getClientCmd());
 		java.awt.Container pane = frame.getContentPane();
-		frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
-		pane.add(javax.swing.Box.createHorizontalGlue());
+		frame.setDefaultCloseOperation(javax.swing.JFrame.DO_NOTHING_ON_CLOSE);
+		frame.addWindowListener(new java.awt.event.WindowAdapter() {
+			public void windowClosing(java.awt.event.WindowEvent e) {
+				frame.dispose();
+			}
+		});
 
-		// Set up the content pane.
 		pane.setLayout(new javax.swing.BoxLayout(pane,
 				javax.swing.BoxLayout.Y_AXIS));
 		for (final String arg : c.getClientArgs()) {
 			javax.swing.JButton jTmp = new javax.swing.JButton(arg);
-
+			/*
+			 * When the user clicks a button, we send the information to the
+			 * server then we close the windows.
+			 */
 			jTmp.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					String toSrv = Client.processClientInput(c.getClientCmd()
@@ -288,7 +299,7 @@ public class GUI extends JFrame implements UIFactory {
 					frame.dispose();
 				}
 			});
-			frame.add(jTmp);
+			frame.add(jTmp, java.awt.Component.CENTER_ALIGNMENT);
 		}
 
 		// Display the window.

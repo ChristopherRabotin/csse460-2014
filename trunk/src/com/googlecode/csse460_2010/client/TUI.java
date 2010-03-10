@@ -19,11 +19,12 @@ public class TUI implements UIFactory {
 	@Override
 	public void getNSendCmdInput(String title) {
 		String in = null, outputLn = null;
-		in = getUserGlbInput(title,true);
 		do {
+			in = getUserGlbInput(title,true);
 			outputLn = Client.processClientInput(in);
 		} while (outputLn == null);
 		Client.sendOnSkt(outputLn);
+		outputLn=null;
 	}
 
 	@Override
