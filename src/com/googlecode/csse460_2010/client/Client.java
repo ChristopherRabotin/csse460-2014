@@ -125,8 +125,10 @@ public class Client {
 			SendPing.init();
 
 			while ((inputLn = readFromSkt.readLine()) != null && !quitting) {
-				if (inputLn.length() > 0)
+				if (inputLn.length() > 0){
 					processServerMsg(inputLn);
+					inputLn = "";
+				}
 				/*
 				 * The server may send empty messages so we want to wait for
 				 * actual data to arrive to ask for the user new input
@@ -327,6 +329,7 @@ public class Client {
 	
 	public static void die(){
 		ui.stdMsg(XMLParser.getClientMsg("quit"));
+		//writeToSkt.println("bye");
 		SendPing.kill();
 		try {
 			readFromSkt.close();

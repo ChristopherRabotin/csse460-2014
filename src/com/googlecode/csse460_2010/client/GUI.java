@@ -260,6 +260,7 @@ public class GUI extends JFrame implements UIFactory {
 			 * close the connection.
 			 */
 			this.setVisible(false);
+			Client.sendOnSkt("bye");
 			Client.die();
 			System.exit(0);
 		}
