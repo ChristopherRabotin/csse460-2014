@@ -23,7 +23,8 @@ import java.util.logging.Logger;
  */
 public class Stirling {
 	private static ArrayList<Client> players = new ArrayList<Client>();
-	private static InputStream xmlFile;
+	private static InputStream xmlFile = null;
+	private static int serverPort = -1; // overrides the XMLParser one.
 	public final static Logger log = Logger.getLogger(Stirling.class.getName());
 
 	/**
@@ -41,18 +42,36 @@ public class Stirling {
 		log.info("Starting game...");
 		if (args.length > 0) {
 			try {
-				xmlFile = new FileInputStream(new File(args[0]));
-				log.fine("Using configuration file " + xmlFile);
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-				System.exit(0);
+				serverPort = Integer.parseInt(args[0]);
+			} catch (NumberFormatException e) {
+				System.err.println(args[0]
+						+ " is not a valid port number. Is a config file?");
+				try {
+					xmlFile = new FileInputStream(new File(args[0]));
+					log.fine("Using configuration file " + xmlFile);
+				} catch (FileNotFoundException e1) {
+					System.err
+							.println(args[0]
+									+ " is not a port number and not a file ressource. Cannot proceed");
+					e.printStackTrace();
+					System.exit(0);
+				}
 			}
-		} else {
+		}
+		if (xmlFile == null) {
+			/*
+			 * that means we're using the default file with another port
+			 */
 			xmlFile = Stirling.class.getResourceAsStream("serverConf.xml");
 			log.fine("Using default configuration file (serverConf.xml)");
 		}
 		try {
 			XMLParser.loadNParseXML(xmlFile);
+			/*
+			 * Check if the user specified a port number.
+			 */
+			if (serverPort == -1)
+				serverPort = XMLParser.getServerPort();
 			log.info("Loaded XML.");
 		} catch (Throwable e) {
 			log.severe("Error while loading XML:\n" + e);
@@ -388,5 +407,9 @@ public class Stirling {
 			}
 		}
 		return outputLn;
+	}
+
+	public static int getServerPort() {
+		return serverPort;
 	}
 }

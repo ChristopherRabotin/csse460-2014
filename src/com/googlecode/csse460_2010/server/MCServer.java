@@ -23,11 +23,11 @@ public class MCServer {
 		ServerSocket serverSocket = null;
 
 		try {
-			serverSocket = new ServerSocket(XMLParser.getServerPort());
+			serverSocket = new ServerSocket(Stirling.getServerPort());
 			Stirling.log.info("Starting server");
 		} catch (IOException e) {
 			Stirling.log.severe("Could not listen on port: "
-					+ XMLParser.getServerPort() + ".");
+					+ Stirling.getServerPort() + ".");
 			System.exit(-1);
 		}
 

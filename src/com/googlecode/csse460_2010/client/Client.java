@@ -55,7 +55,9 @@ public class Client {
 	 * </ul>
 	 * 
 	 * @param args
-	 *            If "tui" is specified than the text user interface is used.
+	 *            If "tui" is specified than the text user interface is used. If
+	 *            there are two or more arguments, the two first must be host
+	 *            and port number. The third one (optional) is "tui".
 	 */
 	public static void main(String[] args) {
 		/*
@@ -72,11 +74,37 @@ public class Client {
 		timeout = XMLParser.getCnxTimeout();
 		host = XMLParser.getCnxHost();
 		/*
-		 * Then we find which user interface to use.
+		 * Let's check if the user specified the host and port and find which
+		 * user interface to use.
 		 */
-		if (args.length > 0 && args[0].contains("tui")) {
+		if (args.length == 1 && args[0].contains("tui")) {
 			ui = new TUI();
+		} else if (args.length >= 2) {
+			host = args[0];
+			try {
+				port = Integer.parseInt(args[1]);
+			} catch (NumberFormatException e) {
+				System.err.println(args[1] + " is not a valid port number.");
+				System.exit(0);
+			}
+			if (args.length >= 3 && args[2].contains("tui")) {
+				ui = new TUI();
+			} else {
+				/*
+				 * We set the look in feel to the system's
+				 */
+				try {
+					UIManager.setLookAndFeel(UIManager
+							.getSystemLookAndFeelClassName());
+				} catch (Exception e) {
+					System.err.println("System look n feel not supported.\n"
+							+ "Switching to Java Metla LnF.");
+					e.printStackTrace();
+				}
+				ui = new GUI();
+			}
 		} else {
+
 			/*
 			 * We set the look in feel to the system's
 			 */
@@ -125,7 +153,7 @@ public class Client {
 			SendPing.init();
 
 			while ((inputLn = readFromSkt.readLine()) != null && !quitting) {
-				if (inputLn.length() > 0){
+				if (inputLn.length() > 0) {
 					processServerMsg(inputLn);
 					inputLn = "";
 				}
@@ -162,7 +190,8 @@ public class Client {
 			}
 			die();
 		} catch (Throwable e) {
-			ui.errMsg(e.getMessage());
+			ui.errMsg("Error! Shutting down three seconds after this message:"
+					+ e.getMessage());
 			e.printStackTrace();
 			try {
 				Thread.sleep(3000);
@@ -326,10 +355,10 @@ public class Client {
 	public static void sendOnSkt(String msg) {
 		writeToSkt.println(msg);
 	}
-	
-	public static void die(){
+
+	public static void die() {
 		ui.stdMsg(XMLParser.getClientMsg("quit"));
-		//writeToSkt.println("bye");
+		// writeToSkt.println("bye");
 		SendPing.kill();
 		try {
 			readFromSkt.close();
