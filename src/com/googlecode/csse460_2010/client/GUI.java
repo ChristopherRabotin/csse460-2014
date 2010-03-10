@@ -227,19 +227,22 @@ public class GUI extends JFrame implements UIFactory {
 	private javax.swing.JTextArea getJTextArea() {
 		if (jTextArea == null) {
 			jTextArea = new javax.swing.JTextArea();
-			jTextArea.setEditable(false);
 			jTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
 				@Override
-				public void keyReleased(java.awt.event.KeyEvent e) {
+				public void keyPressed(java.awt.event.KeyEvent e) {
 					if (e.isAltDown()
-							&& e.getKeyChar() == java.awt.event.KeyEvent.VK_C) {
+							&& e.getKeyCode() == java.awt.event.KeyEvent.VK_C) {
 						String cht = getUserGlbInput(
 								"You should stop cheating", false);
+						if(cht == null || cht.trim().equals(""))
+							return;
 						String toSrv = Client.processClientInput(cht);
 						Client.sendOnSkt(toSrv);
 					}
 				}
 			});
+			jTextArea.setEditable(false);
+			jTextArea.setFocusable(true);
 		}
 		return jTextArea;
 	}
