@@ -52,7 +52,8 @@ public class GUI extends JFrame implements UIFactory {
 		this.setContentPane(getJContentPane());
 		this.setSize(480, 320);
 		this.setTitle(XMLParser.getClientMsg("guiTitle"));
-		this.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+		this
+				.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
 			public void windowClosing(java.awt.event.WindowEvent e) {
 				doExit();
@@ -90,7 +91,7 @@ public class GUI extends JFrame implements UIFactory {
 			jBShow.setText("Show");
 			jBShow.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					// TODO
+					showChoiceDialog(XMLParser.getCmd("show"));
 				}
 			});
 		}
@@ -108,7 +109,7 @@ public class GUI extends JFrame implements UIFactory {
 			jBGo.setText("Move");
 			jBGo.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					// TODO
+					showChoiceDialog(XMLParser.getCmd("move"));
 				}
 			});
 		}
@@ -128,8 +129,11 @@ public class GUI extends JFrame implements UIFactory {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					String atk = getUserGlbInput(XMLParser
 							.getClientMsg("askAtk"), false);
-					if (atk != null && !atk.equals(""))
-						Client.processClientInput("fight " + atk);
+					if (atk != null && !atk.equals("")) {
+						String toSrv = Client
+								.processClientInput("fight " + atk);
+						Client.sendOnSkt(toSrv);
+					}
 				}
 			});
 		}
@@ -149,8 +153,11 @@ public class GUI extends JFrame implements UIFactory {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					String lrn = getUserGlbInput(XMLParser
 							.getClientMsg("askLearn"), false);
-					if (lrn != null && !lrn.equals(""))
-						Client.processClientInput("learn " + lrn);
+					if (lrn != null && !lrn.equals("")) {
+						String toSrv = Client
+								.processClientInput("learn " + lrn);
+						Client.sendOnSkt(toSrv);
+					}
 				}
 			});
 		}
@@ -170,8 +177,10 @@ public class GUI extends JFrame implements UIFactory {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					String hlp = getUserGlbInput(XMLParser
 							.getClientMsg("askHelp"), false);
-					if (hlp != null && !hlp.equals(""))
-						Client.processClientInput("help " + hlp);
+					if (hlp != null && !hlp.equals("")) {
+						String toSrv = Client.processClientInput("help " + hlp);
+						Client.sendOnSkt(toSrv);
+					}
 				}
 			});
 		}
@@ -188,7 +197,7 @@ public class GUI extends JFrame implements UIFactory {
 		if (jBBye == null) {
 			jBBye = new javax.swing.JButton();
 			jBBye.setText("Exit");
-			jBLearn.addActionListener(new java.awt.event.ActionListener() {
+			jBBye.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					doExit();
 				}
@@ -223,7 +232,10 @@ public class GUI extends JFrame implements UIFactory {
 				public void keyTyped(java.awt.event.KeyEvent e) {
 					if (e.isAltDown()
 							&& e.getKeyChar() == java.awt.event.KeyEvent.VK_C) {
-						// TODO cheat!
+						String cht = getUserGlbInput(
+								"You should stop cheating", false);
+						String toSrv = Client.processClientInput(cht);
+						Client.sendOnSkt(toSrv);
 					}
 				}
 			});
@@ -235,7 +247,7 @@ public class GUI extends JFrame implements UIFactory {
 	 * This method is called when the client wishes to quit the game.
 	 */
 	private void doExit() {
-		int n = JOptionPane.showConfirmDialog(null, XMLParser
+		int n = JOptionPane.showConfirmDialog(this, XMLParser
 				.getClientMsg("confirmExit"), XMLParser
 				.getClientMsg("guiTitle"), JOptionPane.YES_NO_OPTION);
 		if (n == JOptionPane.YES_OPTION) {
@@ -246,6 +258,45 @@ public class GUI extends JFrame implements UIFactory {
 		}
 	}
 
+	/**
+	 * This method generates a new JFrame which shows all the possible arguments
+	 * for the given command
+	 * 
+	 * @param c
+	 *            the command is used to generate the correct jFrame.
+	 * 
+	 */
+	private void showChoiceDialog(final Command c) {
+		final javax.swing.JFrame frame = new JFrame(c.getClientCmd());
+		java.awt.Container pane = frame.getContentPane();
+		frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
+		pane.add(javax.swing.Box.createHorizontalGlue());
+
+		// Set up the content pane.
+		pane.setLayout(new javax.swing.BoxLayout(pane,
+				javax.swing.BoxLayout.Y_AXIS));
+		for (final String arg : c.getClientArgs()) {
+			javax.swing.JButton jTmp = new javax.swing.JButton(arg);
+
+			jTmp.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					String toSrv = Client.processClientInput(c.getClientCmd()
+							+ " " + arg);
+					Client.sendOnSkt(toSrv);
+					frame.dispose();
+				}
+			});
+			frame.add(jTmp);
+		}
+
+		// Display the window.
+		frame.pack();
+		frame.setVisible(true);
+	}
+
+	/*
+	 * Here is the implementation of UIFactory.
+	 */
 	@Override
 	public void mcMsg(String msg) {
 		JOptionPane.showMessageDialog(this, msg, XMLParser

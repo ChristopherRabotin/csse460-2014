@@ -346,7 +346,7 @@ public class Stirling {
 			} else {
 				boolean attacked = false;
 				for (Attack e : player.getAtks()) {
-					if (e.getName().equals(cmdarg)) {
+					if (e.getName().toLowerCase().equals(cmdarg)) {
 						outputLn = attackDaemon(player, e);
 						attacked = true;
 					}
