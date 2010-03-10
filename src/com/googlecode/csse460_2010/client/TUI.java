@@ -33,6 +33,7 @@ public class TUI implements UIFactory {
 
 	@Override
 	public String getUserGlbInput(String title, boolean mandatory) {
+		stdMsg(title);
 		String in = null;
 		try {
 			do{
