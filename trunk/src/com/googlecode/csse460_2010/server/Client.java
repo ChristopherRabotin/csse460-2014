@@ -123,10 +123,13 @@ public class Client extends Thread {
 					 */
 				}
 			} catch (SocketTimeoutException e) {
-				Stirling.log.severe("Client "+me+" timed out.");
+				Stirling.log.severe("Client " + me + " timed out.");
 				killClient();
 			} catch (IOException e) {
-				killClient();
+				/*
+				 * we don't do anything here because it corresponds to the
+				 * player quitting and we've already announced he was quitting
+				 */
 			}
 
 		} catch (IOException e) {
