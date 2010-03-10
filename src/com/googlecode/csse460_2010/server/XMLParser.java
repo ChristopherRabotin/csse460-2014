@@ -28,7 +28,8 @@ public class XMLParser {
 	private static Room defaultRoom;
 	private static Attack playersDefaultAttack;
 	// these two fields are related to the server
-	private static int serverPort, serverMaxConn, serverRestartTime;
+	private static int serverPort, serverMaxConn, serverRestartTime,
+			serverTimeout;
 	private static String serverName, serverWelcomeMsg;
 
 	/**
@@ -68,6 +69,8 @@ public class XMLParser {
 		serverMaxConn = Integer.parseInt(serverRoot
 				.getAttributeValue("maxPlayers"));
 		serverName = serverRoot.getAttributeValue("name");
+		serverTimeout = Integer.parseInt(serverRoot
+				.getAttributeValue("timeout"));
 		serverRestartTime = Integer.parseInt(serverRoot
 				.getAttributeValue("restartTime"));
 		serverRestartTime *= 1000;
@@ -360,6 +363,15 @@ public class XMLParser {
 	 */
 	public static int getServerRestartTime() {
 		return serverRestartTime;
+	}
+
+	/**
+	 * Getter for serverTimeout
+	 * 
+	 * @return serverTimeout
+	 */
+	public static int getServerTimeOut() {
+		return serverTimeout;
 	}
 
 }

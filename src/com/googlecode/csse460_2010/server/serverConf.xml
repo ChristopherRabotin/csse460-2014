@@ -7,7 +7,7 @@
 		the players to the default room.
 	-->
 	<ServerConfig port="1024" maxPlayers="20" name="Game Server"
-		restartTime="10" />
+		restartTime="10" timeout="10"/>
 	<Protocol>
 		<!--
 			The words preceded by a @ will be replaced by values from the player
