@@ -3,9 +3,9 @@ package com.googlecode.csse460_2010.server;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.InterruptedIOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.Stack;
 
 /**
@@ -122,7 +122,7 @@ public class Client extends Thread {
 					 * reset the value
 					 */
 				}
-			} catch (InterruptedIOException e) {
+			} catch (SocketTimeoutException e) {
 				Stirling.log.severe("Client "+me+" timed out.");
 				killClient();
 			} catch (IOException e) {

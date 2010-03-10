@@ -357,7 +357,7 @@ public class Stirling {
 			}
 		} else if (inputLn.startsWith("learn")) { /* LEARN */
 			try {
-				Attack tbl = XMLParser.getAttacks().get(cmdarg);
+				Attack tbl = XMLParser.getAttacks().get(cmdarg.toLowerCase());
 				if (tbl.isDaemonReserved()) {
 					outputLn = "atkBdaemononly:" + cmdarg;
 				} else if (player.getPoints() >= tbl.getDamage()) {
