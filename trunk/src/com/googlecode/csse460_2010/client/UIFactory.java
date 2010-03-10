@@ -47,5 +47,5 @@ public interface UIFactory {
 	 *            the title of the input message
 	 * @return the user's input
 	 */
-	public String getUserGlbInput(String title);
+	public String getUserGlbInput(String title, boolean mandatory);
 }

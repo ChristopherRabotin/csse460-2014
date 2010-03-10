@@ -50,10 +50,9 @@ public class GUI extends JFrame implements UIFactory {
 	 */
 	private void initialize() {
 		this.setContentPane(getJContentPane());
-		this.setSize(480, 284);
+		this.setSize(480, 320);
 		this.setTitle(XMLParser.getClientMsg("guiTitle"));
-		this
-				.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+		this.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
 			public void windowClosing(java.awt.event.WindowEvent e) {
 				doExit();
@@ -91,6 +90,7 @@ public class GUI extends JFrame implements UIFactory {
 			jBShow.setText("Show");
 			jBShow.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
+					// TODO
 				}
 			});
 		}
@@ -127,8 +127,9 @@ public class GUI extends JFrame implements UIFactory {
 			jBAttack.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					String atk = getUserGlbInput(XMLParser
-							.getClientMsg("askAtk"));
-					Client.processClientInput("fight " + atk);
+							.getClientMsg("askAtk"), false);
+					if (atk != null && !atk.equals(""))
+						Client.processClientInput("fight " + atk);
 				}
 			});
 		}
@@ -146,9 +147,10 @@ public class GUI extends JFrame implements UIFactory {
 			jBLearn.setText("Learn");
 			jBLearn.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					String atk = getUserGlbInput(XMLParser
-							.getClientMsg("askLearn"));
-					Client.processClientInput("learn " + atk);
+					String lrn = getUserGlbInput(XMLParser
+							.getClientMsg("askLearn"), false);
+					if (lrn != null && !lrn.equals(""))
+						Client.processClientInput("learn " + lrn);
 				}
 			});
 		}
@@ -166,9 +168,10 @@ public class GUI extends JFrame implements UIFactory {
 			jBHelp.setText("Help");
 			jBHelp.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					String atk = getUserGlbInput(XMLParser
-							.getClientMsg("askHelp"));
-					Client.processClientInput("help " + atk);
+					String hlp = getUserGlbInput(XMLParser
+							.getClientMsg("askHelp"), false);
+					if (hlp != null && !hlp.equals(""))
+						Client.processClientInput("help " + hlp);
 				}
 			});
 		}
@@ -236,10 +239,9 @@ public class GUI extends JFrame implements UIFactory {
 				.getClientMsg("confirmExit"), XMLParser
 				.getClientMsg("guiTitle"), JOptionPane.YES_NO_OPTION);
 		if (n == JOptionPane.YES_OPTION) {
-			JOptionPane.showMessageDialog(null, XMLParser
-					.getClientMsg("quit"), XMLParser
-					.getClientMsg("guiTitle"),
-					JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, XMLParser.getClientMsg("quit"),
+					XMLParser.getClientMsg("guiTitle"),
+					JOptionPane.INFORMATION_MESSAGE);
 			System.exit(0);
 		}
 	}
@@ -272,11 +274,11 @@ public class GUI extends JFrame implements UIFactory {
 	}
 
 	@Override
-	public String getUserGlbInput(String title) {
+	public String getUserGlbInput(String title, boolean mandatory) {
 		String rtn = null;
 		do {
 			rtn = JOptionPane.showInputDialog(title);
-		} while (rtn == null || rtn.equals(""));
+		} while ((rtn == null || rtn.equals("")) && mandatory);
 		return rtn;
 	}
 

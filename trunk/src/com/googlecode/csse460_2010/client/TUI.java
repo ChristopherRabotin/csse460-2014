@@ -19,7 +19,7 @@ public class TUI implements UIFactory {
 	@Override
 	public void getNSendCmdInput(String title) {
 		String in = null, outputLn = null;
-		in = getUserGlbInput(title);
+		in = getUserGlbInput(title,true);
 		do {
 			outputLn = Client.processClientInput(in);
 		} while (outputLn == null);
@@ -32,11 +32,13 @@ public class TUI implements UIFactory {
 	}
 
 	@Override
-	public String getUserGlbInput(String title) {
+	public String getUserGlbInput(String title, boolean mandatory) {
 		String in = null;
 		try {
+			do{
 			in = new BufferedReader(new InputStreamReader(System.in))
 					.readLine();
+			} while ((in == null || in.equals("")) && mandatory);
 		} catch (IOException e) {
 			System.err.println("Unable to read from input at this time!\n" + e);
 		}
