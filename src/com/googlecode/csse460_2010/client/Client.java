@@ -11,8 +11,6 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 
-import com.googlecode.csse460_2010.server.Stirling;
-
 /**
  * This is the main class of the Client part of the project. As the
  * documentation specifies it, there are no input arguments necessary.
@@ -23,7 +21,7 @@ import com.googlecode.csse460_2010.server.Stirling;
 public class Client {
 	private static int port, timeout;
 	private static String host, name, inputLn;
-	private static InputStream xmlFile = Stirling.class.getResourceAsStream("serverConf.xml");
+	private static InputStream xmlFile = Client.class.getResourceAsStream("clientConf.xml");
 	private static InetAddress addr;
 	private static SocketAddress sockaddr;
 	private static Socket skt;
@@ -63,7 +61,7 @@ public class Client {
 			XMLParser.loadNParse(xmlFile);
 		} catch (Throwable e) {
 			System.err.println("Error while loading the XML file!");
-			System.err.println("" + e.getStackTrace());
+			e.printStackTrace();
 			System.exit(0);
 		}
 		port = XMLParser.getCnxPort();

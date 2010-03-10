@@ -73,7 +73,11 @@ public class XMLParser {
 				.getAttributeValue("timeout"));
 		serverRestartTime = Integer.parseInt(serverRoot
 				.getAttributeValue("restartTime"));
+		/*
+		 * Convert from seconds to milliseconds
+		 */
 		serverRestartTime *= 1000;
+		serverTimeout *= 1000;
 		/*
 		 * it is defined in seconds but TimerTask works in milliseconds
 		 */
